@@ -75,56 +75,72 @@ pip install -r requirements.txt
 
 ### Setting Up Supabase Tables 
 
-We need to create three tables in Supabase to store the Reddit data:
+We need to create three tables in Supabase to store the Reddit data. 
 
 1. Redditors
 2. Submissions 
 3. Comments
 
-For test run, name them as "test_redditor", "test_submission", and "test_comment". Go to the [Supabase Dashboard](https://app.supabase.com) and create these tables:
+For testing purpose, we will name them "test_redditor", "test_submission", and "test_comment". Go to the [Supabase Dashboard](https://app.supabase.com) and open SQL Editor. Click "New Query" to start a new SQL query, and paste this table creation SQL:
 
-**Redditors**
+```sql
+-- Create table test_redditor
+CREATE TABLE test_redditor (
+    redditor_id varchar primary key,
+    name varchar,
+    created_at timestamptz,
+    karma jsonb,
+    is_gold boolean,
+    is_mod jsonb,
+    trophy jsonb,
+    removed varchar
+);
 
-- `redditor_id`: **Primary key**, varchar
-- `name`: varchar 
-- `created_at`: timestamptz
-- `karma`: jsonb
-- `is_gold`: boolean
-- `is_mod`: jsonb 
-- `trophy`: jsonb
-- `removed`: varchar
+-- Enable row-level security on test_redditor
+ALTER TABLE test_redditor ENABLE ROW LEVEL SECURITY;
 
-**Submissions**
+-- Create table test_submission
+CREATE TABLE test_submission (
+    submission_id varchar primary key,
+    redditor_id varchar,
+    created_at timestamptz,
+    title varchar,
+    text text,
+    subreddit varchar,
+    permalink varchar,
+    attachment jsonb,
+    flair jsonb,
+    awards jsonb,
+    score jsonb,
+    upvote_ratio jsonb,
+    num_comments jsonb,
+    edited boolean,
+    archived boolean,
+    removed boolean,
+    poll jsonb
+); 
 
-- `submission_id`: **Primary key**, varchar
-- `redditor_id`: varchar
-- `created_at`: timestamptz
-- `title`: varchar
-- `text`: text
-- `subreddit`: varchar
-- `permalink`: varchar 
-- `attachment`: jsonb
-- `flair`: jsonb
-- `awards`: jsonb
-- `score`: jsonb
-- `upvote_ratio`: jsonb
-- `num_comments`: jsonb
-- `edited`: boolean 
-- `archived`: boolean
-- `removed`: boolean
-- `poll`: jsonb
+-- Enable row-level security on test_submission
+ALTER TABLE test_submission ENABLE ROW LEVEL SECURITY;
 
-**Comments**
+-- Create table test_comment
+CREATE TABLE test_comment(
+    comment_id varchar primary key,
+    link_id varchar,
+    parent_id varchar,
+    redditor_id varchar,
+    created_at timestamptz,
+    body text,
+    score jsonb,
+    edited boolean,
+    removed varchar
+); 
 
-- `comment_id`: **Primary key**, varchar 
-- `link_id`: varchar
-- `parent_id`: varchar  
-- `redditor_id`: varchar
-- `created_at`: timestamptz
-- `body`: text
-- `score`: jsonb
-- `edited`: boolean
-- `removed`: varchar
+-- Enable row-level security on test_comment
+ALTER TABLE test_comment ENABLE ROW LEVEL SECURITY;
+```
+
+This will create the three tables with the required columns and data types. Once created, you will see the new tables now available in the Supabase interface. In the future, you can duplicate these tables and modify the names for your own production tables.
 
 ### Running the Code: 
 
