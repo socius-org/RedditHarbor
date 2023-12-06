@@ -1,6 +1,6 @@
 # RedditHarbor
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?label=license)](https://opensource.org/licenses/MIT)
-[![Github Stars](https://img.shields.io/github/stars/socius-org/RedditHarbor?style=flat&logo=github)](https://github.com/socius-org/RedditHarbor/stargazers)
+[![Github Stars](https://img.shields.io/github/stars/socius-org/RedditHarbor?logo=github)](https://github.com/socius-org/RedditHarbor)
 [![Github Watchers](https://img.shields.io/github/watchers/socius-org/RedditHarbor?style=flat&logo=github)](https://github.com/socius-org/RedditHarbor)
 
 RedditHarbor is a tool to easily collect Reddit data and store it in a Supabase database. It streamlines the data collection process so you can build a "harbor" of data collected from various subreddits.
