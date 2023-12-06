@@ -12,8 +12,6 @@ RedditHarbor is a tool to easily collect Reddit data and store it in a Supabase 
 | ❌ | Public Beta | Stability and Flexibility |
 | ❌ | Public | Production-ready |
 
-Sure, here is an improved beginning section of the README.md:
-
 ## Prerequisites
 
 **Reddit API**: You need a Reddit account to access the Reddit API. Follow [Reddit's API guide](https://www.reddit.com/wiki/api/) to register as a developer and create a script app. This will provide the credentials needed to authenticate with Reddit. 
@@ -26,13 +24,9 @@ Sure, here is an improved beginning section of the README.md:
 
 ## Getting Started
 
-**Requirements:**
-
-- Reddit API credentials 
-- Supabase account and database 
-- Python and the packages in `requirements.txt`
-
 ### Installation
+
+The following steps create an isolated Python environment to install dependencies without affecting other projects.
 
 **Windows (Git Bash)** 
 
@@ -47,7 +41,7 @@ Create and activate a virtual environment:
 
 ```
 python -m venv venv 
-source venv\Scripts\activate
+source venv/Scripts/activate
 cd .. 
 ```
 
@@ -79,8 +73,6 @@ Install requirements:
 pip install -r requirements.txt
 ```
 
-The steps create an isolated Python environment to install dependencies without affecting other projects.
-
 ### Setting Up Supabase Tables 
 
 We need to create three tables in Supabase to store the Reddit data:
@@ -93,7 +85,7 @@ For test run, name them as "test_redditor", "test_submission", and "test_comment
 
 **Redditors**
 
-- `redditor_id`: Primary key, varchar
+- `redditor_id`: **Primary key**, varchar
 - `name`: varchar 
 - `created_at`: timestamptz
 - `karma`: jsonb
@@ -104,7 +96,7 @@ For test run, name them as "test_redditor", "test_submission", and "test_comment
 
 **Submissions**
 
-- `submission_id`: Primary key, varchar
+- `submission_id`: **Primary key**, varchar
 - `redditor_id`: varchar
 - `created_at`: timestamptz
 - `title`: varchar
@@ -124,7 +116,7 @@ For test run, name them as "test_redditor", "test_submission", and "test_comment
 
 **Comments**
 
-- `comment_id`: Primary key, varchar 
+- `comment_id`: **Primary key**, varchar 
 - `link_id`: varchar
 - `parent_id`: varchar  
 - `redditor_id`: varchar
@@ -157,8 +149,6 @@ DB_CONFIG = {
 }
 ```
 
-See the script comments in `run.py` for examples of collecting Reddit data. Now you are ready to start collecting Reddit data. Run `run.py` in Git Bash. 
-
-```python run.py```
+See the script comments in `run.py` for examples of collecting Reddit data. Now you are ready to start collecting Reddit data. Run ```python run.py``` in Git Bash. 
 
 
