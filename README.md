@@ -3,6 +3,8 @@
 [![Github Stars](https://img.shields.io/github/stars/socius-org/RedditHarbor?logo=github)](https://github.com/socius-org/RedditHarbor)
 [![Github Watchers](https://img.shields.io/github/watchers/socius-org/RedditHarbor?style=flat&logo=github)](https://github.com/socius-org/RedditHarbor)
 
+https://github.com/socius-org/RedditHarbor/assets/130935698/188aa3b2-1da5-45af-9302-82b6685c573e
+
 RedditHarbor is a tool to easily collect Reddit data and store it in a Supabase database. It streamlines the data collection process so you can build a "harbor" of data collected from various subreddits.
 
 | Status | Stability | Goal |
