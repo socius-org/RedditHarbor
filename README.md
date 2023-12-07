@@ -16,13 +16,13 @@ RedditHarbor is a tool to easily collect Reddit data and store it in a Supabase 
 
 ## Prerequisites
 
-**Reddit API**: You need a Reddit account to access the Reddit API. Follow [Reddit's API guide](https://www.reddit.com/wiki/api/) to register as a developer and create a script app. This will provide the credentials needed to authenticate with Reddit. 
+**Reddit API**: You need a Reddit account to access the Reddit API. Follow [Reddit's API guide](https://www.reddit.com/wiki/api/) to register as a developer and create a script app. This will provide the credentials (PUBLIC_KEY and SECRET_KEY) needed to authenticate with Reddit. 
 
-**Supabase API**: Sign up for a [Supabase](https://supabase.com/) account. Create a new project to get the database URL and API key. You will need these credentials to connect and store the Reddit data. 
+**Supabase API**: Sign up for a [Supabase](https://supabase.com/) account. Create a new project to get the database URL and SECRET_KEY. You will need these credentials to connect and store the Reddit data. 
 
 **Environment**: We recommend using Visual Studio Code [(download here)](https://code.visualstudio.com/download). Install the Python extension to get full support for running and editing Python apps. Alternatively you can use your preferred code editor or IDE. 
 
-**Command Prompt**: If you are Windows user, we recommend using Git Bash [(download here)](https://gitforwindows.org/). Follow the setup wizard, select all the default options. At the Adjusting your PATH environment step, select "Use Git from the Windows Command Prompt" option. Once installed, you will have access to Git Bash which gives you Linux-style command line utilities and git functionality in Windows. 
+**Command Prompt**: If you are Windows user, Git Bash is one of the best command prompts [(download here)](https://gitforwindows.org/). Follow the setup wizard, select all the default options. At the Adjusting your PATH environment step, select "Use Git from the Windows Command Prompt" option. Once installed, you will have access to Git Bash which gives you Linux-style command line utilities and git functionality in Windows. 
 
 ## Getting Started
 
@@ -150,7 +150,7 @@ Open `run.py` in your VSCode (or IDE). To start collecting Reddit data, you firs
 
 ```python
 SUPABASE_URL = "<your-supabase-url>" 
-SUPABASE_KEY = "<your-supabase-api-key>"
+SUPABASE_KEY = "<your-supabase-api-key>" #Remember to use "service_role/secret" key, not "anon/public" key 
 
 REDDIT_PUBLIC = "<your-reddit-public-key>"
 REDDIT_SECRET = "<your-reddit-secret-key>"
