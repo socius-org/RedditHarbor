@@ -153,7 +153,7 @@ SUPABASE_KEY = "<your-supabase-api-key>" #Remember to use "service_role/secret" 
 
 REDDIT_PUBLIC = "<your-reddit-public-key>"
 REDDIT_SECRET = "<your-reddit-secret-key>"
-REDDIT_USER_AGENT = "<your-reddit-user-agent>"
+REDDIT_USER_AGENT = "<your-reddit-user-agent>" #format - <institution:project-name (u/reddit-username)>
 ```
 
 Then define the database table names to store the data:
