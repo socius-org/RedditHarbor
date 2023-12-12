@@ -1,10 +1,13 @@
-import os 
+import os
 from dotenv import load_dotenv
+
 load_dotenv()
 from supabase import create_client, Client
 import praw
 from rich.console import Console
+
 console = Console()
+
 
 def create_empty_env_file():
     """
@@ -23,10 +26,24 @@ def save_credentials_to_env(service_name: str, credentials: dict):
         service_name (str): Name of the service (e.g., "SUPABASE" or "REDDIT").
         credentials (dict): Dictionary containing key-value pairs of credentials.
     """
-    with open(".env", "a") as env_file:
-        env_file.write(f"\n# {service_name} credentials\n")
-        for key, value in credentials.items():
-            env_file.write(f"{service_name.upper()}_{key}={value}\n")
+    with open(".env", "r") as env_file:
+        lines = env_file.readlines()
+
+    # Remove all lines related to the specified service, including the comment line
+    new_lines = [
+        line
+        for line in lines
+        if not line.startswith(f"# {service_name} credentials")
+        and not line.startswith(f"{service_name.upper()}_")
+    ]
+
+    # Add new credentials to the end of the file
+    new_lines.append(f"\n# {service_name} credentials\n")
+    for key, value in credentials.items():
+        new_lines.append(f"{service_name.upper()}_{key}={value}\n")
+
+    with open(".env", "w") as env_file:
+        env_file.writelines(new_lines)
 
 
 def load_credentials_from_env(service_name: str):
@@ -44,12 +61,14 @@ def load_credentials_from_env(service_name: str):
 
     for key, value in os.environ.items():
         if key.startswith(prefix):
-            credentials[key[len(prefix):]] = value
+            credentials[key[len(prefix) :]] = value
 
     return credentials
 
 
-def reddit(public_key: str = None, secret_key: str = None, user_agent: str = None) -> praw.Reddit:
+def reddit(
+    public_key: str = None, secret_key: str = None, user_agent: str = None
+) -> praw.Reddit:
     """
     Connect to the Reddit API using the provided credentials or those stored in the .env file.
 
@@ -87,13 +106,34 @@ def reddit(public_key: str = None, secret_key: str = None, user_agent: str = Non
         )
 
         if submission.selftext is not None:
-            console.log("[bold green]Connected to Reddit successfully.")
-            # Save the credentials to the .env file
-            save_credentials_to_env("REDDIT", {"PUBLIC": public_key, "SECRET": secret_key, "USER_AGENT": user_agent})
-            return reddit_client
+            # Check if new credentials are provided before saving to .env
+            if any((public_key, secret_key, user_agent)):
+                if any(
+                    existing_credentials.get(key) != value
+                    for key, value in {
+                        "PUBLIC": public_key,
+                        "SECRET": secret_key,
+                        "USER_AGENT": user_agent,
+                    }.items()
+                ):
+                    console.log("[bold green]Connected to Reddit successfully.")
+                    # Save the credentials to the .env file
+                    save_credentials_to_env(
+                        "REDDIT",
+                        {
+                            "PUBLIC": public_key,
+                            "SECRET": secret_key,
+                            "USER_AGENT": user_agent,
+                        },
+                    )
+                    console.log("[bold yellow]Saving Reddit credentials to .env file.")
+                else:
+                    console.log("[bold yellow]Using existing Reddit credentials.")
+                    console.log("[bold green]Connected to Reddit successfully.")
+        return reddit_client
 
     except Exception as e:
-        console.log(f"Failed to connect to Reddit. Error: {str(e)}")
+        console.log(f"[bold red]Failed to connect to Reddit.[/] Error: {str(e)}")
         return None
 
 
@@ -108,7 +148,7 @@ def supabase(url: str = None, private_key: str = None) -> Client:
     Returns:
         Client: An instance of the Supabase client if the connection is successful, else None.
     """
-    
+
     create_empty_env_file()
 
     # Try to load existing credentials from the .env file
@@ -120,10 +160,21 @@ def supabase(url: str = None, private_key: str = None) -> Client:
 
     try:
         supabase_client: Client = create_client(url, private_key)
-        console.log("[bold green]Connected to Supabase successfully.")
-        # Save the credentials to the .env file
-        save_credentials_to_env("SUPABASE", {"URL": url, "KEY": private_key})
+        # Check if new credentials are provided before saving to .env
+        if any((url, private_key)):
+            if any(
+                existing_credentials.get(key) != value
+                for key, value in {"URL": url, "KEY": private_key}.items()
+            ):
+                console.log("[bold green]Connected to Supabase successfully.")
+                # Save the credentials to the .env file
+                save_credentials_to_env("SUPABASE", {"URL": url, "KEY": private_key})
+                console.log("[bold yellow]Saving Supabase credentials to .env file.")
+            else:
+                console.log("[bold yellow]Using existing Supabase credentials.")
+                console.log("[bold green]Connected to Supabase successfully.")
         return supabase_client
+
     except Exception as e:
-        console.log(f"Failed to connect to Supabase. Error: {str(e)}")
+        console.log(f"[bold red]Failed to connect to Supabase.[/] Error: {str(e)}")
         return None
