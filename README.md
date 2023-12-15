@@ -9,10 +9,10 @@ RedditHarbor is a tool to easily collect Reddit data and store it in a Supabase 
 
 | Status | Stability | Goal |
 | ------ | ------ | ---- |
-| ✅ | Alpha | We are testing and collecting feedbacks with a closed set of academic researchers |
-| 🚧 | Public Alpha | Opened to academic researchers  |
-| ❌ | Public Beta | Stability and Flexibility |
-| ❌ | Public | Production-ready |
+| ✅ | Alpha | Test and collect feedbacks with a closed set of academic researchers |
+| 🚧 | Public Alpha | Open to academic researchers. Publish python package. |
+| ❌ | Public Beta | Stability and Flexibility. |
+| ❌ | Public | Production-ready. |
 
 ## Prerequisites
 
@@ -168,21 +168,5 @@ DB_CONFIG = {
 ```
 
 See the script comments in `run.py` for examples of collecting Reddit data. Now you are ready to start collecting Reddit data. Run ```python run.py``` in Git Bash. 
-
-
-## All requires reddit_client, supabase_client and db_config. This would allow users to flexibly choose which db to store the data.
-
-### collect.subreddit.submission: Lazy collection. Collects submission and user data from subreddit(s)-of-interest. Requires subreddits. 
-### collect.subreddit.comment: Lazy collection. Collects comment and user data from subreddit(s)-of-interest. Requires subreddits. By default, top_level_comments. 
-### collect.subreddit.submission_and_comment: Lazy collection. Collects submission, comment and user data from subreddit(s)-of-interest. Requires subreddits. By default, top_level_comments. 
-
-### collect.comment.from_user: Collects comment made by user(s)-of-interest. Requires user_ids. By default, top_level_comments. 
-### collect.comment.from_submission: Collects submission made by user(s)-of-interest. Requires submission_ids. 
-
-### collect.user.from_comment: Collects user from comment(s)-of-interest. Requires comment_ids. 
-### collect.user.from_submission: Collects user from submission(s)-of-interst. Requires submission_ids. 
-
-### collect.submission.from_user: Collects submission from user(s)-of-interest. Requires user_ids. 
-### collect.submission.from_subreddit: Collects submission from subreddit(s)-of-interest. Requires subreddits. 
 
 
