@@ -1,0 +1,3 @@
+recursive-include redditharbor *
+recursive-exclude redditharbor venv
+recursive-exclude redditharbor build
