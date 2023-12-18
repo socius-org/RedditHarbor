@@ -10,9 +10,8 @@ RedditHarbor simplifies collecting Reddit data and saving it to a database. It r
 | Status | Stability | Goal |
 | ------ | ------ | ---- |
 | ✅ | Alpha | Test and collect feedbacks with a closed set of academic researchers |
-| 🚧 | Public Alpha | Open to academic researchers. Publish python package. |
-| ❌ | Public Beta | Stability and Flexibility. |
-| ❌ | Public | Production-ready. |
+| 🚧 | Beta | Open to academic researchers. Publish python package. |
+| ❌ | Public | Production-ready. Stability and Flexibility|
 
 ## Introduction 
 
