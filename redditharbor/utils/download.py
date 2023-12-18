@@ -21,7 +21,7 @@ class submission:
         paginate: bool or dict = True,
     ):
         """
-        Initialize a submission instance for interacting with a Supabase table.
+        Initialize an instance for interacting with a Supabase table containing submission data.
 
         Args:
             supabase_client (supabase.Client): The Supabase client used for database interaction.
@@ -75,7 +75,7 @@ class submission:
                 .count
             )
             self.page_size = 1000
-            self.page_numbers = (self.row_count // self.page_size) + 2
+            self.page_numbers = (self.row_count // self.page_size) + (1 if self.row_count % self.page_size != 0 else 0)
         else:
             # self.paginate.get("key", default) is a dictionary method that returns the value for the given key if the key is present in the dictionary. If the key is not found, it returns the default value.
             # In this case, it's used to get the "row_count" and "page_size" from the paginate dictionary, with default values of fetching the row count from Supabase and using a default page size of 1000 if these keys are not present.
@@ -86,7 +86,7 @@ class submission:
                 .count,
             )
             self.page_size = self.paginate.get("page_size", 1000)
-            self.page_numbers = (self.row_count // self.page_size) + 2
+            self.page_numbers = (self.row_count // self.page_size) + (1 if self.row_count % self.page_size != 0 else 0)
 
     def to_pkl(self, columns: List[str] or str, file_name: str, file_path: str = ""):
         """
@@ -118,23 +118,24 @@ class submission:
         else:
             raise ValueError("Input is neither a string nor a list.")
 
-        start_row, end_row = 1, 1000
+        start_row, end_row = 0, self.page_size
 
         for page in track(
-            range(1, self.page_numbers),
+            range(1, self.page_numbers + 1),
             description=f"Downloading to .pickle file in {save_file_path}",
         ):
             if page == 1:
                 pass
             elif page < (self.page_numbers - 1):
-                start_row += 1000
-                end_row += 1000
+                    start_row += self.page_size
+                    end_row += self.page_size
             else:
-                start_row += 1000
+                start_row += self.page_size
                 end_row = self.row_count
+            
             paginated_submissions = (
                 self.submission_db.select(*columns).range(start_row, end_row).execute()
-            ).dict()["data"]
+            ).model_dump()["data"]
             with open(f"{save_file_path}/{file_name}_{page}.pickle", "wb") as handle:
                 pickle.dump(
                     paginated_submissions, handle, protocol=pickle.HIGHEST_PROTOCOL
@@ -176,7 +177,7 @@ class submission:
         else:
             raise ValueError("Input is neither a string nor a list.")
 
-        start_row, end_row = 1, 1000
+        start_row, end_row = 0, 1000
 
         with open(
             f"{save_file_path}/{file_name}.csv", "w", newline="", encoding="utf-8"
@@ -185,22 +186,23 @@ class submission:
             writer.writerow(columns if columns != "*" else self.columns)
 
             for page in track(
-                range(1, self.page_numbers),
+                range(1, self.page_numbers + 1),
                 description=f"Downloading to .csv file in {save_file_path}",
             ):
                 if page == 1:
                     pass
                 elif page < (self.page_numbers - 1):
-                    start_row += 1000
-                    end_row += 1000
+                    start_row += self.page_size
+                    end_row += self.page_size
                 else:
-                    start_row += 1000
+                    start_row += self.page_size
                     end_row = self.row_count
+                
                 paginated_submissions = (
                     self.submission_db.select(*columns)
                     .range(start_row, end_row)
                     .execute()
-                ).dict()["data"]
+                ).model_dump()["data"]
                 for row in paginated_submissions:
                     writer.writerow(list(row.values()))
 
@@ -240,7 +242,7 @@ class submission:
         else:
             raise ValueError("Input is neither a string nor a list.")
 
-        start_row, end_row = 1, 1000
+        start_row, end_row = 0, self.page_size
 
         with open(
             f"{save_file_path}/{file_name}.txt", "w", encoding="utf-8"
@@ -248,22 +250,23 @@ class submission:
             txtfile.write("\t".join(columns if columns != "*" else self.columns) + "\n")
 
             for page in track(
-                range(1, self.page_numbers),
+                range(1, self.page_numbers + 1),
                 description=f"Downloading to .txt file in {save_file_path}",
             ):
                 if page == 1:
                     pass
                 elif page < (self.page_numbers - 1):
-                    start_row += 1000
-                    end_row += 1000
+                    start_row += self.page_size
+                    end_row += self.page_size
                 else:
-                    start_row += 1000
+                    start_row += self.page_size
                     end_row = self.row_count
+                
                 paginated_submissions = (
                     self.submission_db.select(*columns)
                     .range(start_row, end_row)
                     .execute()
-                ).dict()["data"]
+                ).model_dump()["data"]
                 for row in paginated_submissions:
                     txtfile.write("\t".join(map(str, row.values())) + "\n")
 
@@ -303,23 +306,24 @@ class submission:
         else:
             raise ValueError("Input is neither a string nor a list.")
 
-        start_row, end_row = 1, 1000
+        start_row, end_row = 0, self.page_size
 
         for page in track(
-            range(1, self.page_numbers),
+            range(1, self.page_numbers + 1),
             description=f"Downloading to .json file in {save_file_path}",
         ):
             if page == 1:
                 pass
             elif page < (self.page_numbers - 1):
-                start_row += 1000
-                end_row += 1000
+                    start_row += self.page_size
+                    end_row += self.page_size
             else:
-                start_row += 1000
+                start_row += self.page_size
                 end_row = self.row_count
+            
             paginated_submissions = (
                 self.submission_db.select(*columns).range(start_row, end_row).execute()
-            ).dict()["data"]
+            ).model_dump()["data"]
             with open(
                 f"{save_file_path}/{file_name}_{page}.json", "w", encoding="utf-8"
             ) as jsonfile:
@@ -338,7 +342,7 @@ class comment:
         paginate: bool or dict = True,
     ):
         """
-        Initialize a comment instance for interacting with a Supabase table.
+        Initialize an instance for interacting with a Supabase table containing comment data.
 
         Args:
             supabase_client (supabase.Client): The Supabase client used for database interaction.
@@ -385,7 +389,7 @@ class comment:
                 .count
             )
             self.page_size = 1000
-            self.page_numbers = (self.row_count // self.page_size) + 2
+            self.page_numbers = (self.row_count // self.page_size) + (1 if self.row_count % self.page_size != 0 else 0)
         else:
             self.row_count = self.paginate.get(
                 "row_count",
@@ -394,7 +398,7 @@ class comment:
                 .count,
             )
             self.page_size = self.paginate.get("page_size", 1000)
-            self.page_numbers = (self.row_count // self.page_size) + 2
+            self.page_numbers = (self.row_count // self.page_size) + (1 if self.row_count % self.page_size != 0 else 0)
 
     def to_pkl(self, columns: List[str] or str, file_name: str, file_path: str = ""):
         """
@@ -426,23 +430,24 @@ class comment:
         else:
             raise ValueError("Input is neither a string nor a list.")
 
-        start_row, end_row = 1, 1000
+        start_row, end_row = 0, self.page_size
 
         for page in track(
-            range(1, self.page_numbers),
+            range(1, self.page_numbers + 1),
             description=f"Downloading to .pickle file in {save_file_path}",
         ):
             if page == 1:
                 pass
             elif page < (self.page_numbers - 1):
-                start_row += 1000
-                end_row += 1000
+                    start_row += self.page_size
+                    end_row += self.page_size
             else:
-                start_row += 1000
+                start_row += self.page_size
                 end_row = self.row_count
+            
             paginated_comments = (
                 self.comment_db.select(*columns).range(start_row, end_row).execute()
-            ).dict()["data"]
+            ).model_dump()["data"]
             with open(f"{save_file_path}/{file_name}_{page}.pickle", "wb") as handle:
                 pickle.dump(
                     paginated_comments, handle, protocol=pickle.HIGHEST_PROTOCOL
@@ -484,7 +489,7 @@ class comment:
         else:
             raise ValueError("Input is neither a string nor a list.")
 
-        start_row, end_row = 1, 1000
+        start_row, end_row = 0, self.page_size
 
         with open(
             f"{save_file_path}/{file_name}.csv", "w", newline="", encoding="utf-8"
@@ -493,22 +498,23 @@ class comment:
             writer.writerow(columns if columns != "*" else self.columns)
 
             for page in track(
-                range(1, self.page_numbers),
+                range(1, self.page_numbers + 1),
                 description=f"Downloading to .csv file in {save_file_path}",
             ):
                 if page == 1:
                     pass
                 elif page < (self.page_numbers - 1):
-                    start_row += 1000
-                    end_row += 1000
+                    start_row += self.page_size
+                    end_row += self.page_size
                 else:
-                    start_row += 1000
+                    start_row += self.page_size
                     end_row = self.row_count
+                
                 paginated_comments = (
                     self.comment_db.select(*columns)
                     .range(start_row, end_row)
                     .execute()
-                ).dict()["data"]
+                ).model_dump()["data"]
                 for row in paginated_comments:
                     writer.writerow(list(row.values()))
 
@@ -548,7 +554,7 @@ class comment:
         else:
             raise ValueError("Input is neither a string nor a list.")
 
-        start_row, end_row = 1, 1000
+        start_row, end_row = 0, self.page_size
 
         with open(
             f"{save_file_path}/{file_name}.txt", "w", encoding="utf-8"
@@ -556,22 +562,23 @@ class comment:
             txtfile.write("\t".join(columns if columns != "*" else self.columns) + "\n")
 
             for page in track(
-                range(1, self.page_numbers),
+                range(1, self.page_numbers + 1),
                 description=f"Downloading to .txt file in {save_file_path}",
             ):
                 if page == 1:
                     pass
                 elif page < (self.page_numbers - 1):
-                    start_row += 1000
-                    end_row += 1000
+                    start_row += self.page_size
+                    end_row += self.page_size
                 else:
-                    start_row += 1000
+                    start_row += self.page_size
                     end_row = self.row_count
+                
                 paginated_comments = (
                     self.comment_db.select(*columns)
                     .range(start_row, end_row)
                     .execute()
-                ).dict()["data"]
+                ).model_dump()["data"]
                 for row in paginated_comments:
                     txtfile.write("\t".join(map(str, row.values())) + "\n")
 
@@ -611,23 +618,24 @@ class comment:
         else:
             raise ValueError("Input is neither a string nor a list.")
 
-        start_row, end_row = 1, 1000
+        start_row, end_row = 0, self.page_size
 
         for page in track(
-            range(1, self.page_numbers),
+            range(1, self.page_numbers + 1),
             description=f"Downloading to .json file in {save_file_path}",
         ):
             if page == 1:
                 pass
             elif page < (self.page_numbers - 1):
-                start_row += 1000
-                end_row += 1000
+                    start_row += self.page_size
+                    end_row += self.page_size
             else:
-                start_row += 1000
+                start_row += self.page_size
                 end_row = self.row_count
+            
             paginated_comments = (
                 self.comment_db.select(*columns).range(start_row, end_row).execute()
-            ).dict()["data"]
+            ).model_dump()["data"]
             with open(
                 f"{save_file_path}/{file_name}_{page}.json", "w", encoding="utf-8"
             ) as jsonfile:
@@ -637,7 +645,6 @@ class comment:
             f"{self.row_count} rows downloaded and saved in {self.page_numbers - 1} json files"
         )
 
-
 class user:
     def __init__(
         self,
@@ -646,7 +653,7 @@ class user:
         paginate: bool or dict = True,
     ):
         """
-        Initialize a comment instance for interacting with a Supabase table.
+        Initialize an instance for interacting with a Supabase table containing user data.
 
         Args:
             supabase_client (supabase.Client): The Supabase client used for database interaction.
@@ -691,7 +698,7 @@ class user:
                 .count
             )
             self.page_size = 1000
-            self.page_numbers = (self.row_count // self.page_size) + 2
+            self.page_numbers = (self.row_count // self.page_size) + (1 if self.row_count % self.page_size != 0 else 0)
         else:
             self.row_count = self.paginate.get(
                 "row_count",
@@ -700,9 +707,9 @@ class user:
                 .count,
             )
             self.page_size = self.paginate.get("page_size", 1000)
-            self.page_numbers = (self.row_count // self.page_size) + 2
-
-    def to_pkl(self, columns: List[str] or str, file_name: str, file_path: str = ""):
+            self.page_numbers = (self.row_count // self.page_size) + (1 if self.row_count % self.page_size != 0 else 0)
+        
+    def to_pkl(self, columns: List[str] or str, file_name: str, file_path: str = "") -> None:
         """
         Save Supabase data to multiple .pickle files.
 
@@ -732,23 +739,24 @@ class user:
         else:
             raise ValueError("Input is neither a string nor a list.")
 
-        start_row, end_row = 1, 1000
+        start_row, end_row = 0, self.page_size
 
         for page in track(
-            range(1, self.page_numbers),
+            range(1, self.page_numbers + 1),
             description=f"Downloading to .pickle file in {save_file_path}",
         ):
             if page == 1:
                 pass
             elif page < (self.page_numbers - 1):
-                start_row += 1000
-                end_row += 1000
+                    start_row += self.page_size
+                    end_row += self.page_size
             else:
-                start_row += 1000
+                start_row += self.page_size
                 end_row = self.row_count
+            
             paginated_redditors = (
                 self.redditor_db.select(*columns).range(start_row, end_row).execute()
-            ).dict()["data"]
+            ).model_dump()["data"]
             with open(f"{save_file_path}/{file_name}_{page}.pickle", "wb") as handle:
                 pickle.dump(
                     paginated_redditors, handle, protocol=pickle.HIGHEST_PROTOCOL
@@ -790,7 +798,7 @@ class user:
         else:
             raise ValueError("Input is neither a string nor a list.")
 
-        start_row, end_row = 1, 1000
+        start_row, end_row = 0, self.page_size
 
         with open(
             f"{save_file_path}/{file_name}.csv", "w", newline="", encoding="utf-8"
@@ -799,22 +807,23 @@ class user:
             writer.writerow(columns if columns != "*" else self.columns)
 
             for page in track(
-                range(1, self.page_numbers),
+                range(1, self.page_numbers + 1),
                 description=f"Downloading to .csv file in {save_file_path}",
             ):
                 if page == 1:
                     pass
                 elif page < (self.page_numbers - 1):
-                    start_row += 1000
-                    end_row += 1000
+                    start_row += self.page_size
+                    end_row += self.page_size
                 else:
-                    start_row += 1000
+                    start_row += self.page_size
                     end_row = self.row_count
+                
                 paginated_redditors = (
                     self.redditor_db.select(*columns)
                     .range(start_row, end_row)
                     .execute()
-                ).dict()["data"]
+                ).model_dump()["data"]
                 for row in paginated_redditors:
                     writer.writerow(list(row.values()))
 
@@ -854,7 +863,7 @@ class user:
         else:
             raise ValueError("Input is neither a string nor a list.")
 
-        start_row, end_row = 1, 1000
+        start_row, end_row = 0, self.page_size
 
         with open(
             f"{save_file_path}/{file_name}.txt", "w", encoding="utf-8"
@@ -862,22 +871,23 @@ class user:
             txtfile.write("\t".join(columns if columns != "*" else self.columns) + "\n")
 
             for page in track(
-                range(1, self.page_numbers),
+                range(1, self.page_numbers + 1),
                 description=f"Downloading to .txt file in {save_file_path}",
             ):
                 if page == 1:
                     pass
                 elif page < (self.page_numbers - 1):
-                    start_row += 1000
-                    end_row += 1000
+                    start_row += self.page_size
+                    end_row += self.page_size
                 else:
-                    start_row += 1000
+                    start_row += self.page_size
                     end_row = self.row_count
+                
                 paginated_redditors = (
                     self.redditor_db.select(*columns)
                     .range(start_row, end_row)
                     .execute()
-                ).dict()["data"]
+                ).model_dump()["data"]
                 for row in paginated_redditors:
                     txtfile.write("\t".join(map(str, row.values())) + "\n")
 
@@ -917,28 +927,29 @@ class user:
         else:
             raise ValueError("Input is neither a string nor a list.")
 
-        start_row, end_row = 1, 1000
+        start_row, end_row = 0, self.page_size
 
         for page in track(
-            range(1, self.page_numbers),
+            range(1, self.page_numbers + 1),
             description=f"Downloading to .json file in {save_file_path}",
         ):
             if page == 1:
                 pass
             elif page < (self.page_numbers - 1):
-                start_row += 1000
-                end_row += 1000
+                    start_row += self.page_size
+                    end_row += self.page_size
             else:
-                start_row += 1000
+                start_row += self.page_size
                 end_row = self.row_count
+            
             paginated_redditors = (
                 self.redditor_db.select(*columns).range(start_row, end_row).execute()
-            ).dict()["data"]
+            ).model_dump()["data"]
             with open(
                 f"{save_file_path}/{file_name}_{page}.json", "w", encoding="utf-8"
             ) as jsonfile:
                 json.dump(paginated_redditors, jsonfile, ensure_ascii=False, indent=2)
 
         return console.print(
-            f"{self.row_count} rows downloaded and saved in {self.page_numbers - 1} json files"
+            f"{self.row_count} rows downloaded and saved in {self.page_numbers} json files"
         )

@@ -11,11 +11,11 @@ setup(
   url = 'https://github.com/socius-org/RedditHarbor/',  
   download_url = 'https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.1.0.tar.gz', 
   keywords = ['Reddit', 'Supabase', 'Crawler'],
-  install_requires=[            
-          'praw',
-          'supabase',
-          'rich', 
-          'dotenv'
+  install_requires=[
+          'praw == 7.7.1',
+          'supabase == 1.0.3', 
+          'rich == 13.4.2',
+          'python-dotenv == 1.0.0'
       ],
   include_package_data=True
 )

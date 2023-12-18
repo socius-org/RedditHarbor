@@ -13,6 +13,21 @@ class collect:
     def __init__(
         self, reddit_client: praw.Reddit, supabase_client: supabase.Client, db_config: dict = None
     ):
+        """
+        Initialize the Collect instance for collecting data from Reddit and storing it in Supabase.
+
+        Args:
+            reddit_client (praw.Reddit): The Reddit client used for interacting with Reddit's API.
+            supabase_client (supabase.Client): The Supabase client used for database interaction.
+            db_config (dict, optional): A dictionary containing configuration details for database tables.
+                It should include keys 'user', 'submission', and 'comment' for respective table names.
+
+        Raises:
+            ValueError: If db_config is not provided.
+
+        Note:
+            The method also checks for the existence of the 'error_log' folder and creates it if not present.
+        """
         if db_config is not None:
             self.reddit = reddit_client
             self.supabase = supabase_client
@@ -27,6 +42,13 @@ class collect:
 
         else:
             raise ValueError("Invalid input: db_config must be provided.")
+        
+        #Check and create "error_log" folder 
+        self.error_log_path = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "../error_log")
+        )
+        if not os.path.exists(self.error_log_path):
+            os.makedirs(self.error_log_path)
     
     def redditor_data(self, praw_models: praw.models) -> Tuple[str, bool]:
         """
@@ -456,13 +478,10 @@ class collect:
                                 total_redditor_inserted_count += 1
 
                         except Exception as error:
-                            error_log_path = os.path.abspath(
-                                os.path.join(os.path.dirname(__file__), "../error_log")
-                            )
                             console.log(f"t3_{submission_id}: [bold red]{error}[/]")
                             console.print_exception()
                             console.save_html(
-                                os.path.join(error_log_path, f"t3_{submission_id}.html")
+                                os.path.join(self.error_log_path, f"t3_{submission_id}.html")
                             )
                             continue
 
@@ -534,13 +553,10 @@ class collect:
                                 total_redditor_inserted_count += redditor_inserted_count
 
                         except Exception as error:
-                            error_log_path = os.path.abspath(
-                                os.path.join(os.path.dirname(__file__), "../error_log")
-                            )
                             console.log(f"t3_{submission.id}: [bold red]{error}[/]")
                             console.print_exception()
                             console.save_html(
-                                os.path.join(error_log_path, f"t3_{submission.id}.html")
+                                os.path.join(self.error_log_path, f"t3_{submission.id}.html")
                             )
                             continue
 
@@ -622,13 +638,10 @@ class collect:
                                 total_redditor_inserted_count += comment_redditor_inserted_count
 
                         except Exception as error:
-                            error_log_path = os.path.abspath(
-                                os.path.join(os.path.dirname(__file__), "../error_log")
-                            )
                             console.log(f"t3_{submission.id}: [bold red]{error}[/]")
                             console.print_exception()
                             console.save_html(
-                                os.path.join(error_log_path, f"t3_{submission.id}.html")
+                                os.path.join(self.error_log_path, f"t3_{submission.id}.html")
                             )
                             continue
 
@@ -678,28 +691,20 @@ class collect:
                                         submission_inserted
                                     )
                             except Exception as error:
-                                error_log_path = os.path.abspath(
-                                    os.path.join(
-                                        os.path.dirname(__file__), "../error_log"
-                                    )
-                                )
                                 console.log(f"t3_{submission_id}: [bold red]{error}[/]")
                                 console.print_exception()
                                 console.save_html(
                                     os.path.join(
-                                        error_log_path, f"t3_{submission_id}.html"
+                                        self.error_log_path, f"t3_{submission_id}.html"
                                     )
                                 )
                                 continue
 
                     except Exception as error:
-                        error_log_path = os.path.abspath(
-                            os.path.join(os.path.dirname(__file__), "../error_log")
-                        )
                         console.log(f"user_{user_name}: [bold red]{error}[/]")
                         console.print_exception()
                         console.save_html(
-                            os.path.join(error_log_path, f"user_{user_name}.html")
+                            os.path.join(self.error_log_path, f"user_{user_name}.html")
                         )
                         continue
         return console.print(
@@ -713,7 +718,7 @@ class collect:
         Collects and stores comments from specified user(s).
 
         Args:
-            user_names (List[str]): A list of Reddit usernames from which to collect comments.
+            user_names (List[str]): A list of Reddit usernames from which to collect comments. Must to user name, not id. 
             sort_types (List[str]): A list of sorting types for user's comments (e.g., 'hot', 'new', 'rising', 'top', 'controversial').
             limit (int, optional): The maximum number of comments to collect for each user. Defaults to 10.
 
@@ -739,13 +744,10 @@ class collect:
                         comment_inserted_count = self.comment_data(comments=comments)[0]
                         total_comment_inserted_count += comment_inserted_count
                     except Exception as error:
-                        error_log_path = os.path.abspath(
-                            os.path.join(os.path.dirname(__file__), "../error_log")
-                        )
                         console.log(f"user_{user_name}: [bold red]{error}[/]")
                         console.print_exception()
                         console.save_html(
-                            os.path.join(error_log_path, f"user_{user_name}.html")
+                            os.path.join(self.error_log_path, f"user_{user_name}.html")
                         )
                         continue
 

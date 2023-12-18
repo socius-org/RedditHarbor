@@ -1,17 +1,16 @@
 import os
 from dotenv import load_dotenv
-
-load_dotenv()
 from supabase import create_client, Client
 import praw
 from rich.console import Console
 
+load_dotenv()
 console = Console()
 
 
 def create_empty_env_file():
     """
-    Create an empty .env file if it does not exist.
+    Create an empty .env file in the root directory of the project if it does not exist.
     """
     if not os.path.isfile(".env"):
         with open(".env", "w") as env_file:
@@ -20,7 +19,7 @@ def create_empty_env_file():
 
 def save_credentials_to_env(service_name: str, credentials: dict):
     """
-    Save credentials to the .env file.
+    Save credentials to the .env file in the root directory of the project.
 
     Parameters:
         service_name (str): Name of the service (e.g., "SUPABASE" or "REDDIT").

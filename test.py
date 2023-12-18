@@ -1,9 +1,10 @@
-from dock.pipeline import collect
+from redditharbor.dock.pipeline import collect
 import redditharbor.login as login 
 import os 
-from utils import download 
+from redditharbor.utils import download 
+from redditharbor.utils import fetch 
 
-# reddit_client = login.reddit()
+reddit_client = login.reddit()
 supabase_client = login.supabase()
 
 DB_CONFIG = {
@@ -12,7 +13,7 @@ DB_CONFIG = {
         "comment": "test_comment",
     }
 
-# collect = collect(reddit=reddit_client, supabase=supabase_client, db_config=DB_CONFIG)
+collect = collect(reddit_client=reddit_client, supabase_client=supabase_client, db_config=DB_CONFIG)
 # collect.subreddit_submission(subreddits=["AskReddit"], sort_types=["new"])
 # collect.subreddit_comment(subreddits=["AskReddit"], sort_types=["new"])
 # collect.subreddit_submission_and_comment(subreddits=["AskReddit"], sort_types=["new"])
@@ -22,12 +23,12 @@ DB_CONFIG = {
 
 # print(os.path.dirname(__file__)) 
 
-# submission_db = supabase_client.table("test_submission")
-
-# print(len(submission_db.select("submission_id").range(1, 1000).execute().dict()["data"]))
-
 # test_columns = ["submission_id", "redditor_id", "created_at", "title", "text"]
 
-download = download.user(supabase_client=supabase_client, db_name="test_redditor")
+# download = download.user(supabase_client=supabase_client, db_name="test_redditor")
 
-download.to_json(columns = "all", file_name="all", file_path="")
+# download.to_json(columns = "all", file_name="all", file_path="")
+
+# fetch = fetch.user(supabase_client=supabase_client, db_name="test_redditor")
+
+# print(fetch.name(limit=10))
