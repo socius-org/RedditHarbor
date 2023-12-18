@@ -3,7 +3,7 @@
 [![Github Stars](https://img.shields.io/github/stars/socius-org/RedditHarbor?logo=github)](https://github.com/socius-org/RedditHarbor)
 [![Github Watchers](https://img.shields.io/github/watchers/socius-org/RedditHarbor?style=flat&logo=github)](https://github.com/socius-org/RedditHarbor)
 
-https://github.com/socius-org/RedditHarbor/assets/130935698/188aa3b2-1da5-45af-9302-82b6685c573e
+https://github.com/socius-org/RedditHarbor/assets/130935698/71780631-a5b4-4e41-bb37-f882f4fc2926
 
 RedditHarbor simplifies collecting Reddit data and saving it to a database. It removes the complexity of working with APIs, letting you easily build a "harbor" of Reddit data for analysis.
 
