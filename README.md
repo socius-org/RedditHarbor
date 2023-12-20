@@ -2,6 +2,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?label=license)](https://opensource.org/licenses/MIT)
 [![Github Stars](https://img.shields.io/github/stars/socius-org/RedditHarbor?logo=github)](https://github.com/socius-org/RedditHarbor)
 [![Github Watchers](https://img.shields.io/github/watchers/socius-org/RedditHarbor?style=flat&logo=github)](https://github.com/socius-org/RedditHarbor)
+[![Github Clones](https://img.shields.io/badge/clones-30%2Fweek-brightgreen)](https://github.com/socius-org/RedditHarbor)
+[![Github Visitors](https://img.shields.io/badge/visitors-225%2Fweek-brightgreen)](https://github.com/socius-org/RedditHarbor)
+
 
 https://github.com/socius-org/RedditHarbor/assets/130935698/71780631-a5b4-4e41-bb37-f882f4fc2926
 
