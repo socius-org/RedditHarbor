@@ -158,7 +158,8 @@ from redditharbor.dock.pipeline import collect
 collect = collect(reddit_client=reddit_client, supabase_client=supabase_client, db_config=DB_CONFIG)
 ```
 
-### Collect Submissions and Users
+### From Subreddits 
+#### Collect Submissions and Users
 
 To collect submissions and associated user data from specified subreddits:
 
@@ -170,7 +171,7 @@ collect.subreddit_submission(subreddits, sort_types, limit=5)
 
 This will collect the 5 hottest and 5 top submissions from r/python and r/learnpython, along with the associated user data, and store them in the configured database tables.
 
-### Collect Comments and Users
+#### Collect Comments and Users
 
 Similarly, to collect comments and users:
 
@@ -180,7 +181,7 @@ collect.subreddit_comment(subreddits, sort_types, limit=5, level=2)
 
 This will collect comments from the 5 hottest and 5 top submissions from the specified subreddits, up to a depth of 2 reply levels.
 
-### Collect Submissions, Comments and Users
+#### Collect Submissions, Comments and Users
 
 To collect submissions, associated comments and users in one go:
 
@@ -188,7 +189,8 @@ To collect submissions, associated comments and users in one go:
 collect.subreddit_submission_and_comment(subreddits, sort_types, limit=5, level=2)
 ```
 
-### Collect User Submissions
+### From Users 
+#### Collect User Submissions
 
 To collect submissions made by specified users, you have to "fetch" user names from existing database:
 
@@ -202,7 +204,7 @@ collect.submission_from_user(users, sort_types, limit=10)
 
 This will collect 10 most controversial submissions from the specified users. 
 
-### Collect User Comments
+#### Collect User Comments
 
 And to collect comments:
 
