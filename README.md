@@ -1,7 +1,8 @@
 # RedditHarbor
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?label=license)](https://opensource.org/licenses/MIT)
-[![Github Stars](https://img.shields.io/github/stars/socius-org/RedditHarbor?logo=github)](https://github.com/socius-org/RedditHarbor)
-[![Github Watchers](https://img.shields.io/github/watchers/socius-org/RedditHarbor?style=flat&logo=github)](https://github.com/socius-org/RedditHarbor)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square&label=license)](https://opensource.org/licenses/MIT)
+[![Github Stars](https://img.shields.io/github/stars/socius-org/RedditHarbor?style=flat-square&logo=github)](https://github.com/socius-org/RedditHarbor)
+[![Github Watchers](https://img.shields.io/github/watchers/socius-org/RedditHarbor?style=flat-square&logo=github)](https://github.com/socius-org/RedditHarbor)
+![PyPI - Downloads](https://img.shields.io/pypi/dw/redditharbor?style=flat-square&logo=python)
 
 https://github.com/socius-org/RedditHarbor/assets/130935698/71780631-a5b4-4e41-bb37-f882f4fc2926
 
@@ -10,9 +11,8 @@ RedditHarbor simplifies collecting Reddit data and saving it to a database. It r
 | Status | Stability | Goal |
 | ------ | ------ | ---- |
 | ✅ | Alpha | Test and collect feedbacks with a closed set of academic researchers |
-| 🚧 | Public Alpha | Open to academic researchers. Publish python package. |
-| ❌ | Public Beta | Stability and Flexibility. |
-| ❌ | Public | Production-ready. |
+| 🚧 | Beta | Open to academic researchers. Publish python package. |
+| ❌ | Public | Production-ready. Stability and Flexibility|
 
 ## Introduction 
 
@@ -158,7 +158,8 @@ from redditharbor.dock.pipeline import collect
 collect = collect(reddit_client=reddit_client, supabase_client=supabase_client, db_config=DB_CONFIG)
 ```
 
-### Collect Submissions and Users
+### From Subreddits 
+#### Collect Submissions and Users
 
 To collect submissions and associated user data from specified subreddits:
 
@@ -170,7 +171,7 @@ collect.subreddit_submission(subreddits, sort_types, limit=5)
 
 This will collect the 5 hottest and 5 top submissions from r/python and r/learnpython, along with the associated user data, and store them in the configured database tables.
 
-### Collect Comments and Users
+#### Collect Comments and Users
 
 Similarly, to collect comments and users:
 
@@ -180,7 +181,7 @@ collect.subreddit_comment(subreddits, sort_types, limit=5, level=2)
 
 This will collect comments from the 5 hottest and 5 top submissions from the specified subreddits, up to a depth of 2 reply levels.
 
-### Collect Submissions, Comments and Users
+#### Collect Submissions, Comments and Users
 
 To collect submissions, associated comments and users in one go:
 
@@ -188,7 +189,8 @@ To collect submissions, associated comments and users in one go:
 collect.subreddit_submission_and_comment(subreddits, sort_types, limit=5, level=2)
 ```
 
-### Collect User Submissions
+### From Users 
+#### Collect User Submissions
 
 To collect submissions made by specified users, you have to "fetch" user names from existing database:
 
@@ -202,7 +204,7 @@ collect.submission_from_user(users, sort_types, limit=10)
 
 This will collect 10 most controversial submissions from the specified users. 
 
-### Collect User Comments
+#### Collect User Comments
 
 And to collect comments:
 
