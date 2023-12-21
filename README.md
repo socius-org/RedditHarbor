@@ -22,11 +22,12 @@ Social media data from platforms like Reddit contains rich insights into human b
 
 In plain language:
 
-- It connects to the Reddit API and downloads posts, comments etc.
-- It then stores this data in an organized database (Supabase)
-- You can then access the database to analyze the data for your research
+- It connects to the Reddit API and downloads submissions, comments, user profiles etc.
+- It automatically **anonymises any personally identifiable information (PII)** to protect user privacy and comply with IRBs
+- It then stores this data in an organized database (Supabase) that you control
+- You can then export the database to CSV/JSON formats for your analysis 
 
-No coding required after the initial setup!
+Minimum coding required after the initial setup! The tool is designed specifically for researchers with limited coding backgrounds. 
 
 ## Prerequisites
 
