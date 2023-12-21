@@ -41,7 +41,9 @@ No coding required after the initial setup!
 Install the RedditHarbor package using pip:
 
 ```
-pip install redditharbor #requires Python 3.9 or higher
+ #requires Python 3.9 or higher
+pip install redditharbor
+pip install redditharbor[pii]
 ```
 
 ### Setting Up Supabase Tables 

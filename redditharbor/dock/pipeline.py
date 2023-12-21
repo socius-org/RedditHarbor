@@ -5,9 +5,14 @@ import praw
 import supabase
 from rich.console import Console
 from rich.traceback import install
+from presidio_analyzer import AnalyzerEngine
+from presidio_anonymizer import AnonymizerEngine
 
 console = Console(record=True)
 install()
+
+pii_analyzer = AnalyzerEngine()
+pii_anonymizer = AnonymizerEngine()
 
 class collect:
     def __init__(
@@ -187,7 +192,7 @@ class collect:
         return redditor_id, redditor_inserted
 
     def submission_data(
-        self, submission: praw.models.reddit.submission.Submission
+        self, submission: praw.models.reddit.submission.Submission, mask_pii: bool
     ) -> Tuple[str, int, int]:
         """
         Collects and stores submissions and associated users in a specified subreddit.
@@ -226,7 +231,14 @@ class collect:
             redditor_id, redditor_inserted = self.redditor_data(submission)
             created_at = datetime.datetime.fromtimestamp(submission.created_utc)
             title = submission.title
+            
             selftext = submission.selftext
+            if mask_pii is True: 
+                #presidio assums you know what language you are sending to it. 
+                #consider using a language detection mechanism, or user to set language
+                pii_results = pii_analyzer.analyze(text=selftext, language="en")
+                selftext = pii_anonymizer.anonymize(text=selftext, analyzer_results=pii_results)
+            
             subreddit = submission.subreddit.display_name
             permalink = "https://www.reddit.com" + submission.permalink
 
@@ -348,7 +360,7 @@ class collect:
         return submission_id, submission_inserted, redditor_inserted
 
     def comment_data(
-        self, comments: List[praw.models.reddit.comment.Comment]
+        self, comments: List[praw.models.reddit.comment.Comment], mask_pii: bool
     ) -> Tuple[int, int]:
         """
         Collects and stores comment data associated with a list of comments.
@@ -395,6 +407,9 @@ class collect:
                     created_at = datetime.datetime.fromtimestamp(comment.created_utc)
 
                     selfbody = comment.body
+                    if mask_pii is True: 
+                        pii_results = pii_analyzer.analyze(text=selfbody, language="en")
+                        selfbody = pii_anonymizer.anonymize(text=selfbody, analyzer_results=pii_results)
                     removed = None
 
                     if comment.edited is False:
@@ -439,7 +454,7 @@ class collect:
         return comment_inserted_count, redditor_inserted_count
 
     def subreddit_submission(
-        self, subreddits: List[str], sort_types: List[str], limit: int = 10
+        self, subreddits: List[str], sort_types: List[str], limit: int = 10, mask_pii: bool = True
     ) -> None:
         """
         Lazy collection. Collects and stores submissions and associated users in specified subreddits.
@@ -448,6 +463,7 @@ class collect:
             subreddits (List[str]): A list of subreddit names to collect submissions from.
             sort_types (List[str]): A list of sorting types for submissions (e.g., 'hot', 'new', 'rising', 'top', 'controversial').
             limit (int, optional): The maximum number of submissions to collect for each subreddit. Defaults to 10. Set to None to fetch maximum number of submissions. 
+            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to True.
 
         Returns:
             None. Prints the count of collected submissions and user data to the console.
@@ -470,7 +486,7 @@ class collect:
                                 submission_id,
                                 submission_inserted,
                                 redditor_inserted,
-                            ) = self.submission_data(submission=submission)
+                            ) = self.submission_data(submission=submission, mask_pii=mask_pii)
 
                             if submission_inserted is True:
                                 total_submission_inserted_count += 1
@@ -495,6 +511,7 @@ class collect:
         sort_types: List[str],
         limit: int = 10,
         level: int = 1,
+        mask_pii: bool = True 
     ) -> None:
         """
         Lazy collection. Collects and stores comments and associated users in specified subreddits.
@@ -504,6 +521,7 @@ class collect:
             sort_types (List[str]): A list of sorting types for submissions (e.g., 'hot', 'new', 'rising', 'top', 'controversial').
             limit (int, optional): The maximum number of submissions to collect comments from (for each subreddit). Defaults to 10. Set to None to fetch maximum number of submissions. 
             level (int, optional): The depth to which comment replies should be fetched. Defaults to 1. Set to None to fetch all comment replies. 
+            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to True.
 
         Returns:
             None. Prints the count of collected comments and user data to the console.
@@ -548,7 +566,7 @@ class collect:
                                 (
                                     comment_inserted_count,
                                     redditor_inserted_count,
-                                ) = self.comment_data(comments=comments)
+                                ) = self.comment_data(comments=comments, mask_pii=mask_pii)
                                 total_comment_inserted_count += comment_inserted_count
                                 total_redditor_inserted_count += redditor_inserted_count
 
@@ -570,6 +588,7 @@ class collect:
         sort_types: List[str],
         limit: int = 10,
         level: int = 1,
+        mask_pii: bool = True 
     ) -> None:
         """
         Lazy collection. Collects and stores submissions, comments and associated users in specified subreddits.
@@ -579,6 +598,7 @@ class collect:
             sort_types (List[str]): A list of sorting types for submissions (e.g., 'hot', 'new', 'rising', 'top', 'controversial').
             limit (int, optional): The maximum number of submissions to collect comments from (for each subreddit). Defaults to 10. Set to None to fetch maximum number of submissions. 
             level (int, optional): The depth to which comment replies should be fetched. Defaults to 1. Set to None to fetch all comment replies. 
+            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to True.
 
         Returns:
             None. Prints the count of collected submissions, comments and user data to the console.
@@ -604,7 +624,7 @@ class collect:
                                 submission_id,
                                 submission_inserted,
                                 submission_redditor_inserted,
-                            ) = self.submission_data(submission=submission)
+                            ) = self.submission_data(submission=submission, mask_pii=mask_pii)
                             
                             if submission_inserted is True: 
                                 total_submission_inserted_count += 1 
@@ -633,7 +653,7 @@ class collect:
                                 (
                                     comment_inserted_count,
                                     comment_redditor_inserted_count,
-                                ) = self.comment_data(comments=comments)
+                                ) = self.comment_data(comments=comments, mask_pii=mask_pii)
                                 total_comment_inserted_count += comment_inserted_count
                                 total_redditor_inserted_count += comment_redditor_inserted_count
 
@@ -650,7 +670,7 @@ class collect:
         )
 
     def submission_from_user(
-        self, user_names: List[str], sort_types: List[str], limit: int = 10
+        self, user_names: List[str], sort_types: List[str], limit: int = 10, mask_pii: bool = True 
     ) -> None:
         """
         Collects and stores submissions from specified user(s).
@@ -659,6 +679,7 @@ class collect:
             user_names (List[str]): A list of Reddit usernames from which to collect submissions.
             sort_types (List[str]): A list of sorting types for user's submissions (e.g., 'hot', 'new', 'rising', 'top', 'controversial').
             limit (int, optional): The maximum number of submissions to collect for each user. Defaults to 10.
+            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to True.
 
         Returns:
             None. Prints the count of collected submission data to the console.
@@ -685,7 +706,7 @@ class collect:
                                 (
                                     submission_id,
                                     submission_inserted,
-                                ) = self.submission_data(submission=submission)[:2]
+                                ) = self.submission_data(submission=submission, mask_pii=mask_pii)[:2]
                                 if submission_inserted is True:
                                     total_submission_inserted_count += (
                                         submission_inserted
@@ -712,7 +733,7 @@ class collect:
         )
 
     def comment_from_user(
-        self, user_names: List[str], sort_types: List[str], limit: int = 10
+        self, user_names: List[str], sort_types: List[str], limit: int = 10, mask_pii: bool = True 
     ) -> None:
         """
         Collects and stores comments from specified user(s).
@@ -721,6 +742,7 @@ class collect:
             user_names (List[str]): A list of Reddit usernames from which to collect comments. Must to user name, not id. 
             sort_types (List[str]): A list of sorting types for user's comments (e.g., 'hot', 'new', 'rising', 'top', 'controversial').
             limit (int, optional): The maximum number of comments to collect for each user. Defaults to 10.
+            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to True.
 
         Returns:
             None. Prints the count of collected comment data to the console.
@@ -741,7 +763,7 @@ class collect:
                                 limit=limit
                             )
                         ]
-                        comment_inserted_count = self.comment_data(comments=comments)[0]
+                        comment_inserted_count = self.comment_data(comments=comments, mask_pii=mask_pii)[0]
                         total_comment_inserted_count += comment_inserted_count
                     except Exception as error:
                         console.log(f"user_{user_name}: [bold red]{error}[/]")
