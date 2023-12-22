@@ -1,13 +1,13 @@
 import os
+import logging.config 
 from dotenv import load_dotenv
 from supabase import create_client, Client
 import praw
 from rich.console import Console
 
+console = Console(record=True)
 load_dotenv()
-console = Console()
-
-
+ 
 def create_empty_env_file():
     """
     Create an empty .env file in the root directory of the project if it does not exist.

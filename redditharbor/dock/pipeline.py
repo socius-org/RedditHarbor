@@ -1,4 +1,5 @@
 import os
+import logging.config
 from typing import List, Tuple
 import datetime
 import praw
@@ -10,6 +11,11 @@ from presidio_anonymizer import AnonymizerEngine
 
 console = Console(record=True)
 install()
+
+logging.config.dictConfig({
+    "version": 1, 
+    "disable_existing_loggers": True
+})
 
 pii_analyzer = AnalyzerEngine()
 pii_anonymizer = AnonymizerEngine()
@@ -236,7 +242,7 @@ class collect:
             if mask_pii is True: 
                 #presidio assums you know what language you are sending to it. 
                 #consider using a language detection mechanism, or user to set language
-                pii_results = pii_analyzer.analyze(text=selftext, language="en")
+                pii_results = pii_analyzer.analyze(text=selftext, language="en", return_decision_process=False)
                 selftext = pii_anonymizer.anonymize(text=selftext, analyzer_results=pii_results).text
             
             subreddit = submission.subreddit.display_name
@@ -408,7 +414,7 @@ class collect:
 
                     selfbody = comment.body
                     if mask_pii is True: 
-                        pii_results = pii_analyzer.analyze(text=selfbody, language="en")
+                        pii_results = pii_analyzer.analyze(text=selfbody, language="en", return_decision_process=False)
                         selfbody = pii_anonymizer.anonymize(text=selfbody, analyzer_results=pii_results).text
                     removed = None
 
