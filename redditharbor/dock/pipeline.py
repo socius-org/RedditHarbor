@@ -228,7 +228,7 @@ class collect:
                 )
             )
 
-            redditor_id, redditor_inserted = self.redditor_data(submission)
+            redditor_id, redditor_inserted = self.redditor_data(submission) #consider not saving if redditor_id is "deleted"
             created_at = datetime.datetime.fromtimestamp(submission.created_utc)
             title = submission.title
             
@@ -237,7 +237,7 @@ class collect:
                 #presidio assums you know what language you are sending to it. 
                 #consider using a language detection mechanism, or user to set language
                 pii_results = pii_analyzer.analyze(text=selftext, language="en")
-                selftext = pii_anonymizer.anonymize(text=selftext, analyzer_results=pii_results)
+                selftext = pii_anonymizer.anonymize(text=selftext, analyzer_results=pii_results).text
             
             subreddit = submission.subreddit.display_name
             permalink = "https://www.reddit.com" + submission.permalink
@@ -400,7 +400,7 @@ class collect:
                     link_id = comment.link_id.replace("t3_", "")
                     subreddit = str(comment.subreddit)
                     parent_id = comment.parent_id
-                    redditor_id, redditor_inserted = self.redditor_data(comment)
+                    redditor_id, redditor_inserted = self.redditor_data(comment) #consider not saving if redditor_id is "deleted"
                     if redditor_inserted is True:
                         redditor_inserted_count += 1
 
@@ -409,7 +409,7 @@ class collect:
                     selfbody = comment.body
                     if mask_pii is True: 
                         pii_results = pii_analyzer.analyze(text=selfbody, language="en")
-                        selfbody = pii_anonymizer.anonymize(text=selfbody, analyzer_results=pii_results)
+                        selfbody = pii_anonymizer.anonymize(text=selfbody, analyzer_results=pii_results).text
                     removed = None
 
                     if comment.edited is False:
@@ -443,12 +443,9 @@ class collect:
                     comment_inserted_count += 1
 
             except Exception as error:
-                error_log_path = os.path.abspath(
-                    os.path.join(os.path.dirname(__file__), "../error_log")
-                )
                 console.log(f"t1_{comment.id}: [bold red]{error}[/]")
                 console.print_exception()
-                console.save_html(os.path.join(error_log_path, f"t1_{comment.id}.html"))
+                console.save_html(os.path.join(self.error_log_path, f"t1_{comment.id}.html"))
                 continue
 
         return comment_inserted_count, redditor_inserted_count

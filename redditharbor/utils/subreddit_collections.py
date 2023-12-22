@@ -283,3 +283,8 @@ r_Crypto = [
     "ethereum", 
     "EthTrader"
 ]
+
+r_ApprovalNeeded = [
+    "SuicideWatch", #Guideline #7: Surveys and research participation requests must be pre-approved by the mod team. Posts we have okayed will be flaired.
+    "mentalhealth" #Rules #8: No surveys permitted on the subreddit as of November 2nd, 2023 due to the sheer amount of requests we receive. Please contact the moderation team through Modmail about your research study prior to posting. Posts without permission will be removed.
+]

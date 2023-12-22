@@ -1,7 +1,7 @@
 # from redditharbor.dock.pipeline import collect
 # import redditharbor.login as login 
-from rich.console import Console 
-console = Console()
+# from rich.console import Console 
+# console = Console()
 # from redditharbor.utils import download 
 # from redditharbor.utils import fetch 
 
@@ -17,7 +17,7 @@ console = Console()
 # collect = collect(reddit_client=reddit_client, supabase_client=supabase_client, db_config=DB_CONFIG)
 # collect.subreddit_submission(subreddits=["AskReddit"], sort_types=["new"])
 # collect.subreddit_comment(subreddits=["AskReddit"], sort_types=["new"])
-# collect.subreddit_submission_and_comment(subreddits=["AskReddit"], sort_types=["new"])
+# collect.subreddit_submission_and_comment(subreddits=["stocks"], sort_types=["new"], mask_pii=False)
 
 # collect.comment_from_user(user_names=["WorldNewsMods", "AcademicPattern2737", "EveningGalaxy"], sort_types=["hot"])
 # collect.submission_from_user(user_names=["WorldNewsMods", "AcademicPattern2737", "EveningGalaxy"], sort_types=["hot"])
@@ -37,7 +37,7 @@ console = Console()
 from presidio_analyzer import AnalyzerEngine
 from presidio_anonymizer import AnonymizerEngine
 
-text="James Bond's mobile number is 212-555-5555"
+text="James Bond's phone number is 212-555-5555"
 
 # Set up the engine, loads the NLP module (spaCy model by default) 
 # and other PII recognizers
@@ -46,13 +46,10 @@ analyzer = AnalyzerEngine()
 # Call analyzer to get results
 results = analyzer.analyze(text=text,
                            language='en')
-
-console.print("Results: ", results)
-
 # Analyzer results are passed to the AnonymizerEngine for anonymization
 
 anonymizer = AnonymizerEngine()
 
-anonymized_text = anonymizer.anonymize(text=text, analyzer_results=results)
+anonymized_text = anonymizer.anonymize(text=text,analyzer_results=results).text
 
-console.print(anonymized_text.text)
+print(anonymized_text)
