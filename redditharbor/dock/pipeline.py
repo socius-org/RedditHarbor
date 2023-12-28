@@ -457,7 +457,7 @@ class collect:
         return comment_inserted_count, redditor_inserted_count
 
     def subreddit_submission(
-        self, subreddits: List[str], sort_types: List[str], limit: int = 10, mask_pii: bool = True
+        self, subreddits: List[str], sort_types: List[str], limit: int = 10, mask_pii: bool = False
     ) -> None:
         """
         Lazy collection. Collects and stores submissions and associated users in specified subreddits.
@@ -466,7 +466,7 @@ class collect:
             subreddits (List[str]): A list of subreddit names to collect submissions from.
             sort_types (List[str]): A list of sorting types for submissions (e.g., 'hot', 'new', 'rising', 'top', 'controversial').
             limit (int, optional): The maximum number of submissions to collect for each subreddit. Defaults to 10. Set to None to fetch maximum number of submissions. 
-            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to True.
+            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to False.
 
         Returns:
             None. Prints the count of collected submissions and user data to the console.
@@ -514,7 +514,7 @@ class collect:
         sort_types: List[str],
         limit: int = 10,
         level: int = 1,
-        mask_pii: bool = True 
+        mask_pii: bool = False 
     ) -> None:
         """
         Lazy collection. Collects and stores comments and associated users in specified subreddits.
@@ -524,7 +524,7 @@ class collect:
             sort_types (List[str]): A list of sorting types for submissions (e.g., 'hot', 'new', 'rising', 'top', 'controversial').
             limit (int, optional): The maximum number of submissions to collect comments from (for each subreddit). Defaults to 10. Set to None to fetch maximum number of submissions. 
             level (int, optional): The depth to which comment replies should be fetched. Defaults to 1. Set to None to fetch all comment replies. 
-            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to True.
+            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to False.
 
         Returns:
             None. Prints the count of collected comments and user data to the console.
@@ -591,7 +591,7 @@ class collect:
         sort_types: List[str],
         limit: int = 10,
         level: int = 1,
-        mask_pii: bool = True 
+        mask_pii: bool = False 
     ) -> None:
         """
         Lazy collection. Collects and stores submissions, comments and associated users in specified subreddits.
@@ -601,7 +601,7 @@ class collect:
             sort_types (List[str]): A list of sorting types for submissions (e.g., 'hot', 'new', 'rising', 'top', 'controversial').
             limit (int, optional): The maximum number of submissions to collect comments from (for each subreddit). Defaults to 10. Set to None to fetch maximum number of submissions. 
             level (int, optional): The depth to which comment replies should be fetched. Defaults to 1. Set to None to fetch all comment replies. 
-            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to True.
+            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to False.
 
         Returns:
             None. Prints the count of collected submissions, comments and user data to the console.
@@ -673,7 +673,7 @@ class collect:
         )
 
     def submission_from_user(
-        self, user_names: List[str], sort_types: List[str], limit: int = 10, mask_pii: bool = True 
+        self, user_names: List[str], sort_types: List[str], limit: int = 10, mask_pii: bool = False
     ) -> None:
         """
         Collects and stores submissions from specified user(s).
@@ -682,7 +682,7 @@ class collect:
             user_names (List[str]): A list of Reddit usernames from which to collect submissions.
             sort_types (List[str]): A list of sorting types for user's submissions (e.g., 'hot', 'new', 'rising', 'top', 'controversial').
             limit (int, optional): The maximum number of submissions to collect for each user. Defaults to 10.
-            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to True.
+            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to False.
 
         Returns:
             None. Prints the count of collected submission data to the console.
@@ -745,7 +745,7 @@ class collect:
             user_names (List[str]): A list of Reddit usernames from which to collect comments. Must to user name, not id. 
             sort_types (List[str]): A list of sorting types for user's comments (e.g., 'hot', 'new', 'rising', 'top', 'controversial').
             limit (int, optional): The maximum number of comments to collect for each user. Defaults to 10.
-            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to True.
+            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to False.
 
         Returns:
             None. Prints the count of collected comment data to the console.
