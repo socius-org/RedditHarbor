@@ -16,14 +16,14 @@ RedditHarbor simplifies collecting Reddit data and saving it to a database. It r
 
 ## Introduction 
 
-Social media data from platforms like Reddit contains rich insights into human behavior and beliefs. However, collecting and storing this data requires dealing with complex APIs.
+Social media data from platforms like Reddit contains rich insights into human behaviour and beliefs. However, collecting and storing this data requires dealing with complex APIs.
 
 **RedditHarbor streamlines this entire process so you can focus on your research.**
 
 In plain language:
 
 - It connects to the Reddit API and downloads submissions, comments, user profiles etc.
-- It automatically **anonymises any personally identifiable information (PII)** to protect user privacy and comply with IRBs
+- It allows **anonymising any personally identifiable information (PII)** to protect user privacy and comply with IRBs
 - It then stores this data in an organized database (Supabase) that you control
 - You can then export the database to CSV/JSON formats for your analysis 
 
@@ -170,7 +170,17 @@ sort_types = ["hot", "top"]
 collect.subreddit_submission(subreddits, sort_types, limit=5)
 ```
 
-This will collect the 5 hottest and 5 top submissions from r/python and r/learnpython, along with the associated user data, and store them in the configured database tables.
+This will collect the 5 hottest and 5 top submissions from r/python and r/learnpython, along with the associated user data, and store them in the configured database tables. If you would like to anonymise any pii data, set `mask_pii` as True. 
+
+```python
+collect.subreddit_submission(subreddits, sort_types, limit=5, mask_pii=True)
+```
+
+> **📝 Supported PII entities:**
+> 
+> PII is identified and anonymised with Microsoft's [presidio](https://microsoft.github.io/presidio/). Setting `mask_pii` as True will automatically mask [12+ pii entities](https://microsoft.github.io/presidio/supported_entities/) such as `<PERSON>`, `<PHONE NUMBER>` and `<EMAIL_ADDRESS>`.
+>
+> While PII is anonymized rigorously to protect privacy, this may inadvertently obscure some entities required for research. For example, "Including food and energy costs, so-called headline PCE actually fell 0.1% on the month and was up just 2.6% from a year ago." will be saved as "Including food and energy costs, so-called headline PCE actually fell 0.1% on <DATE_TIME> and was up just 2.6% from <DATE_TIME>." 
 
 #### Collect Comments and Users
 
@@ -196,11 +206,11 @@ collect.subreddit_submission_and_comment(subreddits, sort_types, limit=5, level=
 To collect submissions made by specified users, you have to "fetch" user names from existing database:
 
 ```python
-from redditharbor.utils import fetch 
+from redditharbor.utils import fetch
+
 fetch_user = fetch.user(supabase_client=supabase_client, db_name=DB_CONFIG["user"])
 users = fetch_user.name(limit=100) #This will fetch the first 100 user names from the user database 
-sort_types = ["controversial"]
-collect.submission_from_user(users, sort_types, limit=10)
+collect.submission_from_user(users=users, sort_types=["controversial"], limit=10)
 ```
 
 This will collect 10 most controversial submissions from the specified users. 
@@ -210,10 +220,10 @@ This will collect 10 most controversial submissions from the specified users.
 And to collect comments:
 
 ```python
-collect.comment_from_user(users, sort_types, limit=10) 
+collect.comment_from_user(users=users, sort_types=["new"], limit=10) 
 ```
 
-This will collect 10 most controversial comments from the specified users. 
+This will collect 10 most recent comments from the specified users. 
 
 ## Downloading Data
 
