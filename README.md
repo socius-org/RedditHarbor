@@ -2,7 +2,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square&label=license)](https://opensource.org/licenses/MIT)
 [![Github Stars](https://img.shields.io/github/stars/socius-org/RedditHarbor?style=flat-square&logo=github)](https://github.com/socius-org/RedditHarbor)
 [![Github Watchers](https://img.shields.io/github/watchers/socius-org/RedditHarbor?style=flat-square&logo=github)](https://github.com/socius-org/RedditHarbor)
-![PyPI - Downloads](https://img.shields.io/pypi/dw/redditharbor?style=flat-square&logo=python)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/redditharbor?style=flat-square&logo=python)
 
 https://github.com/socius-org/RedditHarbor/assets/130935698/71780631-a5b4-4e41-bb37-f882f4fc2926
 
