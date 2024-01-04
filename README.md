@@ -12,7 +12,7 @@ RedditHarbor simplifies collecting Reddit data and saving it to a database. It r
 | ------ | ------ | ---- |
 | ✅ | Alpha | Test and collect feedbacks with a closed set of academic researchers |
 | 🚧 | Beta | Open to academic researchers. Publish python package. |
-| ❌ | Public | Production-ready. Stability and Flexibility|
+| ❌ | Public | Production-ready. Stability and Flexibility.|
 
 ## Introduction 
 
@@ -180,7 +180,7 @@ collect.subreddit_submission(subreddits, sort_types, limit=5, mask_pii=True)
 > 
 > PII is identified and anonymised with Microsoft's [presidio](https://microsoft.github.io/presidio/). Setting `mask_pii` as True will automatically mask [12+ pii entities](https://microsoft.github.io/presidio/supported_entities/) such as `<PERSON>`, `<PHONE NUMBER>` and `<EMAIL_ADDRESS>`.
 >
-> While PII is anonymized rigorously to protect privacy, this may inadvertently obscure some entities required for research. For example, "Including food and energy costs, so-called headline PCE actually fell 0.1% on the month and was up just 2.6% from a year ago." will be saved as "Including food and energy costs, so-called headline PCE actually fell 0.1% on <DATE_TIME> and was up just 2.6% from <DATE_TIME>." 
+> ⚠️ *While PII is anonymized rigorously to protect privacy, this may inadvertently obscure some entities required for research. For example, "Including food and energy costs, so-called headline PCE actually fell 0.1% on the month and was up just 2.6% from a year ago." will be saved as "Including food and energy costs, so-called headline PCE actually fell 0.1% on <DATE_TIME> and was up just 2.6% from <DATE_TIME>."* 
 
 #### Collect Comments and Users
 
