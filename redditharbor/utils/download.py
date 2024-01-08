@@ -106,7 +106,7 @@ class submission:
             None. Prints the number of rows downloaded and the number of .pickle files created.
         """
         save_file_path = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), f"../{file_path}")
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
         )
         if isinstance(columns, str):
             if columns.lower() == "all":
@@ -164,7 +164,7 @@ class submission:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), f"../{file_path}")
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -229,7 +229,7 @@ class submission:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), f"../{file_path}")
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -293,7 +293,7 @@ class submission:
         """
         # Similar to to_csv but saving to JSON format
         save_file_path = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), f"../{file_path}")
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -347,7 +347,7 @@ class submission:
         """
         # Similar to to_csv but saving to JSON format
         save_file_path = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), f"../{file_path}")
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
         )
         os.makedirs(save_file_path, exist_ok=True)
         
@@ -485,7 +485,7 @@ class comment:
             None. Prints the number of rows downloaded and the number of .pickle files created.
         """
         save_file_path = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), f"../{file_path}")
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
         )
         if isinstance(columns, str):
             if columns.lower() == "all":
@@ -543,7 +543,7 @@ class comment:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), f"../{file_path}")
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -608,7 +608,7 @@ class comment:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), f"../{file_path}")
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -672,7 +672,7 @@ class comment:
         """
         # Similar to to_csv but saving to JSON format
         save_file_path = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), f"../{file_path}")
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -794,7 +794,7 @@ class user:
             None. Prints the number of rows downloaded and the number of .pickle files created.
         """
         save_file_path = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), f"../{file_path}")
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
         )
         if isinstance(columns, str):
             if columns.lower() == "all":
@@ -852,7 +852,7 @@ class user:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), f"../{file_path}")
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -917,7 +917,7 @@ class user:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), f"../{file_path}")
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -981,7 +981,7 @@ class user:
         """
         # Similar to to_csv but saving to JSON format
         save_file_path = os.path.abspath(
-            os.path.join(os.path.abspath(__file__), f"../{file_path}")
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
         )
 
         if isinstance(columns, str):

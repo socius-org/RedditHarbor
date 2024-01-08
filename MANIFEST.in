@@ -1,5 +1,5 @@
 recursive-include redditharbor *
 
-exclude redditharbor\__pycache__\*
-exclude redditharbor\dock\__pycache__\*
-exclude redditharbor\utils\__pycache__\*
+exclude redditharbor/__pycache__/*
+exclude redditharbor/dock/__pycache__/*
+exclude redditharbor/utils/__pycache__/*

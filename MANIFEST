@@ -7,5 +7,6 @@ redditharbor\dock\__init__.py
 redditharbor\dock\pipeline.py
 redditharbor\utils\__init__.py
 redditharbor\utils\download.py
+redditharbor\utils\fetch.py
 redditharbor\utils\metrics.py
 redditharbor\utils\subreddit_collections.py
