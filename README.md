@@ -253,6 +253,17 @@ download.to_json(columns = cols, file_name="submission", file_path="<your-folder
 
 This will save columns "submission_id", "title" and "score" from the submission table to a submissions.json file(s) in the "/<your-folder-name>" directory.
 
+### Download Images from Submissions
+
+To download image files from the submission data: 
+
+```python
+download = download.submission(supabase_client, DB_CONFIG["submission"])
+download.to_img(file_path="<your-folder-name>")
+```
+
+This will save all .jpg and .png files of the submissions table in the "/<your-folder-name>" directory.
+
 ### Download Comments
 
 Similarly, for comments:
