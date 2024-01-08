@@ -45,6 +45,8 @@ class submission:
                 The default limit to the amount of rows returned is 1,000 in Supabase.
             
         """
+        self.cwd = os.getcwd()
+        
         self.supabase = supabase_client
         self.submission_db_config = db_name
         self.submission_db = self.supabase.table(self.submission_db_config)
@@ -90,7 +92,7 @@ class submission:
             self.page_size = self.paginate.get("page_size", 1000)
             self.page_numbers = (self.row_count // self.page_size) + (1 if self.row_count % self.page_size != 0 else 0)
 
-    def to_pkl(self, columns: List[str] or str, file_name: str, file_path: str = ""):
+    def to_pkl(self, columns: List[str] or str, file_name: str, file_path: str = "submission_exports"):
         """
         Save Supabase data to multiple .pickle files.
 
@@ -106,8 +108,10 @@ class submission:
             None. Prints the number of rows downloaded and the number of .pickle files created.
         """
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
+            os.path.join(self.cwd, f"../{file_path}")
         )
+        
+        os.makedirs(save_file_path, exist_ok=True)
         if isinstance(columns, str):
             if columns.lower() == "all":
                 columns = "*"
@@ -147,7 +151,7 @@ class submission:
             f"{self.row_count} rows downloaded and saved in {self.page_numbers - 1} pickle files"
         )
 
-    def to_csv(self, columns: List[str] or str, file_name: str, file_path: str = ""):
+    def to_csv(self, columns: List[str] or str, file_name: str, file_path: str = "submission_exports"):
         """
         Save Supabase data to a .csv file.
 
@@ -164,8 +168,10 @@ class submission:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
+            os.path.join(self.cwd, f"../{file_path}")
         )
+        
+        os.makedirs(save_file_path, exist_ok=True)
 
         if isinstance(columns, str):
             if columns.lower() == "all":
@@ -212,7 +218,7 @@ class submission:
             f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.csv"
         )
 
-    def to_txt(self, columns: List[str] or str, file_name: str, file_path: str = ""):
+    def to_txt(self, columns: List[str] or str, file_name: str, file_path: str = "submission_exports"):
         """
         Save Supabase data to a .txt file.
 
@@ -229,8 +235,10 @@ class submission:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
+            os.path.join(self.cwd, f"../{file_path}")
         )
+        
+        os.makedirs(save_file_path, exist_ok=True)
 
         if isinstance(columns, str):
             if columns.lower() == "all":
@@ -276,7 +284,7 @@ class submission:
             f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.txt"
         )
 
-    def to_json(self, columns: List[str] or str, file_name: str, file_path: str = ""):
+    def to_json(self, columns: List[str] or str, file_name: str, file_path: str = "submission_exports"):
         """
         Save Supabase data to multiple .json files.
 
@@ -293,8 +301,10 @@ class submission:
         """
         # Similar to to_csv but saving to JSON format
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
+            os.path.join(self.cwd, f"../{file_path}")
         )
+        
+        os.makedirs(save_file_path, exist_ok=True)
 
         if isinstance(columns, str):
             if columns.lower() == "all":
@@ -335,7 +345,7 @@ class submission:
             f"{self.row_count} rows downloaded and saved in {self.page_numbers - 1} json files"
         )
     
-    def to_img(self, file_path: str = ""):
+    def to_img(self, file_path: str = "submission_exports"):
         """
         Save image data in submissions to .jpeg or .png files. Ignores all other columns. 
 
@@ -345,20 +355,19 @@ class submission:
         Returns:
             None. Prints the number of images downloaded.
         """
-        # Similar to to_csv but saving to JSON format
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
+            os.path.join(self.cwd, f"../{file_path}")
         )
+        
         os.makedirs(save_file_path, exist_ok=True)
         
         success, fail = 0, 0 
         failed_urls = list()
         start_row, end_row = 0, self.page_size
-
-        for page in track(
-            range(1, self.page_numbers + 1),
-            description=f"Downloading to image file(s) in {save_file_path}",
-        ):
+        
+        console.print(f"Downloading image file(s) in {save_file_path}")
+        
+        for page in range(1, self.page_numbers + 1):
             if page == 1:
                 pass
             elif page < (self.page_numbers - 1):
@@ -371,7 +380,8 @@ class submission:
             paginated_submissions = (
                 self.submission_db.select("submission_id", "attachment").range(start_row, end_row).execute()
             ).model_dump()["data"]
-            for data in paginated_submissions: 
+            
+            for data in track(paginated_submissions, description=f"Downloading bulk {page}/{self.page_numbers}"): 
                 if (data['attachment'] is None): 
                     pass 
                 else:
@@ -433,6 +443,8 @@ class comment:
                 The default limit to the amount of rows returned is 1,000 in Supabase.
             
         """
+        self.cwd = os.getcwd()
+        
         self.supabase = supabase_client
         self.comment_db_config = db_name
         self.comment_db = self.supabase.table(self.comment_db_config)
@@ -469,7 +481,7 @@ class comment:
             self.page_size = self.paginate.get("page_size", 1000)
             self.page_numbers = (self.row_count // self.page_size) + (1 if self.row_count % self.page_size != 0 else 0)
 
-    def to_pkl(self, columns: List[str] or str, file_name: str, file_path: str = ""):
+    def to_pkl(self, columns: List[str] or str, file_name: str, file_path: str = "comment_exports"):
         """
         Save Supabase data to multiple .pickle files.
 
@@ -485,8 +497,11 @@ class comment:
             None. Prints the number of rows downloaded and the number of .pickle files created.
         """
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
+            os.path.join(self.cwd, f"../{file_path}")
         )
+        
+        os.makedirs(save_file_path, exist_ok=True)
+        
         if isinstance(columns, str):
             if columns.lower() == "all":
                 columns = "*"
@@ -526,7 +541,7 @@ class comment:
             f"{self.row_count} rows downloaded and saved in {self.page_numbers - 1} pickle files"
         )
 
-    def to_csv(self, columns: List[str] or str, file_name: str, file_path: str = ""):
+    def to_csv(self, columns: List[str] or str, file_name: str, file_path: str = "comment_exports"):
         """
         Save Supabase data to a .csv file.
 
@@ -543,8 +558,10 @@ class comment:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
+            os.path.join(self.cwd, f"../{file_path}")
         )
+        
+        os.makedirs(save_file_path, exist_ok=True)
 
         if isinstance(columns, str):
             if columns.lower() == "all":
@@ -591,7 +608,7 @@ class comment:
             f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.csv"
         )
 
-    def to_txt(self, columns: List[str] or str, file_name: str, file_path: str = ""):
+    def to_txt(self, columns: List[str] or str, file_name: str, file_path: str = "comment_exports"):
         """
         Save Supabase data to a .txt file.
 
@@ -608,8 +625,10 @@ class comment:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
+            os.path.join(self.cwd, f"../{file_path}")
         )
+        
+        os.makedirs(save_file_path, exist_ok=True)
 
         if isinstance(columns, str):
             if columns.lower() == "all":
@@ -655,7 +674,7 @@ class comment:
             f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.txt"
         )
 
-    def to_json(self, columns: List[str] or str, file_name: str, file_path: str = ""):
+    def to_json(self, columns: List[str] or str, file_name: str, file_path: str = "comment_exports"):
         """
         Save Supabase data to multiple .json files.
 
@@ -672,8 +691,10 @@ class comment:
         """
         # Similar to to_csv but saving to JSON format
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
+            os.path.join(self.cwd, f"../{file_path}")
         )
+        
+        os.makedirs(save_file_path, exist_ok=True)
 
         if isinstance(columns, str):
             if columns.lower() == "all":
@@ -744,6 +765,8 @@ class user:
                 The default limit to the amount of rows returned is 1,000 in Supabase.
             
         """
+        self.cwd = os.getcwd()
+        
         self.supabase = supabase_client
         self.redditor_db_config = db_name
         self.redditor_db = self.supabase.table(self.redditor_db_config)
@@ -778,7 +801,7 @@ class user:
             self.page_size = self.paginate.get("page_size", 1000)
             self.page_numbers = (self.row_count // self.page_size) + (1 if self.row_count % self.page_size != 0 else 0)
         
-    def to_pkl(self, columns: List[str] or str, file_name: str, file_path: str = "") -> None:
+    def to_pkl(self, columns: List[str] or str, file_name: str, file_path: str = "user_exports") -> None:
         """
         Save Supabase data to multiple .pickle files.
 
@@ -794,8 +817,10 @@ class user:
             None. Prints the number of rows downloaded and the number of .pickle files created.
         """
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
+            os.path.join(self.cwd, f"../{file_path}")
         )
+        
+        os.makedirs(save_file_path, exist_ok=True)
         if isinstance(columns, str):
             if columns.lower() == "all":
                 columns = "*"
@@ -835,7 +860,7 @@ class user:
             f"{self.row_count} rows downloaded and saved in {self.page_numbers - 1} pickle files"
         )
 
-    def to_csv(self, columns: List[str] or str, file_name: str, file_path: str = ""):
+    def to_csv(self, columns: List[str] or str, file_name: str, file_path: str = "user_exports"):
         """
         Save Supabase data to a .csv file.
 
@@ -852,8 +877,10 @@ class user:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
+            os.path.join(self.cwd, f"../{file_path}")
         )
+        
+        os.makedirs(save_file_path, exist_ok=True)
 
         if isinstance(columns, str):
             if columns.lower() == "all":
@@ -900,7 +927,7 @@ class user:
             f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.csv"
         )
 
-    def to_txt(self, columns: List[str] or str, file_name: str, file_path: str = ""):
+    def to_txt(self, columns: List[str] or str, file_name: str, file_path: str = "user_exports"):
         """
         Save Supabase data to a .txt file.
 
@@ -917,8 +944,10 @@ class user:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
+            os.path.join(self.cwd, f"../{file_path}")
         )
+        
+        os.makedirs(save_file_path, exist_ok=True)
 
         if isinstance(columns, str):
             if columns.lower() == "all":
@@ -964,7 +993,7 @@ class user:
             f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.txt"
         )
 
-    def to_json(self, columns: List[str] or str, file_name: str, file_path: str = ""):
+    def to_json(self, columns: List[str] or str, file_name: str, file_path: str = "user_exports"):
         """
         Save Supabase data to multiple .json files.
 
@@ -981,8 +1010,10 @@ class user:
         """
         # Similar to to_csv but saving to JSON format
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{file_path}")
+            os.path.join(self.cwd, f"../{file_path}")
         )
+        
+        os.makedirs(save_file_path, exist_ok=True)
 
         if isinstance(columns, str):
             if columns.lower() == "all":
