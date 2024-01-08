@@ -6,12 +6,14 @@ import csv
 from typing import List
 from rich.progress import track
 from rich.console import Console
+import requests 
+from io import BytesIO
+from PIL import Image
 
 console = Console()
 
 # While it might have been possible to design a unified class for submission, comment, and redditor,
 # we opted for three separate classes with near-identical structures to enhance user experience (UX).
-
 
 class submission:
     def __init__(
@@ -104,7 +106,7 @@ class submission:
             None. Prints the number of rows downloaded and the number of .pickle files created.
         """
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), f"../{file_path}")
+            os.path.join(os.path.abspath(__file__), f"../{file_path}")
         )
         if isinstance(columns, str):
             if columns.lower() == "all":
@@ -162,7 +164,7 @@ class submission:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), f"../{file_path}")
+            os.path.join(os.path.abspath(__file__), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -227,7 +229,7 @@ class submission:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), f"../{file_path}")
+            os.path.join(os.path.abspath(__file__), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -291,7 +293,7 @@ class submission:
         """
         # Similar to to_csv but saving to JSON format
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), f"../{file_path}")
+            os.path.join(os.path.abspath(__file__), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -331,6 +333,73 @@ class submission:
 
         return console.print(
             f"{self.row_count} rows downloaded and saved in {self.page_numbers - 1} json files"
+        )
+    
+    def to_img(self, file_path: str = ""):
+        """
+        Save image data in submissions to .jpeg or .png files. Ignores all other columns. 
+
+        Args:
+            file_path (str): The relative path to the directory where the image file will be saved.
+
+        Returns:
+            None. Prints the number of images downloaded.
+        """
+        # Similar to to_csv but saving to JSON format
+        save_file_path = os.path.abspath(
+            os.path.join(os.path.abspath(__file__), f"../{file_path}")
+        )
+        os.makedirs(save_file_path, exist_ok=True)
+        
+        success, fail = 0, 0 
+        failed_urls = list()
+        start_row, end_row = 0, self.page_size
+
+        for page in track(
+            range(1, self.page_numbers + 1),
+            description=f"Downloading to image file(s) in {save_file_path}",
+        ):
+            if page == 1:
+                pass
+            elif page < (self.page_numbers - 1):
+                    start_row += self.page_size
+                    end_row += self.page_size
+            else:
+                start_row += self.page_size
+                end_row = self.row_count
+            
+            paginated_submissions = (
+                self.submission_db.select("submission_id", "attachment").range(start_row, end_row).execute()
+            ).model_dump()["data"]
+            for data in paginated_submissions: 
+                if (data['attachment'] is None): 
+                    pass 
+                else:
+                    if 'jpg' in data['attachment'].keys():  
+                        img_url = data.get('attachment', {}).get('jpg', None)
+                        img_type = 'jpg'
+                    elif 'png' in data["attachment"].keys():
+                        img_url = data.get('attachment', {}).get('png', None)
+                        img_type = 'png'
+                    else: 
+                        img_url = None 
+                    
+                    if img_url is not None:         
+                        response = requests.get(img_url)
+                        if response.status_code == 200: 
+                            path = os.path.join(save_file_path, f"{data['submission_id']}.{img_type}")
+                            with open(path, 'wb') as file:
+                                file.write(response.content)
+                            success += 1
+                        else:
+                            # console.print(f"[bold red]{response.status_code}[/]: Failed to download image (url: {img_url})") 
+                            fail += 1 
+                            failed_urls.append(img_url)
+
+        return console.print(
+            f"[bold green]{success} image files successfully downloaded and saved\n",
+            f"[bold red]Failed to download {fail} image files\n", 
+            f"Failed urls: {failed_urls}"
         )
 
 
@@ -416,7 +485,7 @@ class comment:
             None. Prints the number of rows downloaded and the number of .pickle files created.
         """
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), f"../{file_path}")
+            os.path.join(os.path.abspath(__file__), f"../{file_path}")
         )
         if isinstance(columns, str):
             if columns.lower() == "all":
@@ -474,7 +543,7 @@ class comment:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), f"../{file_path}")
+            os.path.join(os.path.abspath(__file__), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -539,7 +608,7 @@ class comment:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), f"../{file_path}")
+            os.path.join(os.path.abspath(__file__), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -603,7 +672,7 @@ class comment:
         """
         # Similar to to_csv but saving to JSON format
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), f"../{file_path}")
+            os.path.join(os.path.abspath(__file__), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -725,7 +794,7 @@ class user:
             None. Prints the number of rows downloaded and the number of .pickle files created.
         """
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), f"../{file_path}")
+            os.path.join(os.path.abspath(__file__), f"../{file_path}")
         )
         if isinstance(columns, str):
             if columns.lower() == "all":
@@ -783,7 +852,7 @@ class user:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), f"../{file_path}")
+            os.path.join(os.path.abspath(__file__), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -848,7 +917,7 @@ class user:
         """
 
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), f"../{file_path}")
+            os.path.join(os.path.abspath(__file__), f"../{file_path}")
         )
 
         if isinstance(columns, str):
@@ -912,7 +981,7 @@ class user:
         """
         # Similar to to_csv but saving to JSON format
         save_file_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), f"../{file_path}")
+            os.path.join(os.path.abspath(__file__), f"../{file_path}")
         )
 
         if isinstance(columns, str):

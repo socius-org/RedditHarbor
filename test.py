@@ -1,22 +1,19 @@
 import redditharbor.login as login 
 from redditharbor.dock.pipeline import collect
-from rich.console import Console
-console = Console()
-from presidio_analyzer import AnalyzerEngine
-from presidio_anonymizer import AnonymizerEngine
+from redditharbor.utils import download
 
 
-reddit_client = login.reddit()
+# reddit_client = login.reddit()
 supabase_client = login.supabase()
 
-DB_CONFIG = {
-        "user": "test_redditor",
-        "submission": "test_submission",
-        "comment": "test_comment",
-    }
+# DB_CONFIG = {
+#         "user": "test_redditor",
+#         "submission": "test_submission",
+#         "comment": "test_comment",
+#     }
 
-collect = collect(reddit_client=reddit_client, supabase_client=supabase_client, db_config=DB_CONFIG)
-collect.subreddit_submission(subreddits=["AskReddit"], sort_types=["new"])
+# collect = collect(reddit_client=reddit_client, supabase_client=supabase_client, db_config=DB_CONFIG)
+# collect.subreddit_submission(subreddits=["AskReddit"], sort_types=["new"])
 # collect.subreddit_comment(subreddits=["AskReddit"], sort_types=["new"])
 # collect.subreddit_submission_and_comment(subreddits=["AskReddit"], sort_types=["new"])
 
@@ -27,7 +24,8 @@ collect.subreddit_submission(subreddits=["AskReddit"], sort_types=["new"])
 
 # test_columns = ["submission_id", "redditor_id", "created_at", "title", "text"]
 
-# download = download.user(supabase_client=supabase_client, db_name="test_redditor")
+download = download.submission(supabase_client=supabase_client, db_name="FinInvMarket_submissions", paginate={"row_count":1000, "page_size":2})
+download.to_img("test")
 
 # download.to_json(columns = "all", file_name="all", file_path="")
 
