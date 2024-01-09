@@ -9,7 +9,7 @@ setup(
   author = 'Nick S.H Oh',                   
   author_email = 'nick.sh.oh@socialscience.ai',      
   url = 'https://github.com/socius-org/RedditHarbor/',  
-  download_url = 'https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.1.6.tar.gz', 
+  download_url = 'https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.1.6.3.tar.gz', 
   keywords = ['Reddit', 'Supabase', 'Crawler'],
   include_package_data=True,
   install_requires=[
