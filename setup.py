@@ -1,9 +1,9 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
   name = 'redditharbor',
   packages = ['redditharbor'],   
-  version = '0.1.6',      
+  version = '0.1.6.3',      
   license='MIT',        
   description = 'A tool designed to effortlessly collect and store Reddit data in a Supabase database.',   
   author = 'Nick S.H Oh',                   
@@ -11,6 +11,7 @@ setup(
   url = 'https://github.com/socius-org/RedditHarbor/',  
   download_url = 'https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.1.6.tar.gz', 
   keywords = ['Reddit', 'Supabase', 'Crawler'],
+  include_package_data=True,
   install_requires=[
           'praw == 7.7.1',
           'supabase == 1.0.3', 
@@ -23,6 +24,5 @@ setup(
       ],
   extras_require={
     'pii': ['spacy[en_core_web_lg]'],
-    },
-  include_package_data=True
+    }
 )

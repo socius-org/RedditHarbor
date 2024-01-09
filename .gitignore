@@ -6,6 +6,6 @@ utils/__pycache__/
 
 build/
 dist/ 
-redditharbor.egg-info/
+*.egg-info/
 
 test.py
