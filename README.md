@@ -242,7 +242,7 @@ download = download.submission(supabase_client, DB_CONFIG["submission"])
 download.to_csv(columns="all", file_name="submission", file_path="<your-folder-name>")
 ```
 
-This will save all columns from the "submissions" table to a submissions.csv file in the "/<your-folder-name>" directory.
+This will save all columns from the "submissions" table to a submissions.csv file in the specified folder directory.
 
 You can specify columns and file formats:
 
@@ -251,7 +251,18 @@ cols = ["submission_id", "title", "score"]
 download.to_json(columns = cols, file_name="submission", file_path="<your-folder-name>")
 ```
 
-This will save columns "submission_id", "title" and "score" from the submission table to a submissions.json file(s) in the "/<your-folder-name>" directory.
+This will save columns "submission_id", "title" and "score" from the submission table to a submissions.json file(s) in the specified folder directory.
+
+### Download Images from Submissions
+
+To download image files from the submission data: 
+
+```python
+download = download.submission(supabase_client, DB_CONFIG["submission"])
+download.to_img(file_path="<your-folder-name>")
+```
+
+This will save all .jpg and .png files of the submissions table in the specified folder directory.
 
 ### Download Comments
 
