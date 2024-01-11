@@ -119,7 +119,7 @@ This will create the three tables with the required columns and data types. Once
 
 ### Running the Code: 
 
-Create an empty python file in your IDE. To start collecting Reddit data, you first need to configure the authentication:
+To use the package, first create an empty Python file in your IDE of choice, such as [VS Code](https://code.visualstudio.com/). Running the code directly in Jupyter notebook is not recommended, as it may cause errors. To start collecting Reddit data, you first need to configure the authentication:
 
 ```python
 SUPABASE_URL = "<your-supabase-url>" 
