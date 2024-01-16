@@ -8,12 +8,6 @@ https://github.com/socius-org/RedditHarbor/assets/130935698/71780631-a5b4-4e41-b
 
 RedditHarbor simplifies collecting Reddit data and saving it to a database. It removes the complexity of working with APIs, letting you easily build a "harbor" of Reddit data for analysis.
 
-| Status | Stability | Goal |
-| ------ | ------ | ---- |
-| ✅ | Alpha | Test and collect feedbacks with a closed set of academic researchers |
-| 🚧 | Beta | Open to academic researchers. Publish python package. |
-| ❌ | Public | Production-ready. Stability and Flexibility.|
-
 ## Introduction 
 
 Social media data from platforms like Reddit contains rich insights into human behaviour and beliefs. However, collecting and storing this data requires dealing with complex APIs.
