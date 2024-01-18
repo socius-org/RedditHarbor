@@ -7,7 +7,7 @@ setup(
   license='MIT',        
   description = 'A tool designed to effortlessly collect and store Reddit data in a Supabase database.',   
   author = 'Nick S.H Oh',                   
-  author_email = 'nick.sh.oh@socialscience.ai',      
+  author_email = 'research@socius.org',      
   url = 'https://github.com/socius-org/RedditHarbor/',  
   download_url = 'https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.1.6.3.tar.gz', 
   keywords = ['Reddit', 'Supabase', 'Crawler'],
