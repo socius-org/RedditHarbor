@@ -168,7 +168,7 @@ This will collect the 5 hottest and 5 top submissions from r/python and r/learnp
 collect.subreddit_submission(subreddits, sort_types, limit=5, mask_pii=True)
 ```
 
-> **📝 Supported PII entities:**
+> **<picture><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4a1/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4a1/512.gif" alt="💡" width="20" height="20"></picture> Supported PII entities:**
 > 
 > PII is identified and anonymised with Microsoft's [presidio](https://microsoft.github.io/presidio/). Setting `mask_pii` as True will automatically mask [12+ pii entities](https://microsoft.github.io/presidio/supported_entities/) such as `<PERSON>`, `<PHONE NUMBER>` and `<EMAIL_ADDRESS>`.
 >
@@ -191,6 +191,25 @@ To collect submissions, associated comments and users in one go:
 ```python
 collect.subreddit_submission_and_comment(subreddits, sort_types, limit=5, level=2)
 ```
+
+### Keyword Search (Submission)
+#### Collect Submissions
+
+To collect submissions based on specific keywords from specified subreddits:
+
+```python
+subreddits = ["python", "learnpython"]
+query = "data science"
+collect.submission_by_keyword(subreddits, query, limit=5)
+```
+
+This example collects the 5 most relevant submissions from the subreddits r/python and r/learnpython that contain the keyword "data science." The search can be customized with boolean operators:
+- `AND`: Requires all words to be present (e.g. "energy AND oil" returns results with both "energy" and "oil")
+- `OR`: Requires at least one word to match (e.g. "energy OR oil" returns results with either "energy" or "oil") 
+- `NOT`: Excludes results with a word (e.g. "energy NOT oil" returns results with "energy" but without "oil") 
+- `()`: Group parts of the query
+
+> <picture><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.gif" alt="🚧" width="20" height="20"></picture> *When using multiple boolean operators, you may sometimes get unexpected results. To control the logic flow, use parentheses to group clauses. For example, "renewable energy NOT fossil fuels OR oil OR gas" returns very different results than "renewable energy NOT (fossil fuels OR oil OR gas)".* 
 
 ### From Users 
 #### Collect User Submissions
