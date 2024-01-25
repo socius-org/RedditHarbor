@@ -1,4 +1,4 @@
-# RedditHarbor
+# <picture><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/2699_fe0f/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/2699_fe0f/512.gif" alt="⚙" width="32" height="32"></picture> RedditHarbor
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square&label=license)](https://opensource.org/licenses/MIT)
 [![Github Stars](https://img.shields.io/github/stars/socius-org/RedditHarbor?style=flat-square&logo=github)](https://github.com/socius-org/RedditHarbor)
 [![Github Watchers](https://img.shields.io/github/watchers/socius-org/RedditHarbor?style=flat-square&logo=github)](https://github.com/socius-org/RedditHarbor)
@@ -107,9 +107,7 @@ ALTER TABLE test_comment ENABLE ROW LEVEL SECURITY;
 
 This will create the three tables with the required columns and data types. Once created, you will see the new tables now available in the Supabase interface. In the future, you can duplicate these tables and modify the table names for your own production.
 
-> **⚠️ Warning:**
-> 
-> *RedditHarbor pacakge is dependent on the predefined column names for all users, submissions and comments tables. To ensure proper functionality, it is crucial to create tables with all the specified columns mentioned in the documentation. Failure to do so may lead to errors or incomplete data retrieval.*
+> **<picture><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.gif" alt="🚧" width="20" height="20"></picture>** *RedditHarbor pacakge is dependent on the predefined column names for all users, submissions and comments tables. To ensure proper functionality, it is crucial to create tables with all the specified columns mentioned in the documentation. Failure to do so may lead to errors or incomplete data retrieval.*
 
 ### Running the Code: 
 
@@ -174,7 +172,7 @@ collect.subreddit_submission(subreddits, sort_types, limit=5, mask_pii=True)
 > 
 > PII is identified and anonymised with Microsoft's [presidio](https://microsoft.github.io/presidio/). Setting `mask_pii` as True will automatically mask [12+ pii entities](https://microsoft.github.io/presidio/supported_entities/) such as `<PERSON>`, `<PHONE NUMBER>` and `<EMAIL_ADDRESS>`.
 >
-> ⚠️ *While PII is anonymized rigorously to protect privacy, this may inadvertently obscure some entities required for research. For example, "Including food and energy costs, so-called headline PCE actually fell 0.1% on the month and was up just 2.6% from a year ago." will be saved as "Including food and energy costs, so-called headline PCE actually fell 0.1% on <DATE_TIME> and was up just 2.6% from <DATE_TIME>."* 
+> <picture><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.gif" alt="🚧" width="20" height="20"></picture> *While PII is anonymized rigorously to protect privacy, this may inadvertently obscure some entities required for research. For example, "Including food and energy costs, so-called headline PCE actually fell 0.1% on the month and was up just 2.6% from a year ago." will be saved as "Including food and energy costs, so-called headline PCE actually fell 0.1% on <DATE_TIME> and was up just 2.6% from <DATE_TIME>."* 
 
 #### Collect Comments and Users
 
