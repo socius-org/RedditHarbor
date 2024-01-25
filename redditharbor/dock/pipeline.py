@@ -213,6 +213,7 @@ class collect:
         submission_id = submission.id
         submission_inserted = False
         redditor_inserted = False
+        attachment = None
 
         id_filter = (
             self.submission_db.select("submission_id")
