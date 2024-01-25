@@ -61,144 +61,156 @@ class collect:
         if not os.path.exists(self.error_log_path):
             os.makedirs(self.error_log_path)
     
-    def redditor_data(self, praw_models: praw.models) -> Tuple[str, bool]:
+    def redditor_data(self, praw_models: praw.models, insert: bool) -> Tuple[str, bool]:
         """
         Collects and stores data related to a specific Redditor.
 
         Args:
             praw_models (praw.models): An object containing praw models.
+            insert (bool): Insert redditor data to DB. 
 
         Returns:
             Tuple[str, bool]: A tuple containing the unique identifier of the Redditor collected and a boolean indicating whether the Redditor was inserted in the database.
         """
         redditor_inserted = False
         redditor = praw_models.author
-
-        if hasattr(redditor, "id"):
-            redditor_id = redditor.id
-            """IF redditor_id in REDDITOR_DB, pass. ELSE, UPDATE REDDITOR_DB with new redditor"""
-            id_filter = (
-                self.redditor_db.select("redditor_id")
-                .eq("redditor_id", redditor_id)
-                .execute()
-                .dict()["data"]
-            )
-            if len(id_filter) == 1:
-                console.log(
-                    "Redditor [bold red]{}[/] already in DB-{}".format(
-                        redditor_id, self.redditor_db_config
-                    )
-                )
-                return redditor_id, redditor_inserted
-            else:
-                console.log(
-                    "Redditor [bold red]{}[/] not in DB. Adding to DB-{}".format(
-                        redditor_id, self.redditor_db_config
-                    )
-                )
-                name = redditor.name
-                created_at = datetime.datetime.fromtimestamp(
-                    redditor.created_utc
-                ).isoformat()
-                karma = {
-                    "comment": redditor.comment_karma,
-                    "link": redditor.link_karma,
-                    "awardee": redditor.awardee_karma,
-                    "awarder": redditor.awarder_karma,
-                    "total": redditor.total_karma,
-                }
-                is_gold = redditor.is_gold
-
-                if redditor.is_mod is True:
-                    is_moderator, num_moderation = {}, len(redditor.moderated())
-                    for m in range(num_moderation):
-                        is_moderator.update(
-                            {
-                                redditor.moderated()[m].name: [
-                                    redditor.moderated()[m].display_name,
-                                    redditor.moderated()[m].subscribers,
-                                ]
-                            }
-                        )
-                elif redditor.is_mod is False:
-                    is_moderator = None
-
-                num_trophies = len(redditor.trophies())
-                if num_trophies != 0:
-                    trophy = []
-                    for t in range(num_trophies):
-                        trophy.append(redditor.trophies()[t].name)
-                    trophy = {"list": trophy}
-                elif num_trophies == 0:
-                    trophy = None
-                removed = "active"
-
-        else:  # Suspended or Deleted
-            if hasattr(redditor, "name") and redditor.is_suspended is True:
-                name = redditor.name
-                """IF redditor_name in REDDITOR_DB, UPDATE removed as 'suspended' from exisiting row. 
-                ELSE, INSERT new row"""
-                name_filter = (
-                    self.redditor_db.select("name")
-                    .eq("name", name)
+        
+        if insert is True: 
+            if hasattr(redditor, "id"):
+                redditor_id = redditor.id
+                """IF redditor_id in REDDITOR_DB, pass. ELSE, UPDATE REDDITOR_DB with new redditor"""
+                id_filter = (
+                    self.redditor_db.select("redditor_id")
+                    .eq("redditor_id", redditor_id)
                     .execute()
                     .dict()["data"]
                 )
-                if len(name_filter) == 1:  # Was Active in the Past, but Suspended
-                    redditor_id = (
-                        self.redditor_db.select("redditor_id")
-                        .eq("name", name)
-                        .execute()
-                        .dict()["data"][0]["redditor_id"]
-                    )
+                if len(id_filter) == 1:
                     console.log(
-                        "Redditor [bold red]{}[/] already in DB-{}. Updating removed status".format(
+                        "Redditor [bold red]{}[/] already in DB-{}".format(
                             redditor_id, self.redditor_db_config
                         )
                     )
-                    self.redditor_db.update({"removed": "suspended"}).eq(
-                        "name", name
-                    ).execute()
                     return redditor_id, redditor_inserted
-                else:  # Suspended
-                    redditor_id = "suspended" + ":" + name
+                else:
                     console.log(
-                        "Redditor [bold red]{}[/] not in DB-{}. Adding to DB with limited data".format(
+                        "Redditor [bold red]{}[/] not in DB. Adding to DB-{}".format(
                             redditor_id, self.redditor_db_config
                         )
                     )
-                    created_at = None
+                    name = redditor.name
+                    created_at = datetime.datetime.fromtimestamp(
+                        redditor.created_utc
+                    ).isoformat()
                     karma = {
+                        "comment": redditor.comment_karma,
+                        "link": redditor.link_karma,
                         "awardee": redditor.awardee_karma,
                         "awarder": redditor.awarder_karma,
                         "total": redditor.total_karma,
                     }
-                    is_gold = None
-                    is_moderator = None
-                    trophy = None
-                    removed = "suspended"
-            elif redditor is None:  # Deleted
-                redditor_id = "deleted"
-                return redditor_id, redditor_inserted
+                    is_gold = redditor.is_gold
 
-        row = {
-            "redditor_id": redditor_id,
-            "name": name,
-            "created_at": created_at,
-            "karma": karma,
-            "is_gold": is_gold,
-            "is_mod": is_moderator,
-            "trophy": trophy,
-            "removed": removed,
-        }
+                    if redditor.is_mod is True:
+                        is_moderator, num_moderation = {}, len(redditor.moderated())
+                        for m in range(num_moderation):
+                            is_moderator.update(
+                                {
+                                    redditor.moderated()[m].name: [
+                                        redditor.moderated()[m].display_name,
+                                        redditor.moderated()[m].subscribers,
+                                    ]
+                                }
+                            )
+                    elif redditor.is_mod is False:
+                        is_moderator = None
 
-        self.redditor_db.insert(row).execute()
-        redditor_inserted = True
+                    num_trophies = len(redditor.trophies())
+                    if num_trophies != 0:
+                        trophy = []
+                        for t in range(num_trophies):
+                            trophy.append(redditor.trophies()[t].name)
+                        trophy = {"list": trophy}
+                    elif num_trophies == 0:
+                        trophy = None
+                    removed = "active"
 
-        return redditor_id, redditor_inserted
+            else:  # Suspended or Deleted
+                if hasattr(redditor, "name") and redditor.is_suspended is True:
+                    name = redditor.name
+                    """IF redditor_name in REDDITOR_DB, UPDATE removed as 'suspended' from exisiting row. 
+                    ELSE, INSERT new row"""
+                    name_filter = (
+                        self.redditor_db.select("name")
+                        .eq("name", name)
+                        .execute()
+                        .dict()["data"]
+                    )
+                    if len(name_filter) == 1:  # Was Active in the Past, but Suspended
+                        redditor_id = (
+                            self.redditor_db.select("redditor_id")
+                            .eq("name", name)
+                            .execute()
+                            .dict()["data"][0]["redditor_id"]
+                        )
+                        console.log(
+                            "Redditor [bold red]{}[/] already in DB-{}. Updating removed status".format(
+                                redditor_id, self.redditor_db_config
+                            )
+                        )
+                        self.redditor_db.update({"removed": "suspended"}).eq(
+                            "name", name
+                        ).execute()
+                        return redditor_id, redditor_inserted
+                    else:  # Suspended
+                        redditor_id = "suspended" + ":" + name
+                        console.log(
+                            "Redditor [bold red]{}[/] not in DB-{}. Adding to DB with limited data".format(
+                                redditor_id, self.redditor_db_config
+                            )
+                        )
+                        created_at = None
+                        karma = {
+                            "awardee": redditor.awardee_karma,
+                            "awarder": redditor.awarder_karma,
+                            "total": redditor.total_karma,
+                        }
+                        is_gold = None
+                        is_moderator = None
+                        trophy = None
+                        removed = "suspended"
+                elif redditor is None:  # Deleted
+                    redditor_id = "deleted"
+                    return redditor_id, redditor_inserted
+            
+            row = {
+                "redditor_id": redditor_id,
+                "name": name,
+                "created_at": created_at,
+                "karma": karma,
+                "is_gold": is_gold,
+                "is_mod": is_moderator,
+                "trophy": trophy,
+                "removed": removed,
+            }
+
+            self.redditor_db.insert(row).execute()
+            redditor_inserted = True
+            return redditor_id, redditor_inserted
+        
+        else: 
+            if hasattr(redditor, "id"):
+                redditor_id = redditor.id
+            else: 
+                if hasattr(redditor, "name") and redditor.is_suspended is True:
+                    redditor_id = "suspended" + ":" + redditor.name
+                elif redditor is None: 
+                    redditor_id = "deleted"
+                    
+            return redditor_id, redditor_inserted
 
     def submission_data(
-        self, submission: praw.models.reddit.submission.Submission, mask_pii: bool
+        self, submission: praw.models.reddit.submission.Submission, mask_pii: bool, insert_redditor: bool = True 
     ) -> Tuple[str, int, int]:
         """
         Collects and stores submissions and associated users in a specified subreddit.
@@ -213,8 +225,7 @@ class collect:
         submission_id = submission.id
         submission_inserted = False
         redditor_inserted = False
-        attachment = None
-
+        
         id_filter = (
             self.submission_db.select("submission_id")
             .eq("submission_id", submission_id)
@@ -235,7 +246,7 @@ class collect:
                 )
             )
 
-            redditor_id, redditor_inserted = self.redditor_data(submission) #consider not saving if redditor_id is "deleted"
+            redditor_id, redditor_inserted = self.redditor_data(submission, insert=insert_redditor) #consider not saving if redditor_id is "deleted"
             created_at = datetime.datetime.fromtimestamp(submission.created_utc)
             title = submission.title
             
@@ -248,7 +259,8 @@ class collect:
             
             subreddit = submission.subreddit.display_name
             permalink = "https://www.reddit.com" + submission.permalink
-
+            attachment = None
+            
             if submission.is_reddit_media_domain:
                 if submission.is_video:
                     attachment = {"video": submission.url}
@@ -367,7 +379,7 @@ class collect:
         return submission_id, submission_inserted, redditor_inserted
 
     def comment_data(
-        self, comments: List[praw.models.reddit.comment.Comment], mask_pii: bool
+        self, comments: List[praw.models.reddit.comment.Comment], mask_pii: bool, insert_redditor: bool = True 
     ) -> Tuple[int, int]:
         """
         Collects and stores comment data associated with a list of comments.
@@ -407,7 +419,7 @@ class collect:
                     link_id = comment.link_id.replace("t3_", "")
                     subreddit = str(comment.subreddit)
                     parent_id = comment.parent_id
-                    redditor_id, redditor_inserted = self.redditor_data(comment) #consider not saving if redditor_id is "deleted"
+                    redditor_id, redditor_inserted = self.redditor_data(comment, insert=insert_redditor) #consider not saving if redditor_id is "deleted"
                     if redditor_inserted is True:
                         redditor_inserted_count += 1
 
@@ -781,12 +793,63 @@ class collect:
             f"[bold green]{total_comment_inserted_count} comment data collected from user(s) {user_names}"
         )
     
-    # def submission_from_subreddit(self):
-    #     return 
-    
-    # def comment_from_subreddit(self):
-    #     return 
-    
+    def submission_by_keyword(
+        self, subreddits: List[str], query: str, limit: int = 10, mask_pii: bool = False
+    ) -> None:
+        """
+        Collects and stores submissions with specified keywords from given subreddits.
+
+        You can customize the search behavior by leveraging boolean operators:
+        - AND: Requires all connected words to be present in the search results.
+        E.g., 'cats AND dogs' returns results with both "cats" and "dogs."
+        - OR: Requires at least one of the connected words to match.
+        E.g., 'cats OR dogs' returns results with either "cats" or "dogs."
+        - NOT: Excludes results containing specific words.
+        E.g., 'cats NOT dogs' returns results with "cats" but without "dogs."
+        - Using parentheses ( ) groups parts of a search together.
+
+        Note: Be cautious with multiple boolean operators; use parentheses to specify behavior.
+
+        Args:
+            subreddits (List[str]): List of subreddit names to collect submissions from.
+            query (str): Search terms.
+            limit (int, optional): Maximum number of submissions to collect. Defaults to 10.
+            mask_pii (bool, optional): Mask (anonymise) personally identifiable information (PII). Defaults to False.
+
+        Returns:
+            None. Prints the count of collected submissions data to the console.
+        """
+
+
+        with console.status(
+            "[bold green]Collecting submissions with specified keyword(s)...",
+            spinner="aesthetic",
+        ):
+            total_submission_inserted_count = 0
+            for subreddit in subreddits:
+                console.print(f"[bold]subreddit: {subreddit}", justify="center")
+                r_ = self.reddit.subreddit(subreddit)
+                for submission in r_.search(query, sort="relevance", limit=limit):
+                    try:
+                        (
+                            submission_id,
+                            submission_inserted,
+                        ) = self.submission_data(submission=submission, mask_pii=mask_pii, insert_redditor=False)[:2]
+
+                        if submission_inserted is True:
+                            total_submission_inserted_count += 1
+
+                    except Exception as error:
+                        console.log(f"t3_{submission_id}: [bold red]{error}[/]")
+                        console.print_exception()
+                        console.save_html(
+                            os.path.join(self.error_log_path, f"t3_{submission_id}.html")
+                        )
+                        continue
+
+        return console.print(
+            f"[bold green]{total_submission_inserted_count} submission data collected from subreddit(s) {subreddits} with query='{query}'"
+        )
     # def user_from_submission(self):
     #     return
     

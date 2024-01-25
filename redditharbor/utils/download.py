@@ -92,13 +92,13 @@ class submission:
             self.page_size = self.paginate.get("page_size", 1000)
             self.page_numbers = (self.row_count // self.page_size) + (1 if self.row_count % self.page_size != 0 else 0)
 
-    def to_pkl(self, columns: List[str] or str, file_name: str, file_path: str = "submission_exports"):
+    def to_pkl(self, columns: List[str] or str, file_name: str = "submission", file_path: str = "submission_exports"):
         """
         Save Supabase data to multiple .pickle files.
 
         Args:
             columns (Union[List[str], str]): A list of column names to select or "all" for all columns.
-            file_name (str): The base name for the output files.
+            file_name (str): The base name for the output files. Defaults to submission_page. 
             file_path (str): The relative path to the directory where the .pickle files will be saved.
 
         Raises:
@@ -151,13 +151,13 @@ class submission:
             f"{self.row_count} rows downloaded and saved in {self.page_numbers - 1} pickle files"
         )
 
-    def to_csv(self, columns: List[str] or str, file_name: str, file_path: str = "submission_exports"):
+    def to_csv(self, columns: List[str] or str, file_name: str = "submission", file_path: str = "submission_exports"):
         """
         Save Supabase data to a .csv file.
 
         Args:
             columns (Union[List[str], str]): A list of column names to select or "all" for all columns.
-            file_name (str): The base name for the output file.
+            file_name (str): The base name for the output file. Defaults to submission_page.
             file_path (str): The relative path to the directory where the CSV file will be saved.
 
         Raises:
@@ -218,13 +218,13 @@ class submission:
             f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.csv"
         )
 
-    def to_txt(self, columns: List[str] or str, file_name: str, file_path: str = "submission_exports"):
+    def to_txt(self, columns: List[str] or str, file_name: str = "submission", file_path: str = "submission_exports"):
         """
         Save Supabase data to a .txt file.
 
         Args:
             columns (Union[List[str], str]): A list of column names to select or "all" for all columns.
-            file_name (str): The base name for the output file.
+            file_name (str): The base name for the output file. Defaults to submission_page.
             file_path (str): The relative path to the directory where the TXT file will be saved.
 
         Raises:
@@ -284,13 +284,13 @@ class submission:
             f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.txt"
         )
 
-    def to_json(self, columns: List[str] or str, file_name: str, file_path: str = "submission_exports"):
+    def to_json(self, columns: List[str] or str, file_name: str = "submission", file_path: str = "submission_exports"):
         """
         Save Supabase data to multiple .json files.
 
         Args:
             columns (Union[List[str], str]): A list of column names to select or "all" for all columns.
-            file_name (str): The base name for the output file.
+            file_name (str): The base name for the output file. Defaults to submission_page.
             file_path (str): The relative path to the directory where the JSON file will be saved.
 
         Raises:
@@ -481,13 +481,13 @@ class comment:
             self.page_size = self.paginate.get("page_size", 1000)
             self.page_numbers = (self.row_count // self.page_size) + (1 if self.row_count % self.page_size != 0 else 0)
 
-    def to_pkl(self, columns: List[str] or str, file_name: str, file_path: str = "comment_exports"):
+    def to_pkl(self, columns: List[str] or str, file_name: str = "comment", file_path: str = "comment_exports"):
         """
         Save Supabase data to multiple .pickle files.
 
         Args:
             columns (Union[List[str], str]): A list of column names to select or "all" for all columns.
-            file_name (str): The base name for the output files.
+            file_name (str): The base name for the output files. Defaults to comment_page.
             file_path (str): The relative path to the directory where the .pickle files will be saved.
 
         Raises:
@@ -541,13 +541,13 @@ class comment:
             f"{self.row_count} rows downloaded and saved in {self.page_numbers - 1} pickle files"
         )
 
-    def to_csv(self, columns: List[str] or str, file_name: str, file_path: str = "comment_exports"):
+    def to_csv(self, columns: List[str] or str, file_name: str = "comment", file_path: str = "comment_exports"):
         """
         Save Supabase data to a .csv file.
 
         Args:
             columns (Union[List[str], str]): A list of column names to select or "all" for all columns.
-            file_name (str): The base name for the output file.
+            file_name (str): The base name for the output file. Defaults to comment_page.
             file_path (str): The relative path to the directory where the CSV file will be saved.
 
         Raises:
@@ -608,13 +608,13 @@ class comment:
             f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.csv"
         )
 
-    def to_txt(self, columns: List[str] or str, file_name: str, file_path: str = "comment_exports"):
+    def to_txt(self, columns: List[str] or str, file_name: str = "comment", file_path: str = "comment_exports"):
         """
         Save Supabase data to a .txt file.
 
         Args:
             columns (Union[List[str], str]): A list of column names to select or "all" for all columns.
-            file_name (str): The base name for the output file.
+            file_name (str): The base name for the output file. Defaults to comment_page.
             file_path (str): The relative path to the directory where the TXT file will be saved.
 
         Raises:
@@ -674,13 +674,13 @@ class comment:
             f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.txt"
         )
 
-    def to_json(self, columns: List[str] or str, file_name: str, file_path: str = "comment_exports"):
+    def to_json(self, columns: List[str] or str, file_name: str = "comment", file_path: str = "comment_exports"):
         """
         Save Supabase data to multiple .json files.
 
         Args:
             columns (Union[List[str], str]): A list of column names to select or "all" for all columns.
-            file_name (str): The base name for the output file.
+            file_name (str): The base name for the output file. Defaults to comment_page.
             file_path (str): The relative path to the directory where the JSON file will be saved.
 
         Raises:
@@ -801,13 +801,13 @@ class user:
             self.page_size = self.paginate.get("page_size", 1000)
             self.page_numbers = (self.row_count // self.page_size) + (1 if self.row_count % self.page_size != 0 else 0)
         
-    def to_pkl(self, columns: List[str] or str, file_name: str, file_path: str = "user_exports") -> None:
+    def to_pkl(self, columns: List[str] or str, file_name: str = "user", file_path: str = "user_exports") -> None:
         """
         Save Supabase data to multiple .pickle files.
 
         Args:
             columns (Union[List[str], str]): A list of column names to select or "all" for all columns.
-            file_name (str): The base name for the output files.
+            file_name (str): The base name for the output files. Defaults to user_page.
             file_path (str): The relative path to the directory where the .pickle files will be saved.
 
         Raises:
@@ -860,13 +860,13 @@ class user:
             f"{self.row_count} rows downloaded and saved in {self.page_numbers - 1} pickle files"
         )
 
-    def to_csv(self, columns: List[str] or str, file_name: str, file_path: str = "user_exports"):
+    def to_csv(self, columns: List[str] or str, file_name: str = "user", file_path: str = "user_exports"):
         """
         Save Supabase data to a .csv file.
 
         Args:
             columns (Union[List[str], str]): A list of column names to select or "all" for all columns.
-            file_name (str): The base name for the output file.
+            file_name (str): The base name for the output file. Defaults to user_page.
             file_path (str): The relative path to the directory where the CSV file will be saved.
 
         Raises:
@@ -927,13 +927,13 @@ class user:
             f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.csv"
         )
 
-    def to_txt(self, columns: List[str] or str, file_name: str, file_path: str = "user_exports"):
+    def to_txt(self, columns: List[str] or str, file_name: str = "user", file_path: str = "user_exports"):
         """
         Save Supabase data to a .txt file.
 
         Args:
             columns (Union[List[str], str]): A list of column names to select or "all" for all columns.
-            file_name (str): The base name for the output file.
+            file_name (str): The base name for the output file. Defaults to user_page.
             file_path (str): The relative path to the directory where the TXT file will be saved.
 
         Raises:
@@ -993,13 +993,13 @@ class user:
             f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.txt"
         )
 
-    def to_json(self, columns: List[str] or str, file_name: str, file_path: str = "user_exports"):
+    def to_json(self, columns: List[str] or str, file_name: str = "user", file_path: str = "user_exports"):
         """
         Save Supabase data to multiple .json files.
 
         Args:
             columns (Union[List[str], str]): A list of column names to select or "all" for all columns.
-            file_name (str): The base name for the output file.
+            file_name (str): The base name for the output file. Defaults to user_page.
             file_path (str): The relative path to the directory where the JSON file will be saved.
 
         Raises:
