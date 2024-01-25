@@ -240,7 +240,7 @@ class collect:
             
             selftext = submission.selftext
             if mask_pii is True: 
-                #presidio assums you know what language you are sending to it. 
+                #presidio assumes you know what language you are sending to it. 
                 #consider using a language detection mechanism, or user to set language
                 pii_results = pii_analyzer.analyze(text=selftext, language="en", return_decision_process=False)
                 selftext = pii_anonymizer.anonymize(text=selftext, analyzer_results=pii_results).text
