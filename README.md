@@ -168,7 +168,7 @@ This will collect the 5 hottest and 5 top submissions from r/python and r/learnp
 collect.subreddit_submission(subreddits, sort_types, limit=5, mask_pii=True)
 ```
 
-> **<picture><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4a1/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4a1/512.gif" alt="💡" width="20" height="20"></picture> Supported PII entities:**
+> **📝 Supported PII entities:**
 > 
 > PII is identified and anonymised with Microsoft's [presidio](https://microsoft.github.io/presidio/). Setting `mask_pii` as True will automatically mask [12+ pii entities](https://microsoft.github.io/presidio/supported_entities/) such as `<PERSON>`, `<PHONE NUMBER>` and `<EMAIL_ADDRESS>`.
 >
