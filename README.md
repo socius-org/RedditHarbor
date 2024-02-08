@@ -220,7 +220,7 @@ To collect submissions made by specified users, you have to "fetch" user names f
 from redditharbor.utils import fetch
 
 fetch_user = fetch.user(supabase_client=supabase_client, db_name=DB_CONFIG["user"])
-users = fetch_user.name(limit=100) #This will fetch the first 100 user names from the user database 
+users = fetch_user.name(limit=100) #This will fetch the first 100 user names from the user database. Set limit=None to fetch entire user names.  
 collect.submission_from_user(users=users, sort_types=["controversial"], limit=10)
 ```
 
