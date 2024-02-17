@@ -3,13 +3,13 @@ from setuptools import setup
 setup(
   name = 'redditharbor',
   packages = ['redditharbor'],   
-  version = '0.2',      
+  version = '0.2.1',      
   license='MIT',        
   description = 'A tool designed to effortlessly collect and store Reddit data in a Supabase database.',   
   author = 'Nick S.H Oh',                   
   author_email = 'research@socius.org',      
   url = 'https://github.com/socius-org/RedditHarbor/',  
-  download_url = 'https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.2.tar.gz', 
+  download_url = 'https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.2.1.tar.gz', 
   keywords = ['Reddit', 'Supabase', 'reddit-api', 'database', 'reddit-crawler', 'reddit-scraper'],
   include_package_data=True,
   install_requires=[
