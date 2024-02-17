@@ -212,6 +212,21 @@ This example collects the 5 most relevant submissions from the subreddits r/pyth
 
 > <picture><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.gif" alt="🚧" width="20" height="20"></picture> *When using multiple boolean operators, you may sometimes get unexpected results. To control the logic flow, use parentheses to group clauses. For example, "renewable energy NOT fossil fuels OR oil OR gas" returns very different results than "renewable energy NOT (fossil fuels OR oil OR gas)".* 
 
+### From Submissions
+#### Collect Submission Comments 
+
+To collect comments from specified submissions, you can use the following code:
+
+```python
+from redditharbor.utils import fetch 
+
+fetch_submission = fetch.submission(supabase_client=supabase_client, db_name=db_config["submission"])
+submission_ids = fetch_submission.id(limit=100) # Limiting to 100 submission IDs for demonstration. Set limit=None to fetch all submission IDs
+collect.comment_from_submission(submission_ids=submission_ids, level=2) #Set level=None to collect entire comments
+```
+
+This will collect comments from the specified 100 submissions at level 2 (e.g. including replies to top-level comments). 
+
 ### From Users 
 #### Collect User Submissions
 
