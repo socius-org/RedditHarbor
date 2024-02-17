@@ -1,13 +1,13 @@
 Metadata-Version: 2.1
 Name: redditharbor
-Version: 0.1.6.3
+Version: 0.2
 Summary: A tool designed to effortlessly collect and store Reddit data in a Supabase database.
 Home-page: https://github.com/socius-org/RedditHarbor/
 Author: Nick S.H Oh
-Author-email: nick.sh.oh@socialscience.ai
+Author-email: research@socius.org
 License: MIT
-Download-URL: https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.1.6.tar.gz
-Keywords: Reddit,Supabase,Crawler
+Download-URL: https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.2.tar.gz
+Keywords: Reddit,Supabase,reddit-api,database,reddit-crawler,reddit-scraper
 Platform: UNKNOWN
 Provides-Extra: pii
 License-File: LICENSE

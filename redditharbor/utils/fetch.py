@@ -4,22 +4,15 @@ from rich.progress import track
 from rich.console import Console
 
 console = Console()
-
-# class submission: 
-#     def __init__(): 
-#         return
-
-# class comment: 
-#     def __init__():
-#         return 
     
 class user: 
     """
-    A class for interacting with a Supabase table containing user data.
+    A class to interact with redditors(users) stored in a Supabase database.
 
-    Args:
-        supabase_client (supabase.Client): The Supabase client used for database interaction.
-        db_name (str): The name of the Supabase table containing user data.
+    Attributes:
+        supabase (supabase.Client): The Supabase client used to access the database.
+        redditor_db_config (str): The name of the database table storing redditor data.
+        redditor_db (supabase.Table): The Supabase table object representing the redditor database.
     """
     def __init__(
         self,
@@ -27,11 +20,11 @@ class user:
         db_name: str
     ):
         """
-        Initialize an instance for interacting with a Supabase table containing user data.
+        Initializes the user class with the Supabase client and database name.
 
         Args:
-            supabase_client (supabase.Client): The Supabase client used for database interaction.
-            db_name (str): The name of the Supabase table containing user data.
+            supabase_client (supabase.Client): The Supabase client instance.
+            db_name (str): The name of the database table containing user data.
         """
         self.supabase = supabase_client
         self.redditor_db_config = db_name
@@ -39,11 +32,10 @@ class user:
         
     def name(self, limit: int = None) -> List[str]: 
         """
-        Fetch user names from the Supabase table.
+        Fetch user names from the database.
 
         Args:
-            limit (int, optional): The maximum number of rows to fetch. If None, fetch all rows.
-                Defaults to None.
+            limit (int, optional): The maximum number of rows to fetch. Defaults to None, retrieving all.
 
         Returns:
             List[str]: A list of user names.
@@ -65,7 +57,7 @@ class user:
             page_size = 1000 
             page_numbers = (row_count // page_size) + (1 if row_count % page_size != 0 else 0)
         
-        start_row, end_row = 0, min(limit, page_size) 
+        start_row, end_row = 0, min(row_count, page_size) 
 
         for page in track(
             range(1, page_numbers + 1),
@@ -90,3 +82,83 @@ class user:
             redditor_names.extend(redditor_name)
         
         return redditor_names
+
+class submission: 
+    """
+    A class to interact with submissions stored in a Supabase database.
+
+    Attributes:
+        supabase (supabase.Client): The Supabase client used to access the database.
+        submission_db_config (str): The name of the database table storing submission data.
+        submission_db (supabase.Table): The Supabase table object representing the submission database.
+    """
+    def __init__(
+        self,
+        supabase_client: supabase.Client, 
+        db_name: str
+    ): 
+        """
+        Initializes the submission class with the Supabase client and database name.
+
+        Args:
+            supabase_client (supabase.Client): The Supabase client instance.
+            db_name (str): The name of the database table storing submission data.
+        """
+        self.supabase = supabase_client
+        self.submission_db_config = db_name
+        self.submission_db = self.supabase.table(self.submission_db_config)
+    
+    def id(self, limit: int = None) -> List[str]: 
+        """
+        Retrieves submission IDs from the database.
+
+        Args:
+            limit (int, optional): The maximum number of submission IDs to retrieve. Defaults to None, retrieving all.
+
+        Returns:
+            List[str]: A list of submission IDs.
+        """
+        submission_ids = list()
+        
+        if limit is None: 
+            #Get all rows 
+            row_count = (
+                self.submission_db.select("submission_id", count="exact")
+                .execute()
+                .count
+            ) 
+            page_size = 1000
+            page_numbers = (row_count // page_size) + (1 if row_count % page_size != 0 else 0)
+        else: 
+            #Get limited rows 
+            row_count = limit 
+            page_size = 1000 
+            page_numbers = (row_count // page_size) + (1 if row_count % page_size != 0 else 0)
+        
+        start_row, end_row = 0, min(row_count, page_size) 
+
+        for page in track(
+            range(1, page_numbers + 1),
+            description=f"Fetching submission ids from {self.submission_db_config}",
+        ):
+            if page == 1:
+                pass
+            elif page < (page_numbers - 1):
+                    start_row += page_size
+                    end_row += page_size
+            else:
+                start_row += page_size
+                end_row = row_count
+            
+            paginated_submission_id = (
+                self.submission_db.select("submission_id").range(start_row, end_row).execute()
+            ).model_dump()["data"]
+            submission_id = [data["submission_id"] for data in paginated_submission_id]
+            submission_ids.extend(submission_id)
+        
+        return submission_ids
+        
+
+# class comment: 
+#     def __init__():
+#         return 

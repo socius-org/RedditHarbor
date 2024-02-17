@@ -1,6 +1,6 @@
 import os
 import logging.config
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 import datetime
 import praw
 import supabase
@@ -526,7 +526,7 @@ class collect:
         subreddits: List[str],
         sort_types: List[str],
         limit: int = 10,
-        level: int = 1,
+        level: Optional[int] = 1,
         mask_pii: bool = False 
     ) -> None:
         """
@@ -745,11 +745,11 @@ class collect:
                         )
                         continue
         return console.print(
-            f"[bold green]{total_submission_inserted_count} submission data collected from user(s) {user_names}"
+            f"[bold green]{total_submission_inserted_count} submission data collected from {len(user_names)} user(s)"
         )
 
     def comment_from_user(
-        self, user_names: List[str], sort_types: List[str], limit: int = 10, mask_pii: bool = True 
+        self, user_names: List[str], sort_types: List[str], limit: int = 10, mask_pii: bool = False 
     ) -> None:
         """
         Collects and stores comments from specified user(s).
@@ -790,7 +790,7 @@ class collect:
                         continue
 
         return console.print(
-            f"[bold green]{total_comment_inserted_count} comment data collected from user(s) {user_names}"
+            f"[bold green]{total_comment_inserted_count} comment data collected from {len(user_names)} user(s)"
         )
     
     def submission_by_keyword(
@@ -849,6 +849,58 @@ class collect:
 
         return console.print(
             f"[bold green]{total_submission_inserted_count} submission data collected from subreddit(s) {subreddits} with query='{query}'"
+        )
+    
+    def comment_from_submission( 
+        self, 
+        submission_ids: List[str],
+        level: Optional[int] = 1, 
+        mask_pii: bool = False 
+    ) -> None:
+        """
+        Collects and stores comments from specified submission id(s).
+        
+        Parameters:
+            submission_ids (List[str]): A list of submission IDs from which to collect comments.
+            level (Optional[int]): The depth of comments to collect. Defaults to 1.
+            mask_pii (bool, optional): Mask (or anonymise) personally identifiable information (PII). Defaults to False.
+
+        Returns:
+            None
+        """
+        with console.status(
+            "[bold green]Collecting comments from submission id(s)...", spinner="aesthetic"
+        ):
+            total_comment_inserted_count = 0
+            for submission_id in submission_ids:
+                console.print(f"[bold]submission: {submission_id}", justify="center")
+                submission = self.reddit.submission(submission_id)
+                try:
+                     #Check if comments of submission were crawled
+                    link_id_filter = (
+                        self.comment_db.select("link_id")
+                        .eq("link_id", submission_id)
+                        .execute()
+                        .dict()["data"]
+                    )
+                    
+                    if len(link_id_filter) >= 1:
+                        console.log(f"Submission Link [bold red]{submission_id}[/] already in DB-{self.comment_db_config}")
+
+                    else:
+                        submission.comments.replace_more(limit=level)
+                        comments = submission.comments.list()
+                        comment_inserted_count = self.comment_data(comments=comments, mask_pii=mask_pii, insert_redditor=False)[0]
+                        total_comment_inserted_count += comment_inserted_count
+                except Exception as error:
+                    console.log(f"t3_{submission.id}: [bold red]{error}[/]")
+                    console.print_exception()
+                    console.save_html(
+                        os.path.join(self.error_log_path, f"t3_{submission.id}.html")
+                    )
+                    continue
+        return console.print(
+            f"[bold green]{total_comment_inserted_count} comment data collected from {len(submission_ids)} submission(s)"
         )
     # def user_from_submission(self):
     #     return
