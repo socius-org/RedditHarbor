@@ -5,7 +5,7 @@
 [![Downloads](https://static.pepy.tech/badge/redditharbor)](https://pypistats.org/packages/redditharbor)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/redditharbor?style=flat-square&logo=python)](https://pypistats.org/packages/redditharbor)
 
-https://github.com/socius-org/RedditHarbor/assets/130935698/71780631-a5b4-4e41-bb37-f882f4fc2926
+![redditharbor_demo](https://github.com/socius-org/RedditHarbor/assets/130935698/7bb4f570-90f7-4e6c-a469-7e8debf9a260)
 
 RedditHarbor simplifies collecting Reddit data and saving it to a database. It removes the complexity of working with APIs, letting you easily build a "harbor" of Reddit data for analysis.
 
