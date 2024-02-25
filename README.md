@@ -36,11 +36,13 @@ Minimum coding required after the initial setup! The tool is designed specifical
 
 Install the RedditHarbor package using pip:
 
-```
- #requires Python 3.9 or higher
+```python
+# requires Python 3.9 or higher
 pip install redditharbor
 pip install redditharbor[pii]
 ```
+
+`pip install redditharbor[pii]` is required to enable anonymising any personally identifiable information (PII). 
 
 ### Setting Up Supabase Tables 
 
