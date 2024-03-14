@@ -107,9 +107,7 @@ class submission:
         Returns:
             None. Prints the number of rows downloaded and the number of .pickle files created.
         """
-        save_file_path = os.path.abspath(
-            os.path.join(self.cwd, f"../{file_path}")
-        )
+        save_file_path = os.path.join(self.cwd, f"{file_path}")
         
         os.makedirs(save_file_path, exist_ok=True)
         if isinstance(columns, str):
@@ -142,7 +140,7 @@ class submission:
             paginated_submissions = (
                 self.submission_db.select(*columns).range(start_row, end_row).execute()
             ).model_dump()["data"]
-            with open(f"{save_file_path}/{file_name}_{page}.pickle", "wb") as handle:
+            with open(f"{save_file_path}\{file_name}_{page}.pickle", "wb") as handle:
                 pickle.dump(
                     paginated_submissions, handle, protocol=pickle.HIGHEST_PROTOCOL
                 )
@@ -167,9 +165,7 @@ class submission:
             None. Prints the number of rows downloaded and the CSV file created.
         """
 
-        save_file_path = os.path.abspath(
-            os.path.join(self.cwd, f"../{file_path}")
-        )
+        save_file_path = os.path.join(self.cwd, f"{file_path}")
         
         os.makedirs(save_file_path, exist_ok=True)
 
@@ -188,7 +184,7 @@ class submission:
         start_row, end_row = 0, 1000
 
         with open(
-            f"{save_file_path}/{file_name}.csv", "w", newline="", encoding="utf-8"
+            f"{save_file_path}\{file_name}.csv", "w", newline="", encoding="utf-8"
         ) as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(columns if columns != "*" else self.columns)
@@ -234,9 +230,7 @@ class submission:
             None. Prints the number of rows downloaded and the TXT file created.
         """
 
-        save_file_path = os.path.abspath(
-            os.path.join(self.cwd, f"../{file_path}")
-        )
+        save_file_path = os.path.join(self.cwd, f"{file_path}")
         
         os.makedirs(save_file_path, exist_ok=True)
 
@@ -255,7 +249,7 @@ class submission:
         start_row, end_row = 0, self.page_size
 
         with open(
-            f"{save_file_path}/{file_name}.txt", "w", encoding="utf-8"
+            f"{save_file_path}\{file_name}.txt", "w", encoding="utf-8"
         ) as txtfile:
             txtfile.write("\t".join(columns if columns != "*" else self.columns) + "\n")
 
@@ -300,9 +294,7 @@ class submission:
             None. Prints the number of rows downloaded and the JSON file created.
         """
         # Similar to to_csv but saving to JSON format
-        save_file_path = os.path.abspath(
-            os.path.join(self.cwd, f"../{file_path}")
-        )
+        save_file_path = os.path.join(self.cwd, f"{file_path}")
         
         os.makedirs(save_file_path, exist_ok=True)
 
@@ -337,7 +329,7 @@ class submission:
                 self.submission_db.select(*columns).range(start_row, end_row).execute()
             ).model_dump()["data"]
             with open(
-                f"{save_file_path}/{file_name}_{page}.json", "w", encoding="utf-8"
+                f"{save_file_path}\{file_name}_{page}.json", "w", encoding="utf-8"
             ) as jsonfile:
                 json.dump(paginated_submissions, jsonfile, ensure_ascii=False, indent=2)
 
@@ -355,9 +347,7 @@ class submission:
         Returns:
             None. Prints the number of images downloaded.
         """
-        save_file_path = os.path.abspath(
-            os.path.join(self.cwd, f"../{file_path}")
-        )
+        save_file_path = os.path.join(self.cwd, f"{file_path}")
         
         os.makedirs(save_file_path, exist_ok=True)
         
@@ -381,7 +371,7 @@ class submission:
                 self.submission_db.select("submission_id", "attachment").range(start_row, end_row).execute()
             ).model_dump()["data"]
             
-            for data in track(paginated_submissions, description=f"Downloading bulk {page}/{self.page_numbers}"): 
+            for data in track(paginated_submissions, description=f"Downloading bulk {page}\{self.page_numbers}"): 
                 if (data['attachment'] is None): 
                     pass 
                 else:
@@ -496,9 +486,7 @@ class comment:
         Returns:
             None. Prints the number of rows downloaded and the number of .pickle files created.
         """
-        save_file_path = os.path.abspath(
-            os.path.join(self.cwd, f"../{file_path}")
-        )
+        save_file_path = os.path.join(self.cwd, f"{file_path}")
         
         os.makedirs(save_file_path, exist_ok=True)
         
@@ -532,7 +520,7 @@ class comment:
             paginated_comments = (
                 self.comment_db.select(*columns).range(start_row, end_row).execute()
             ).model_dump()["data"]
-            with open(f"{save_file_path}/{file_name}_{page}.pickle", "wb") as handle:
+            with open(f"{save_file_path}\{file_name}_{page}.pickle", "wb") as handle:
                 pickle.dump(
                     paginated_comments, handle, protocol=pickle.HIGHEST_PROTOCOL
                 )
@@ -557,9 +545,7 @@ class comment:
             None. Prints the number of rows downloaded and the CSV file created.
         """
 
-        save_file_path = os.path.abspath(
-            os.path.join(self.cwd, f"../{file_path}")
-        )
+        save_file_path = os.path.join(self.cwd, f"{file_path}")
         
         os.makedirs(save_file_path, exist_ok=True)
 
@@ -578,7 +564,7 @@ class comment:
         start_row, end_row = 0, self.page_size
 
         with open(
-            f"{save_file_path}/{file_name}.csv", "w", newline="", encoding="utf-8"
+            f"{save_file_path}\{file_name}.csv", "w", newline="", encoding="utf-8"
         ) as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(columns if columns != "*" else self.columns)
@@ -624,9 +610,7 @@ class comment:
             None. Prints the number of rows downloaded and the TXT file created.
         """
 
-        save_file_path = os.path.abspath(
-            os.path.join(self.cwd, f"../{file_path}")
-        )
+        save_file_path = os.path.join(self.cwd, f"{file_path}")
         
         os.makedirs(save_file_path, exist_ok=True)
 
@@ -645,7 +629,7 @@ class comment:
         start_row, end_row = 0, self.page_size
 
         with open(
-            f"{save_file_path}/{file_name}.txt", "w", encoding="utf-8"
+            f"{save_file_path}\{file_name}.txt", "w", encoding="utf-8"
         ) as txtfile:
             txtfile.write("\t".join(columns if columns != "*" else self.columns) + "\n")
 
@@ -690,9 +674,7 @@ class comment:
             None. Prints the number of rows downloaded and the JSON file created.
         """
         # Similar to to_csv but saving to JSON format
-        save_file_path = os.path.abspath(
-            os.path.join(self.cwd, f"../{file_path}")
-        )
+        save_file_path = os.path.join(self.cwd, f"{file_path}")
         
         os.makedirs(save_file_path, exist_ok=True)
 
@@ -727,7 +709,7 @@ class comment:
                 self.comment_db.select(*columns).range(start_row, end_row).execute()
             ).model_dump()["data"]
             with open(
-                f"{save_file_path}/{file_name}_{page}.json", "w", encoding="utf-8"
+                f"{save_file_path}\{file_name}_{page}.json", "w", encoding="utf-8"
             ) as jsonfile:
                 json.dump(paginated_comments, jsonfile, ensure_ascii=False, indent=2)
 
@@ -816,9 +798,7 @@ class user:
         Returns:
             None. Prints the number of rows downloaded and the number of .pickle files created.
         """
-        save_file_path = os.path.abspath(
-            os.path.join(self.cwd, f"../{file_path}")
-        )
+        save_file_path = os.path.join(self.cwd, f"{file_path}")
         
         os.makedirs(save_file_path, exist_ok=True)
         if isinstance(columns, str):
@@ -851,7 +831,7 @@ class user:
             paginated_redditors = (
                 self.redditor_db.select(*columns).range(start_row, end_row).execute()
             ).model_dump()["data"]
-            with open(f"{save_file_path}/{file_name}_{page}.pickle", "wb") as handle:
+            with open(f"{save_file_path}\{file_name}_{page}.pickle", "wb") as handle:
                 pickle.dump(
                     paginated_redditors, handle, protocol=pickle.HIGHEST_PROTOCOL
                 )
@@ -876,9 +856,7 @@ class user:
             None. Prints the number of rows downloaded and the CSV file created.
         """
 
-        save_file_path = os.path.abspath(
-            os.path.join(self.cwd, f"../{file_path}")
-        )
+        save_file_path = os.path.join(self.cwd, f"{file_path}")
         
         os.makedirs(save_file_path, exist_ok=True)
 
@@ -897,7 +875,7 @@ class user:
         start_row, end_row = 0, self.page_size
 
         with open(
-            f"{save_file_path}/{file_name}.csv", "w", newline="", encoding="utf-8"
+            f"{save_file_path}\{file_name}.csv", "w", newline="", encoding="utf-8"
         ) as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(columns if columns != "*" else self.columns)
@@ -943,9 +921,7 @@ class user:
             None. Prints the number of rows downloaded and the TXT file created.
         """
 
-        save_file_path = os.path.abspath(
-            os.path.join(self.cwd, f"../{file_path}")
-        )
+        save_file_path = os.path.join(self.cwd, f"{file_path}")
         
         os.makedirs(save_file_path, exist_ok=True)
 
@@ -964,7 +940,7 @@ class user:
         start_row, end_row = 0, self.page_size
 
         with open(
-            f"{save_file_path}/{file_name}.txt", "w", encoding="utf-8"
+            f"{save_file_path}\{file_name}.txt", "w", encoding="utf-8"
         ) as txtfile:
             txtfile.write("\t".join(columns if columns != "*" else self.columns) + "\n")
 
@@ -1009,9 +985,7 @@ class user:
             None. Prints the number of rows downloaded and the JSON file created.
         """
         # Similar to to_csv but saving to JSON format
-        save_file_path = os.path.abspath(
-            os.path.join(self.cwd, f"../{file_path}")
-        )
+        save_file_path = os.path.join(self.cwd, f"{file_path}")
         
         os.makedirs(save_file_path, exist_ok=True)
 
@@ -1046,7 +1020,7 @@ class user:
                 self.redditor_db.select(*columns).range(start_row, end_row).execute()
             ).model_dump()["data"]
             with open(
-                f"{save_file_path}/{file_name}_{page}.json", "w", encoding="utf-8"
+                f"{save_file_path}\{file_name}_{page}.json", "w", encoding="utf-8"
             ) as jsonfile:
                 json.dump(paginated_redditors, jsonfile, ensure_ascii=False, indent=2)
 

@@ -17,6 +17,7 @@ logging.config.dictConfig({
     "disable_existing_loggers": True
 })
 
+# Could potentially relocate this within collect.__init__ to improve speed of loading, when not masking pii.  
 pii_analyzer = AnalyzerEngine()
 pii_anonymizer = AnonymizerEngine()
 
@@ -55,11 +56,8 @@ class collect:
             raise ValueError("Invalid input: db_config must be provided.")
         
         #Check and create "error_log" folder 
-        self.error_log_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "../error_log")
-        )
-        if not os.path.exists(self.error_log_path):
-            os.makedirs(self.error_log_path)
+        self.error_log_path = os.path.join(os.getcwd(), "error_log")
+        os.makedirs(self.error_log_path, exist_ok=True)
     
     def redditor_data(self, praw_models: praw.models, insert: bool) -> Tuple[str, bool]:
         """
