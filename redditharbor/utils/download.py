@@ -395,13 +395,15 @@ class submission:
                             # console.print(f"[bold red]{response.status_code}[/]: Failed to download image (url: {img_url})") 
                             fail += 1 
                             failed_urls.append(img_url)
-
-        return console.print(
-            f"[bold green]{success} image files successfully downloaded and saved\n",
-            f"[bold red]Failed to download {fail} image files\n", 
-            f"Failed urls: {failed_urls}"
-        )
-
+        
+        if fail == 0: 
+            return console.print(f"[bold green]{success} image files successfully downloaded and saved\n")
+        else: 
+            return console.print(
+                f"[bold green]{success} image files successfully downloaded and saved\n",
+                f"[bold red]Failed to download {fail} image files\n", 
+                f"Failed urls: {failed_urls}"
+            )
 
 class comment:
     def __init__(

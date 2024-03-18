@@ -1,16 +1,21 @@
 Metadata-Version: 2.1
 Name: redditharbor
-Version: 0.2.1
-Summary: A tool designed to effortlessly collect and store Reddit data in a Supabase database.
+Version: 0.2.2
+Summary: Effortlessly collect and store Reddit data in your database.
 Home-page: https://github.com/socius-org/RedditHarbor/
+Download-URL: https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.2.2.tar.gz
 Author: Nick S.H Oh
 Author-email: research@socius.org
 License: MIT
-Download-URL: https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.2.1.tar.gz
 Keywords: Reddit,Supabase,reddit-api,database,reddit-crawler,reddit-scraper
-Platform: UNKNOWN
-Provides-Extra: pii
 License-File: LICENSE
-
-UNKNOWN
-
+Requires-Dist: praw==7.7.1
+Requires-Dist: supabase==1.0.3
+Requires-Dist: rich==13.4.2
+Requires-Dist: python-dotenv==1.0.0
+Requires-Dist: presidio-analyzer==2.2.351
+Requires-Dist: presidio-anonymizer==2.2.351
+Requires-Dist: pillow==10.2.0
+Requires-Dist: requests==2.31.0
+Provides-Extra: pii
+Requires-Dist: spacy[en_core_web_lg]; extra == "pii"
