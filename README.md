@@ -5,6 +5,10 @@
 [![Downloads](https://static.pepy.tech/badge/redditharbor)](https://pypistats.org/packages/redditharbor)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/redditharbor?style=flat-square&logo=python)](https://pypistats.org/packages/redditharbor)
 
+> **<picture><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f38a/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f38a/512.gif" alt="🎊" width="20" height="20"></picture> ANNOUNCEMENT <picture><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f38a/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f38a/512.gif" alt="🎊" width="20" height="20"></picture>**
+> 
+> **We are delighted to announce that we will be co-organising a tutorial with [the Open Data Institute (ODI)](https://theodi.org/) at [the 18th International AAAI Conference on Web and Social Media](https://icwsm.org/2024/index.html/#tutorials-schedule). This event will take place on <ins>June 3rd, 2024</ins>, at the Jacobs School of Medicine in Buffalo, New York. If you're interested in attending our tutorial, secure your spot by registering at [AAAI registration site](https://aaai.getregistered.net/icwsm-24). For more information about our tutorial, please visit our [tutorial webpage](https://socius-org.github.io/icwsm-2024/).**
+
 ![redditharbor_demo](https://github.com/socius-org/RedditHarbor/assets/130935698/7bb4f570-90f7-4e6c-a469-7e8debf9a260)
 
 RedditHarbor simplifies collecting Reddit data and saving it to a database. It removes the complexity of working with APIs, letting you easily build a "harbor" of Reddit data for analysis.
