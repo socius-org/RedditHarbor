@@ -19,7 +19,7 @@ setup(
           'python-dotenv == 1.0.0',
           'presidio-analyzer == 2.2.351', 
           'presidio-anonymizer == 2.2.351',
-          'pillow == 10.2.0', 
+          'pillow >= 10.2.0', 
           'requests == 2.31.0'  
       ],
   extras_require={

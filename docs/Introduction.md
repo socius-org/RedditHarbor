@@ -1,10 +1,9 @@
 # About
 
-## Navigating 🧭 the complexities of APIs and data collection can be a daunting task, especially for researchers 👨‍💻 with limited coding backgrounds. **RedditHarbor simplifies collecting Reddit data and saving 📥 it to a database**. It **removes the complexity** of working with APIs 🏗️, letting you easily build a "harbor" of data for analysis.
+## Navigating 🧭 the complexities of APIs and data collection can be a daunting task, especially for researchers 👨‍💻 with limited coding backgrounds. 
+## **RedditHarbor simplifies collecting Reddit data and saving 📥 it to a database**. It **removes the complexity** of working with APIs 🏗️, letting you easily build a "harbor" of data for analysis.
 
 ## Overview 
-
-![redditharbor_demo](https://github.com/socius-org/RedditHarbor/assets/130935698/7bb4f570-90f7-4e6c-a469-7e8debf9a260)
 
 ### Extract, Transform and Load (ETL) Data
 

@@ -1,7 +1,5 @@
 # Prerequisites
 
-For a smooth experience during the ICWSM tutorial, please ensure you have the following prerequisites set up beforehand. We have tried to provide clear and easy-to-follow instructions to make the process as straightforward as possible. 
-
 ## 👨‍💻 Reddit API
 
 1. **Create a Reddit Account**: You will need a Reddit account to access the Reddit API. If you don't have one already, head over to [reddit.com](https://www.reddit.com/) and sign up for a new account.
