@@ -21,14 +21,27 @@ Social media data from platforms like Reddit contains rich insights into human b
 
 In plain language:
 
-- It **connects to the Reddit API** and downloads submissions, comments, user profiles etc.
-- It allows **anonymising any personally identifiable information (PII)** to protect user privacy and comply with IRBs
-- It then **stores this data in an organized database** (Supabase) that you control
-- You can then **export the database to CSV/JSON/JPEG formats** for your analysis 
+- **✨ Comprehensive API Data Collection**: Gather Reddit submissions, comments, and user profiles directly from the official data API.
+
+- **🔒 Privacy-Preserving**: Anonymise PII to protect user privacy and meet ethical/IRB standards. 
+
+- **📦 Controlled Data Storage**: Store collected data in your own secure database for accessibility and organisation.
+
+- **📈 Highly Scalable**: Handle massive datasets with millions of rows through efficient pagination.
+
+- **🕹️ Configurable Collection**: Tailor data gathering to your specific needs via adjustable parameters.
+
+- **📂 Analysis-Ready Exports**: Export to CSV, JSON, JPEG for seamless integration with analysis tools.
+
+- **🔄 Temporal Metric Tracking**: Regularly update post metrics like scores, upvote ratios, awards over time - unlike static snapshot databases.
+
+- **⚡ Smart Update Intervals**: Automatically adjust update frequency based on dataset size for optimised API efficiency.
 
 Minimum coding required after the initial setup! The tool is designed specifically for researchers with limited coding backgrounds. 
 
 ## Prerequisites
+
+For a more detailed step-by-step instructions, see our [documentation](https://socius-org.github.io/RedditHarbor/pages/prerequisites.html).  
 
 **Reddit API**: You need a Reddit account to access the Reddit API. Follow [Reddit's API guide](https://www.reddit.com/wiki/api/) to register as a developer and create a script app. This will provide the credentials (PUBLIC_KEY and SECRET_KEY) needed to authenticate with Reddit. 
 
@@ -158,10 +171,7 @@ from redditharbor.dock.pipeline import collect
 collect = collect(reddit_client=reddit_client, supabase_client=supabase_client, db_config=DB_CONFIG)
 ```
 
-### From Subreddits 
-#### Collect Submissions and Users
-
-To collect submissions and associated user data from specified subreddits:
+For example, to collect submissions and associated user data from specified subreddits:
 
 ```python
 subreddits = ["python", "learnpython"]
@@ -175,143 +185,4 @@ This will collect the 5 hottest and 5 top submissions from r/python and r/learnp
 collect.subreddit_submission(subreddits, sort_types, limit=5, mask_pii=True)
 ```
 
-> **📝 Supported PII entities:**
-> 
-> PII is identified and anonymised with Microsoft's [presidio](https://microsoft.github.io/presidio/). Setting `mask_pii` as True will automatically mask [12+ pii entities](https://microsoft.github.io/presidio/supported_entities/) such as `<PERSON>`, `<PHONE NUMBER>` and `<EMAIL_ADDRESS>`.
->
-> <picture><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.gif" alt="🚧" width="20" height="20"></picture> *While PII is anonymized rigorously to protect privacy, this may inadvertently obscure some entities required for research. For example, "Including food and energy costs, so-called headline PCE actually fell 0.1% on the month and was up just 2.6% from a year ago." will be saved as "Including food and energy costs, so-called headline PCE actually fell 0.1% on <DATE_TIME> and was up just 2.6% from <DATE_TIME>."* 
-
-#### Collect Comments and Users
-
-Similarly, to collect comments and users:
-
-```python   
-collect.subreddit_comment(subreddits, sort_types, limit=5, level=2)
-```
-
-This will collect comments from the 5 hottest and 5 top submissions from the specified subreddits, up to a depth of 2 reply levels.
-
-#### Collect Submissions, Comments and Users
-
-To collect submissions, associated comments and users in one go:
-
-```python
-collect.subreddit_submission_and_comment(subreddits, sort_types, limit=5, level=2)
-```
-
-### Keyword Search (Submission)
-#### Collect Submissions
-
-To collect submissions based on specific keywords from specified subreddits:
-
-```python
-subreddits = ["python", "learnpython"]
-query = "data science"
-collect.submission_by_keyword(subreddits, query, limit=5)
-```
-
-This example collects the 5 most relevant submissions from the subreddits r/python and r/learnpython that contain the keyword "data science." The search can be customized with boolean operators:
-- `AND`: Requires all words to be present (e.g. "energy AND oil" returns results with both "energy" and "oil")
-- `OR`: Requires at least one word to match (e.g. "energy OR oil" returns results with either "energy" or "oil") 
-- `NOT`: Excludes results with a word (e.g. "energy NOT oil" returns results with "energy" but without "oil") 
-- `()`: Group parts of the query
-
-> <picture><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.gif" alt="🚧" width="20" height="20"></picture> *When using multiple boolean operators, you may sometimes get unexpected results. To control the logic flow, use parentheses to group clauses. For example, "renewable energy NOT fossil fuels OR oil OR gas" returns very different results than "renewable energy NOT (fossil fuels OR oil OR gas)".* 
-
-### From Submissions
-#### Collect Submission Comments 
-
-To collect comments from specified submissions, you can use the following code:
-
-```python
-from redditharbor.utils import fetch 
-
-fetch_submission = fetch.submission(supabase_client=supabase_client, db_name=db_config["submission"])
-submission_ids = fetch_submission.id(limit=100) # Limiting to 100 submission IDs for demonstration. Set limit=None to fetch all submission IDs
-collect.comment_from_submission(submission_ids=submission_ids, level=2) #Set level=None to collect entire comments
-```
-
-This will collect comments from the specified 100 submissions at level 2 (e.g. including replies to top-level comments). 
-
-### From Users 
-#### Collect User Submissions
-
-To collect submissions made by specified users, you have to "fetch" user names from existing database:
-
-```python
-from redditharbor.utils import fetch
-
-fetch_user = fetch.user(supabase_client=supabase_client, db_name=DB_CONFIG["user"])
-users = fetch_user.name(limit=100) #This will fetch the first 100 user names from the user database. Set limit=None to fetch entire user names.  
-collect.submission_from_user(users=users, sort_types=["controversial"], limit=10)
-```
-
-This will collect 10 most controversial submissions from the specified users. 
-
-#### Collect User Comments
-
-And to collect comments:
-
-```python
-collect.comment_from_user(users=users, sort_types=["new"], limit=10) 
-```
-
-This will collect 10 most recent comments from the specified users. 
-
-## Downloading Data
-
-The `download` module contains classes for interacting with Supabase tables and downloading their data. The `submission`, `comment` and `user` classes provide identical functionality to download Supabase table data into pickle, CSV, text, and JSON formats. It is recommended to create a new folder under your directory and save data in such a folder:
-
-```python
-from redditharbor.utils import download
-```
-
-### Download Submissions
-
-To download submission data:
-
-```python
-download = download.submission(supabase_client, DB_CONFIG["submission"])
-download.to_csv(columns="all", file_name="submission", file_path="<your-folder-name>")
-```
-
-This will save all columns from the "submissions" table to a submissions.csv file in the specified folder directory.
-
-You can specify columns and file formats:
-
-```python 
-cols = ["submission_id", "title", "score"]
-download.to_json(columns = cols, file_name="submission", file_path="<your-folder-name>")
-```
-
-This will save columns "submission_id", "title" and "score" from the submission table to a submissions.json file(s) in the specified folder directory.
-
-### Download Images from Submissions
-
-To download image files from the submission data: 
-
-```python
-download = download.submission(supabase_client, DB_CONFIG["submission"])
-download.to_img(file_path="<your-folder-name>")
-```
-
-This will save all .jpg and .png files of the submissions table in the specified folder directory.
-
-### Download Comments
-
-Similarly, for comments:
-
-```python
-download = download.comment(supabase_client, DB_CONFIG["comment"])
-download.to_csv(columns="all", file_name="comment", file_path="<your-folder-name>")
-```
-
-### Download Users
-
-And users:
-
-```python
-download = download.user(supabase_client, DB_CONFIG["user"])
-download.to_csv(columns="all", file_name="user", file_path="<your-folder-name>")
-```
-
+For further use cases - such as from collecting [subreddit-based data](https://socius-org.github.io/RedditHarbor/pages/subreddit.html), [keyword-based data](https://socius-org.github.io/RedditHarbor/pages/keyword.html) and [database-driven data](https://socius-org.github.io/RedditHarbor/pages/database.html), to [downloading](https://socius-org.github.io/RedditHarbor/pages/download.html) and [updating](https://socius-org.github.io/RedditHarbor/pages/update.html) database - please refer to our [documentation](https://socius-org.github.io/RedditHarbor). 

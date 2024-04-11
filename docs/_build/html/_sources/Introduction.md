@@ -1,10 +1,9 @@
 # About
 
-## Navigating 🧭 the complexities of APIs and data collection can be a daunting task, especially for researchers 👨‍💻 with limited coding backgrounds. **RedditHarbor simplifies collecting Reddit data and saving 📥 it to a database**. It **removes the complexity** of working with APIs 🏗️, letting you easily build a "harbor" of data for analysis.
+## Navigating 🧭 the complexities of APIs and data collection can be a daunting task, especially for researchers 👨‍💻 with limited coding backgrounds. 
+## **RedditHarbor simplifies collecting Reddit data and saving 📥 it to a database**. It **removes the complexity** of working with APIs 🏗️, letting you easily build a "harbor" of data for analysis.
 
 ## Overview 
-
-![redditharbor_demo](https://github.com/socius-org/RedditHarbor/assets/130935698/7bb4f570-90f7-4e6c-a469-7e8debf9a260)
 
 ### Extract, Transform and Load (ETL) Data
 
@@ -28,5 +27,7 @@ Here's how RedditHarbor empowers your research:
 * **📈 Scalable and Efficient**: Handle pagination seamlessly, even for large datasets with millions of rows. 
 * **🕹️ Customisable Collection**: Tailor your data collection to your specific needs by configuring parameters.
 * **📂 Analysis-Ready**: Export your database to CSV, JSON, or JPEG formats for effortless integration with your preferred analysis tools.
+* **🔄 Temporal Metric Tracking:**: Regularly update key metrics like upvote ratios, scores, awards, and comment counts, allowing temporal analysis - a distinct advantage over static "snapshot" databases, such as PushShift or AcademicTorrent. 
+* **⚡ Smart Update Intervals**: Leverage flexible configurations to automatically adjust update intervals based on dataset size, optimising efficiency while adhering to API constraints. 
 
 With RedditHarbor, you can spend less time wrestling with technical hurdles and more time focusing on your research objectives. 
