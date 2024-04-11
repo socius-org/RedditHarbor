@@ -364,7 +364,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#work-in-progress">Work-in-Progress…</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unlock-temporal-insights-with-intelligent-updates">Unlock temporal insights 📈 with intelligent updates 🔄</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#updating-submissions">Updating Submissions</a></li>
 </ul>
             </nav>
         </div>
@@ -378,9 +379,55 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="updating-data">
 <h1>Updating Data<a class="headerlink" href="#updating-data" title="Permalink to this headline">#</a></h1>
-<section id="work-in-progress">
-<h2>Work-in-Progress…<a class="headerlink" href="#work-in-progress" title="Permalink to this headline">#</a></h2>
+<section id="unlock-temporal-insights-with-intelligent-updates">
+<h2>Unlock temporal insights 📈 with intelligent updates 🔄<a class="headerlink" href="#unlock-temporal-insights-with-intelligent-updates" title="Permalink to this headline">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">RedditHarbor</span></code>’s update module streamlines and automates the process of updating crucial metrics for existing submissions (comment and user is currently working-in-progress!). It provides flexibility and configurability to adjust update intervals and data sources. A key advantage of this update module is the ability to track how various metrics, such as the upvote ratio or score, change over time for specific posts. This capability sets RedditHarbor apart from many other Reddit database resources, such as PushShift or Academic Torrents, which typically provide a static “snapshot” of submissions and comments at a random point in time.</p>
 </section>
+<section id="updating-submissions">
+<h2>Updating Submissions<a class="headerlink" href="#updating-submissions" title="Permalink to this headline">#</a></h2>
+<p>To update submission data, follow these steps:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">redditharbor.login</span> <span class="k">as</span> <span class="nn">login</span>
+<span class="kn">from</span> <span class="nn">redditharbor.dock.pipeline</span> <span class="kn">import</span> <span class="n">update</span>
+
+<span class="n">reddit_client</span> <span class="o">=</span> <span class="n">login</span><span class="o">.</span><span class="n">reddit</span><span class="p">()</span>
+<span class="n">supabase_client</span> <span class="o">=</span> <span class="n">login</span><span class="o">.</span><span class="n">supabase</span><span class="p">()</span>
+<span class="n">db_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;test_redditor&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;submission&quot;</span><span class="p">:</span> <span class="s2">&quot;test_submission&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;test_comment&quot;</span>
+<span class="p">}</span>
+
+<span class="n">update</span> <span class="o">=</span> <span class="n">update</span><span class="p">(</span><span class="n">reddit_client</span><span class="p">,</span> <span class="n">supabase_client</span><span class="p">,</span> <span class="n">db_config</span><span class="p">)</span>
+<span class="n">update</span><span class="o">.</span><span class="n">schedule_task</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="s2">&quot;submission&quot;</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="s2">&quot;1hr&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will update the <code class="docutils literal notranslate"><span class="pre">upvote_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">score</span></code>, and <code class="docutils literal notranslate"><span class="pre">num_comments</span></code> for submissions every 10 minutes in the next 1 hour of duration. The <code class="docutils literal notranslate"><span class="pre">update()</span></code> module automatically calculates the time interval based on the number of non-archived rows, adhering to the QPM (queries per minute) limit imposed by the Reddit Data API, which allows only 100 queries per minute per OAuth client ID.</p>
+<ul class="simple">
+<li><p>0-1,000 rows: update every 10 minutes</p></li>
+<li><p>1,001-3,000 rows: update every 30 minutes</p></li>
+<li><p>3,001-6,000 rows: update every 1 hour</p></li>
+<li><p>6,001-36,000 rows: update every 6 hours</p></li>
+<li><p>36,001-72,000 rows: update every 12 hours</p></li>
+<li><p>72,001+ rows: update every 1 day</p></li>
+</ul>
+<!-- ## Updating Comments
+To update comment data, use the following code:
+
+```python
+update.schedule_task(task="comment", duration="1hr")
+```
+
+This will update the `score` and `upvote ratio` for comments every 10 minutes in the next 1 hour of duration in our database, with the update interval automatically adjusted based on the number of non-archived rows.
+
+## Customizing Updates
+You can customize the update process by specifying the desired metrics, intervals, and data sources. For example:
+
+```python
+update.schedule_task(task="submission", metrics=["score", "upvote_ratio"], interval="30min", duration="6hr")
+```
+
+This will update the `score` and `upvote_ratio` metrics for submissions every 30 minutes for the next 6 hours of duration.
+``` --></section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -441,7 +488,8 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#work-in-progress">Work-in-Progress…</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unlock-temporal-insights-with-intelligent-updates">Unlock temporal insights 📈 with intelligent updates 🔄</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#updating-submissions">Updating Submissions</a></li>
 </ul>
   </nav></div>
 
