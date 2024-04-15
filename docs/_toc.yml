@@ -2,19 +2,24 @@
 # Learn more at https://jupyterbook.org/customize/toc.html
 
 format: jb-book
-root: Introduction
+root: about
 parts: 
   - caption: Getting Started
     chapters: 
-    - file: pages/prerequisites
-    - file: pages/install
-    - file: pages/GettingStarted
+    - file: getting_started/prerequisites
+    - file: getting_started/installation
+    - file: getting_started/setting
+  - caption: Database Schema 
+    chapters: 
+    - file: data_schema/user
+    - file: data_schema/submission
+    - file: data_schema/comment
   - caption: Hands-on RedditHarbor 
     chapters:
-    - file: pages/ScrapingExamples
+    - file: hands_on/scraping_examples
       sections: 
-      - file: pages/subreddit
-      - file: pages/keyword
-      - file: pages/database
-    - file: pages/download
-    - file: pages/update
+      - file: hands_on/subreddit_based
+      - file: hands_on/keyword_based
+      - file: hands_on/database_driven
+    - file: hands_on/download_data
+    - file: hands_on/update_data
