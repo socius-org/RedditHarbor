@@ -27,7 +27,7 @@ Here's how RedditHarbor empowers your research:
 * **📈 Scalable and Efficient**: Handle pagination seamlessly, even for large datasets with millions of rows. 
 * **🕹️ Customisable Collection**: Tailor your data collection to your specific needs by configuring parameters.
 * **📂 Analysis-Ready**: Export your database to CSV, JSON, or JPEG formats for effortless integration with your preferred analysis tools.
-* **🔄 Temporal Metric Tracking:**: Regularly update key metrics like upvote ratios, scores, awards, and comment counts, allowing temporal analysis - a distinct advantage over static "snapshot" databases, such as PushShift or AcademicTorrent. 
+* **🔄 Temporal Metric Tracking**: Regularly update key metrics like upvote ratios, scores, awards, and comment counts, allowing temporal analysis - a distinct advantage over static "snapshot" databases, such as PushShift or AcademicTorrent. 
 * **⚡ Smart Update Intervals**: Leverage flexible configurations to automatically adjust update intervals based on dataset size, optimising efficiency while adhering to API constraints. 
 
 With RedditHarbor, you can spend less time wrestling with technical hurdles and more time focusing on your research objectives. 

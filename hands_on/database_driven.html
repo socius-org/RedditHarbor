@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Updating Data &#8212; ICWSM 2024 Tutorial</title>
+    <title>Database-Driven Data Collection &#8212; RedditHarbor</title>
   
   
   
@@ -60,11 +60,13 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'pages/update';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'hands_on/database_driven';</script>
     <link rel="shortcut icon" href="../_static/socius_logo.png"/>
+    <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="Downloading Data" href="download.html" />
+    <link rel="next" title="Downloading Data" href="download_data.html" />
+    <link rel="prev" title="Collecting Keyword-based Data" href="keyword_based.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -130,7 +132,7 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="sidebar-primary-item">
   
 
-<a class="navbar-brand logo" href="../Introduction.html">
+<a class="navbar-brand logo" href="../about.html">
   
   
   
@@ -150,27 +152,33 @@ const thebe_selector_output = ".output, .cell_output"
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
-                <a class="reference internal" href="../Introduction.html">
+                <a class="reference internal" href="../about.html">
                     About
                 </a>
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">Prerequisites</a></li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="GettingStarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/setting.html">Getting Started</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Database Schema</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../data_schema/user.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_schema/submission.html">Submission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_schema/comment.html">Comment</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Hands-on RedditHarbor</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="ScrapingExamples.html">Scraping Examples</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="subreddit.html">Collecting Subreddit-based Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="keyword.html">Collecting Keyword-based Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="database.html">Database-Driven Data Collection</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="scraping_examples.html">Scraping Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="subreddit_based.html">Collecting Subreddit-based Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keyword_based.html">Collecting Keyword-based Data</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Database-Driven Data Collection</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="download.html">Downloading Data</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Updating Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="download_data.html">Downloading Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="update_data.html">Updating Data</a></li>
 </ul>
 
     </div>
@@ -242,7 +250,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/socius-org/RedditHarbor/issues/new?title=Issue%20on%20page%20%2Fpages/update.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/socius-org/RedditHarbor/issues/new?title=Issue%20on%20page%20%2Fhands_on/database_driven.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -272,7 +280,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../_sources/pages/update.md" target="_blank"
+      <li><a href="../_sources/hands_on/database_driven.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -354,7 +362,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Updating Data</h1>
+    <h1>Database-Driven Data Collection</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -364,8 +372,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unlock-temporal-insights-with-intelligent-updates">Unlock temporal insights 📈 with intelligent updates 🔄</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#updating-submissions">Updating Submissions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leverage-your-existing-database-to-collect-additional-relevant-data-such-as-comments-from-specific-submissions-or-user-activity">Leverage your existing database 📂 to collect additional relevant data, such as comments from specific submissions or user activity.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#collect-submission-comments">Collect Submission Comments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#collect-user-submissions">Collect User Submissions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#collect-user-comments">Collect User Comments</a></li>
 </ul>
             </nav>
         </div>
@@ -377,57 +387,45 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="updating-data">
-<h1>Updating Data<a class="headerlink" href="#updating-data" title="Permalink to this headline">#</a></h1>
-<section id="unlock-temporal-insights-with-intelligent-updates">
-<h2>Unlock temporal insights 📈 with intelligent updates 🔄<a class="headerlink" href="#unlock-temporal-insights-with-intelligent-updates" title="Permalink to this headline">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">RedditHarbor</span></code>’s update module streamlines and automates the process of updating crucial metrics for existing submissions (comment and user is currently working-in-progress!). It provides flexibility and configurability to adjust update intervals and data sources. A key advantage of this update module is the ability to track how various metrics, such as the upvote ratio or score, change over time for specific posts. This capability sets RedditHarbor apart from many other Reddit database resources, such as PushShift or Academic Torrents, which typically provide a static “snapshot” of submissions and comments at a random point in time.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="database-driven-data-collection">
+<h1>Database-Driven Data Collection<a class="headerlink" href="#database-driven-data-collection" title="Permalink to this headline">#</a></h1>
+<section id="leverage-your-existing-database-to-collect-additional-relevant-data-such-as-comments-from-specific-submissions-or-user-activity">
+<h2>Leverage your existing database 📂 to collect additional relevant data, such as comments from specific submissions or user activity.<a class="headerlink" href="#leverage-your-existing-database-to-collect-additional-relevant-data-such-as-comments-from-specific-submissions-or-user-activity" title="Permalink to this headline">#</a></h2>
 </section>
-<section id="updating-submissions">
-<h2>Updating Submissions<a class="headerlink" href="#updating-submissions" title="Permalink to this headline">#</a></h2>
-<p>To update submission data, follow these steps:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">redditharbor.login</span> <span class="k">as</span> <span class="nn">login</span>
-<span class="kn">from</span> <span class="nn">redditharbor.dock.pipeline</span> <span class="kn">import</span> <span class="n">update</span>
+<section id="collect-submission-comments">
+<h2>Collect Submission Comments<a class="headerlink" href="#collect-submission-comments" title="Permalink to this headline">#</a></h2>
+<p>While you cannot directly collect comments containing particular keywords, you can collect comments from submissions that match your keywords of interest. To gather comments from specified submissions, use the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">redditharbor.utils</span> <span class="kn">import</span> <span class="n">fetch</span>
 
-<span class="n">reddit_client</span> <span class="o">=</span> <span class="n">login</span><span class="o">.</span><span class="n">reddit</span><span class="p">()</span>
-<span class="n">supabase_client</span> <span class="o">=</span> <span class="n">login</span><span class="o">.</span><span class="n">supabase</span><span class="p">()</span>
-<span class="n">db_config</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;test_redditor&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;submission&quot;</span><span class="p">:</span> <span class="s2">&quot;test_submission&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;test_comment&quot;</span>
-<span class="p">}</span>
+<span class="n">fetch_submission</span> <span class="o">=</span> <span class="n">fetch</span><span class="o">.</span><span class="n">submission</span><span class="p">(</span><span class="n">supabase_client</span><span class="o">=</span><span class="n">supabase_client</span><span class="p">,</span> <span class="n">db_name</span><span class="o">=</span><span class="n">db_config</span><span class="p">[</span><span class="s2">&quot;submission&quot;</span><span class="p">])</span>
+<span class="n">submission_ids</span> <span class="o">=</span> <span class="n">fetch_submission</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>  <span class="c1"># Limiting to 100 submission IDs for demonstration. Set limit=None to fetch all submission IDs.</span>
 
-<span class="n">update</span> <span class="o">=</span> <span class="n">update</span><span class="p">(</span><span class="n">reddit_client</span><span class="p">,</span> <span class="n">supabase_client</span><span class="p">,</span> <span class="n">db_config</span><span class="p">)</span>
-<span class="n">update</span><span class="o">.</span><span class="n">schedule_task</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="s2">&quot;submission&quot;</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="s2">&quot;1hr&quot;</span><span class="p">)</span>
+<span class="n">collect</span><span class="o">.</span><span class="n">comment_from_submission</span><span class="p">(</span><span class="n">submission_ids</span><span class="o">=</span><span class="n">submission_ids</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Set level=None to collect entire comment threads</span>
 </pre></div>
 </div>
-<p>This will update the <code class="docutils literal notranslate"><span class="pre">upvote_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">score</span></code>, and <code class="docutils literal notranslate"><span class="pre">num_comments</span></code> for submissions every 10 minutes in the next 1 hour of duration. The <code class="docutils literal notranslate"><span class="pre">update()</span></code> module automatically calculates the time interval based on the number of non-archived rows, adhering to the QPM (queries per minute) limit imposed by the Reddit Data API, which allows only 100 queries per minute per OAuth client ID.</p>
-<ul class="simple">
-<li><p>0-1,000 rows: update every 10 minutes</p></li>
-<li><p>1,001-3,000 rows: update every 30 minutes</p></li>
-<li><p>3,001-6,000 rows: update every 1 hour</p></li>
-<li><p>6,001-36,000 rows: update every 6 hours</p></li>
-<li><p>36,001-72,000 rows: update every 12 hours</p></li>
-<li><p>72,001+ rows: update every 1 day</p></li>
-</ul>
-<!-- ## Updating Comments
-To update comment data, use the following code:
+<p>This will collect comments from the specified 100 submissions up to level 2 (e.g., including replies to top-level comments).</p>
+</section>
+<section id="collect-user-submissions">
+<h2>Collect User Submissions<a class="headerlink" href="#collect-user-submissions" title="Permalink to this headline">#</a></h2>
+<p>To collect submissions made by specified users, you’ll need to “fetch” user names from your existing database:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">redditharbor.utils</span> <span class="kn">import</span> <span class="n">fetch</span>
 
-```python
-update.schedule_task(task="comment", duration="1hr")
-```
+<span class="n">fetch_user</span> <span class="o">=</span> <span class="n">fetch</span><span class="o">.</span><span class="n">user</span><span class="p">(</span><span class="n">supabase_client</span><span class="o">=</span><span class="n">supabase_client</span><span class="p">,</span> <span class="n">db_name</span><span class="o">=</span><span class="n">DB_CONFIG</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">])</span>
+<span class="n">users</span> <span class="o">=</span> <span class="n">fetch_user</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>  <span class="c1"># This will fetch the first 100 user names from the user database. Set limit=None to fetch all user names.</span>
 
-This will update the `score` and `upvote ratio` for comments every 10 minutes in the next 1 hour of duration in our database, with the update interval automatically adjusted based on the number of non-archived rows.
-
-## Customizing Updates
-You can customize the update process by specifying the desired metrics, intervals, and data sources. For example:
-
-```python
-update.schedule_task(task="submission", metrics=["score", "upvote_ratio"], interval="30min", duration="6hr")
-```
-
-This will update the `score` and `upvote_ratio` metrics for submissions every 30 minutes for the next 6 hours of duration.
-``` --></section>
+<span class="n">collect</span><span class="o">.</span><span class="n">submission_from_user</span><span class="p">(</span><span class="n">users</span><span class="o">=</span><span class="n">users</span><span class="p">,</span> <span class="n">sort_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;controversial&quot;</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will collect the 10 most controversial submissions from the specified users.</p>
+</section>
+<section id="collect-user-comments">
+<h2>Collect User Comments<a class="headerlink" href="#collect-user-comments" title="Permalink to this headline">#</a></h2>
+<p>To collect comments made by specified users, use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">collect</span><span class="o">.</span><span class="n">comment_from_user</span><span class="p">(</span><span class="n">users</span><span class="o">=</span><span class="n">users</span><span class="p">,</span> <span class="n">sort_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;new&quot;</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will collect the 10 most recent comments from the specified users.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -443,7 +441,7 @@ This will update the `score` and `upvote_ratio` metrics for submissions every 30
         },
         kernelOptions: {
             name: "python3",
-            path: "./pages"
+            path: "./hands_on"
         },
         predefinedOutput: true
     }
@@ -462,13 +460,22 @@ This will update the `score` and `upvote_ratio` metrics for submissions every 30
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="download.html"
+       href="keyword_based.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Collecting Keyword-based Data</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="download_data.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Downloading Data</p>
       </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div></div>
   
@@ -488,8 +495,10 @@ This will update the `score` and `upvote_ratio` metrics for submissions every 30
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unlock-temporal-insights-with-intelligent-updates">Unlock temporal insights 📈 with intelligent updates 🔄</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#updating-submissions">Updating Submissions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leverage-your-existing-database-to-collect-additional-relevant-data-such-as-comments-from-specific-submissions-or-user-activity">Leverage your existing database 📂 to collect additional relevant data, such as comments from specific submissions or user activity.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#collect-submission-comments">Collect Submission Comments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#collect-user-submissions">Collect User Submissions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#collect-user-comments">Collect User Comments</a></li>
 </ul>
   </nav></div>
 

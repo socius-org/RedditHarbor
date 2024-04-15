@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Prerequisites &#8212; ICWSM 2024 Tutorial</title>
+    <title>Updating Data &#8212; RedditHarbor</title>
   
   
   
@@ -60,12 +60,12 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'pages/prerequisites';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'hands_on/update_data';</script>
     <link rel="shortcut icon" href="../_static/socius_logo.png"/>
+    <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Installation" href="install.html" />
-    <link rel="prev" title="About" href="../Introduction.html" />
+    <link rel="prev" title="Downloading Data" href="download_data.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -131,7 +131,7 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="sidebar-primary-item">
   
 
-<a class="navbar-brand logo" href="../Introduction.html">
+<a class="navbar-brand logo" href="../about.html">
   
   
   
@@ -151,27 +151,33 @@ const thebe_selector_output = ".output, .cell_output"
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
-                <a class="reference internal" href="../Introduction.html">
+                <a class="reference internal" href="../about.html">
                     About
                 </a>
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Prerequisites</a></li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="GettingStarted.html">Getting Started</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/setting.html">Getting Started</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Database Schema</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../data_schema/user.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_schema/submission.html">Submission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_schema/comment.html">Comment</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Hands-on RedditHarbor</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="ScrapingExamples.html">Scraping Examples</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="subreddit.html">Collecting Subreddit-based Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="keyword.html">Collecting Keyword-based Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="database.html">Database-Driven Data Collection</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="scraping_examples.html">Scraping Examples</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="subreddit_based.html">Collecting Subreddit-based Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keyword_based.html">Collecting Keyword-based Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_driven.html">Database-Driven Data Collection</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="download.html">Downloading Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="update.html">Updating Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="download_data.html">Downloading Data</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Updating Data</a></li>
 </ul>
 
     </div>
@@ -243,7 +249,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/socius-org/RedditHarbor/issues/new?title=Issue%20on%20page%20%2Fpages/prerequisites.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/socius-org/RedditHarbor/issues/new?title=Issue%20on%20page%20%2Fhands_on/update_data.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -273,7 +279,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../_sources/pages/prerequisites.md" target="_blank"
+      <li><a href="../_sources/hands_on/update_data.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -355,7 +361,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Prerequisites</h1>
+    <h1>Updating Data</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -365,10 +371,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reddit-api">👨‍💻 Reddit API</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supabase-api">📦 Supabase API</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">🖥️ Environment Setup</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#command-prompt-windows-users">🔣 Command Prompt (Windows Users)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unlock-temporal-insights-with-intelligent-updates">Unlock temporal insights 📈 with intelligent updates 🔄</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#updating-submissions">Updating Submissions</a></li>
 </ul>
             </nav>
         </div>
@@ -380,66 +384,57 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="prerequisites">
-<h1>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">#</a></h1>
-<section id="reddit-api">
-<h2>👨‍💻 Reddit API<a class="headerlink" href="#reddit-api" title="Permalink to this headline">#</a></h2>
-<ol class="arabic simple">
-<li><p><strong>Create a Reddit Account</strong>: You will need a Reddit account to access the Reddit API. If you don’t have one already, head over to <a class="reference external" href="https://www.reddit.com/">reddit.com</a> and sign up for a new account.</p></li>
-<li><p><strong>Register as a Developer</strong>: Follow <a class="reference external" href="https://www.reddit.com/wiki/api/">Reddit’s API guide</a> to <a class="reference external" href="https://reddithelp.com/hc/en-us/requests/new?ticket_form_id=14868593862164">register as a developer</a>. This step is necessary to create a script app and obtain the required credentials for API access.
-<br></p></li>
-</ol>
-<a class="reference internal image-reference" href="../_images/reddit_register.png"><img alt="../_images/reddit_register.png" class="align-center" src="../_images/reddit_register.png" style="width: 400px;" /></a>
-<br>
-<ol class="arabic simple" start="3">
-<li><p><strong>Create a Script App</strong>: Once registered as a developer, create a <a class="reference external" href="https://old.reddit.com/prefs/apps/">script app</a>. This will provide you with the <code class="docutils literal notranslate"><span class="pre">PUBLIC_KEY</span></code> and <code class="docutils literal notranslate"><span class="pre">SECRET_KEY</span></code> credentials needed to authenticate with the Reddit API during the tutorial.
-<br></p></li>
-</ol>
-<a class="reference internal image-reference" href="../_images/reddit_createapp.png"><img alt="../_images/reddit_createapp.png" class="align-center" src="../_images/reddit_createapp.png" style="width: 400px;" /></a>
-<br>
+  <section class="tex2jax_ignore mathjax_ignore" id="updating-data">
+<h1>Updating Data<a class="headerlink" href="#updating-data" title="Permalink to this headline">#</a></h1>
+<section id="unlock-temporal-insights-with-intelligent-updates">
+<h2>Unlock temporal insights 📈 with intelligent updates 🔄<a class="headerlink" href="#unlock-temporal-insights-with-intelligent-updates" title="Permalink to this headline">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">update()</span></code> module streamlines and automates the process of updating crucial metrics for existing submissions (comment and user is currently working-in-progress!). It provides flexibility and configurability to adjust update intervals and data sources. A key advantage of this update module is the ability to track how various metrics, such as the upvote ratio or score, change over time for specific posts. This capability sets RedditHarbor apart from many other Reddit database resources, such as PushShift or Academic Torrents, which typically provide a static “snapshot” of submissions and comments at a random point in time.</p>
 </section>
-<section id="supabase-api">
-<h2>📦 Supabase API<a class="headerlink" href="#supabase-api" title="Permalink to this headline">#</a></h2>
-<ol class="arabic simple">
-<li><p><strong>Sign Up for Supabase</strong>: Visit <a class="reference external" href="https://supabase.com/">supabase.com</a> and sign up for a new account. This will allow you to create a project and obtain the necessary credentials for storing the Reddit data.</p></li>
-<li><p><strong>Create a New Project</strong>: After signing up, create a new project in Supabase. This will generate a database <code class="docutils literal notranslate"><span class="pre">URL</span></code> and a <code class="docutils literal notranslate"><span class="pre">SECRET_KEY</span></code> (<code class="docutils literal notranslate"><span class="pre">service_role</span></code>) for your project.
-<br></p></li>
-</ol>
-<a class="reference internal image-reference" href="../_images/supabase_createnewproject.png"><img alt="../_images/supabase_createnewproject.png" class="align-center" src="../_images/supabase_createnewproject.png" style="width: 400px;" /></a>
-<br>
-<ol class="arabic simple" start="3">
-<li><p><strong>Access Credentials</strong>: Access database <code class="docutils literal notranslate"><span class="pre">URL</span></code> and <code class="docutils literal notranslate"><span class="pre">SECRET_KEY</span></code> provided in the “Project Settings &gt; Configuration &gt; API” section. You will need these credentials to connect and store the Reddit data during the tutorial.
-<br></p></li>
-</ol>
-<a class="reference internal image-reference" href="../_images/supabase_apikey.png"><img alt="../_images/supabase_apikey.png" class="align-center" src="../_images/supabase_apikey.png" style="width: 400px;" /></a>
-<br>
-</section>
-<section id="environment-setup">
-<h2>🖥️ Environment Setup<a class="headerlink" href="#environment-setup" title="Permalink to this headline">#</a></h2>
-<ol class="arabic">
-<li><p><strong>Install Visual Studio Code (Recommended)</strong>: We recommend <a class="reference external" href="https://code.visualstudio.com/download">installing Visual Studio Code</a>, a popular and user-friendly code editor. Once installed, make sure to get the Python extension for full support in running and editing Python apps.</p>
-<p>Alternatively, you can use your preferred code editor or IDE, but please note that Jupyter Notebook is not the ideal workspace for running RedditHarbor.</p>
-</li>
-<li><p><strong>Install Python</strong>: Install a supported version of Python on your system:</p>
+<section id="updating-submissions">
+<h2>Updating Submissions<a class="headerlink" href="#updating-submissions" title="Permalink to this headline">#</a></h2>
+<p>To update submission data, follow these steps:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">redditharbor.login</span> <span class="k">as</span> <span class="nn">login</span>
+<span class="kn">from</span> <span class="nn">redditharbor.dock.pipeline</span> <span class="kn">import</span> <span class="n">update</span>
+
+<span class="n">reddit_client</span> <span class="o">=</span> <span class="n">login</span><span class="o">.</span><span class="n">reddit</span><span class="p">()</span>
+<span class="n">supabase_client</span> <span class="o">=</span> <span class="n">login</span><span class="o">.</span><span class="n">supabase</span><span class="p">()</span>
+<span class="n">db_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;test_redditor&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;submission&quot;</span><span class="p">:</span> <span class="s2">&quot;test_submission&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="s2">&quot;test_comment&quot;</span>
+<span class="p">}</span>
+
+<span class="n">update</span> <span class="o">=</span> <span class="n">update</span><span class="p">(</span><span class="n">reddit_client</span><span class="p">,</span> <span class="n">supabase_client</span><span class="p">,</span> <span class="n">db_config</span><span class="p">)</span>
+<span class="n">update</span><span class="o">.</span><span class="n">schedule_task</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="s2">&quot;submission&quot;</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="s2">&quot;1hr&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will update the <code class="docutils literal notranslate"><span class="pre">upvote_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">score</span></code>, and <code class="docutils literal notranslate"><span class="pre">num_comments</span></code> for submissions every 10 minutes in the next 1 hour of duration. The <code class="docutils literal notranslate"><span class="pre">update()</span></code> module automatically calculates the time interval based on the number of non-archived rows, adhering to the QPM (queries per minute) limit imposed by the Reddit Data API, which allows only 100 queries per minute per OAuth client ID.</p>
 <ul class="simple">
-<li><p><strong>Windows</strong>: <a class="reference external" href="https://www.python.org/downloads/">Install Python from python.org</a>. Use the “Download Python” button that appears first on the page to download the latest version.</p></li>
-<li><p><strong>macOS</strong>: The system install of Python on macOS is not supported. Instead, we recommend using a package management system like <a class="reference external" href="https://brew.sh/">Homebrew</a>. To install Python using Homebrew on macOS, run <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">python3</span></code> in the Terminal.</p></li>
+<li><p>0-1,000 rows: update every 10 minutes</p></li>
+<li><p>1,001-3,000 rows: update every 30 minutes</p></li>
+<li><p>3,001-6,000 rows: update every 1 hour</p></li>
+<li><p>6,001-36,000 rows: update every 6 hours</p></li>
+<li><p>36,001-72,000 rows: update every 12 hours</p></li>
+<li><p>72,001+ rows: update every 1 day</p></li>
 </ul>
-</li>
-<li><p><strong>Install Python Extension (for Visual Studio Code users)</strong>: If you’re using Visual Studio Code, open the editor and navigate to the sidebar (or press <code class="docutils literal notranslate"><span class="pre">Ctrl+Shift+X</span></code>). Search for “python” in the Extensions Marketplace and install the Python extension.</p></li>
-</ol>
-</section>
-<section id="command-prompt-windows-users">
-<h2>🔣 Command Prompt (Windows Users)<a class="headerlink" href="#command-prompt-windows-users" title="Permalink to this headline">#</a></h2>
-<p>If you’re a Windows user, we recommend using Git Bash, one of the best command prompts for a Linux-style command-line experience. Follow these steps:</p>
-<ol class="arabic simple">
-<li><p><a class="reference external" href="https://gitforwindows.org/">Download Git Bash</a></p></li>
-<li><p>Follow the setup wizard, selecting all the default options</p></li>
-<li><p>At the “Adjusting your PATH environment” step, select the “Use Git from the Windows Command Prompt” option</p></li>
-<li><p>Once installed, you will have access to Git Bash, which provides Linux-style command-line utilities and Git functionality in Windows.</p></li>
-</ol>
-<p>If you have any questions or encounter any difficulties during the setup process, please don’t hesitate to reach out to us. We’re here to ensure a smooth and enjoyable tutorial experience for everyone.</p>
-</section>
+<!-- ## Updating Comments
+To update comment data, use the following code:
+
+```python
+update.schedule_task(task="comment", duration="1hr")
+```
+
+This will update the `score` and `upvote ratio` for comments every 10 minutes in the next 1 hour of duration in our database, with the update interval automatically adjusted based on the number of non-archived rows.
+
+## Customizing Updates
+You can customize the update process by specifying the desired metrics, intervals, and data sources. For example:
+
+```python
+update.schedule_task(task="submission", metrics=["score", "upvote_ratio"], interval="30min", duration="6hr")
+```
+
+This will update the `score` and `upvote_ratio` metrics for submissions every 30 minutes for the next 6 hours of duration.
+``` --></section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -455,7 +450,7 @@ document.write(`
         },
         kernelOptions: {
             name: "python3",
-            path: "./pages"
+            path: "./hands_on"
         },
         predefinedOutput: true
     }
@@ -474,22 +469,13 @@ document.write(`
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../Introduction.html"
+       href="download_data.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">About</p>
+        <p class="prev-next-title">Downloading Data</p>
       </div>
-    </a>
-    <a class="right-next"
-       href="install.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Installation</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div></div>
   
@@ -509,10 +495,8 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reddit-api">👨‍💻 Reddit API</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supabase-api">📦 Supabase API</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">🖥️ Environment Setup</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#command-prompt-windows-users">🔣 Command Prompt (Windows Users)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unlock-temporal-insights-with-intelligent-updates">Unlock temporal insights 📈 with intelligent updates 🔄</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#updating-submissions">Updating Submissions</a></li>
 </ul>
   </nav></div>
 

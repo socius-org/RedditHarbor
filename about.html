@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>About &#8212; ICWSM 2024 Tutorial</title>
+    <title>About &#8212; RedditHarbor</title>
   
   
   
@@ -60,11 +60,12 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'Introduction';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'about';</script>
     <link rel="shortcut icon" href="_static/socius_logo.png"/>
+    <link rel="author" title="About these documents" href="#" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Prerequisites" href="pages/prerequisites.html" />
+    <link rel="next" title="Prerequisites" href="getting_started/prerequisites.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -157,20 +158,26 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="pages/prerequisites.html">Prerequisites</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/GettingStarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/setting.html">Getting Started</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Database Schema</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="data_schema/user.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_schema/submission.html">Submission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_schema/comment.html">Comment</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Hands-on RedditHarbor</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="pages/ScrapingExamples.html">Scraping Examples</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="pages/subreddit.html">Collecting Subreddit-based Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/keyword.html">Collecting Keyword-based Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/database.html">Database-Driven Data Collection</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="hands_on/scraping_examples.html">Scraping Examples</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="hands_on/subreddit_based.html">Collecting Subreddit-based Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hands_on/keyword_based.html">Collecting Keyword-based Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hands_on/database_driven.html">Database-Driven Data Collection</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="pages/download.html">Downloading Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/update.html">Updating Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hands_on/download_data.html">Downloading Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hands_on/update_data.html">Updating Data</a></li>
 </ul>
 
     </div>
@@ -242,7 +249,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/socius-org/RedditHarbor/issues/new?title=Issue%20on%20page%20%2FIntroduction.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/socius-org/RedditHarbor/issues/new?title=Issue%20on%20page%20%2Fabout.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -272,7 +279,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/Introduction.md" target="_blank"
+      <li><a href="_sources/about.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -410,12 +417,14 @@ document.write(`
 <li><p><strong>📈 Scalable and Efficient</strong>: Handle pagination seamlessly, even for large datasets with millions of rows.</p></li>
 <li><p><strong>🕹️ Customisable Collection</strong>: Tailor your data collection to your specific needs by configuring parameters.</p></li>
 <li><p><strong>📂 Analysis-Ready</strong>: Export your database to CSV, JSON, or JPEG formats for effortless integration with your preferred analysis tools.</p></li>
-<li><p><strong>🔄 Temporal Metric Tracking:</strong>: Regularly update key metrics like upvote ratios, scores, awards, and comment counts, allowing temporal analysis - a distinct advantage over static “snapshot” databases, such as PushShift or AcademicTorrent.</p></li>
+<li><p><strong>🔄 Temporal Metric Tracking</strong>: Regularly update key metrics like upvote ratios, scores, awards, and comment counts, allowing temporal analysis - a distinct advantage over static “snapshot” databases, such as PushShift or AcademicTorrent.</p></li>
 <li><p><strong>⚡ Smart Update Intervals</strong>: Leverage flexible configurations to automatically adjust update intervals based on dataset size, optimising efficiency while adhering to API constraints.</p></li>
 </ul>
 <p>With RedditHarbor, you can spend less time wrestling with technical hurdles and more time focusing on your research objectives.</p>
 </section>
 </section>
+<div class="toctree-wrapper compound">
+</div>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
@@ -454,7 +463,7 @@ document.write(`
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="right-next"
-       href="pages/prerequisites.html"
+       href="getting_started/prerequisites.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>

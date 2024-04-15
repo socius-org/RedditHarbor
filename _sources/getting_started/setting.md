@@ -66,7 +66,7 @@ CREATE TABLE test_comment(
 ALTER TABLE test_comment ENABLE ROW LEVEL SECURITY;
 ```
 
-This will create the three tables with the necessary columns and data types. Once created, you'll see the new tables available in the "Table Editor". In the future, you can duplicate and rename these tables (instead of "test_...") for your production needs.
+This will create the three tables with the necessary columns and data types. Once created, you'll see the new tables available in the "Table Editor". In the future, you can duplicate and rename these tables (instead of "test_...") for your production needs. For a structured overview of the database schema used by RedditHarbor, including detailed explanations of each field and its data type, see [Database Schema](../data_schema/user.md). 
 
 ```{warning} 
 The RedditHarbor package depends on predefined column names for all user, submission, and comment tables. To ensure proper functionality, it's crucial to create tables with all the specified columns mentioned in the documentation. Failure to do so may lead to errors or incomplete data retrieval.
