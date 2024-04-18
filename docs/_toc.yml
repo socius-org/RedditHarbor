@@ -8,7 +8,7 @@ parts:
     chapters: 
     - file: getting_started/prerequisites
     - file: getting_started/installation
-    - file: getting_started/setting
+    - file: getting_started/setting_up
   - caption: Database Schema 
     chapters: 
     - file: data_schema/user

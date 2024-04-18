@@ -41,7 +41,7 @@ Minimum coding required after the initial setup! The tool is designed specifical
 
 ## Prerequisites
 
-For a more detailed step-by-step instructions, see our [documentation](https://socius-org.github.io/RedditHarbor/pages/prerequisites.html).  
+For a more detailed step-by-step instructions, see our [documentation](https://socius-org.github.io/RedditHarbor/getting_started/prerequisites.html).  
 
 **Reddit API**: You need a Reddit account to access the Reddit API. Follow [Reddit's API guide](https://www.reddit.com/wiki/api/) to register as a developer and create a script app. This will provide the credentials (PUBLIC_KEY and SECRET_KEY) needed to authenticate with Reddit. 
 
@@ -185,4 +185,4 @@ This will collect the 5 hottest and 5 top submissions from r/python and r/learnp
 collect.subreddit_submission(subreddits, sort_types, limit=5, mask_pii=True)
 ```
 
-For further use cases - such as from collecting [subreddit-based data](https://socius-org.github.io/RedditHarbor/pages/subreddit.html), [keyword-based data](https://socius-org.github.io/RedditHarbor/pages/keyword.html) and [database-driven data](https://socius-org.github.io/RedditHarbor/pages/database.html), to [downloading](https://socius-org.github.io/RedditHarbor/pages/download.html) and [updating](https://socius-org.github.io/RedditHarbor/pages/update.html) database - please refer to our [documentation](https://socius-org.github.io/RedditHarbor). 
+For further use cases - ranging from [collecting subreddit-based data](https://socius-org.github.io/RedditHarbor/hands_on/subreddit_based.html), [collecting keyword-based data](https://socius-org.github.io/RedditHarbor/hands_on/keyword_based.html) and [database-driven data collection](https://socius-org.github.io/RedditHarbor/hands_on/database_driven.html), to [downloading data](https://socius-org.github.io/RedditHarbor/hands_on/download_data.html) and [updating data](https://socius-org.github.io/RedditHarbor/hands_on/update_data.html) - please refer to our [documentation](https://socius-org.github.io/RedditHarbor). 

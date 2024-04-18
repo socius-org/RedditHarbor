@@ -1,4 +1,4 @@
-# Getting Started
+# Setting Up
 
 ## Setting Up Supabase Tables
 
