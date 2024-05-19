@@ -140,7 +140,9 @@ class submission:
             paginated_submissions = (
                 self.submission_db.select(*columns).range(start_row, end_row).execute()
             ).model_dump()["data"]
-            with open(f"{save_file_path}\{file_name}_{page}.pickle", "wb") as handle:
+            with open(
+                os.path.join(save_file_path, f"{file_name}_{page}.pickle"), "wb"
+            ) as handle:
                 pickle.dump(
                     paginated_submissions, handle, protocol=pickle.HIGHEST_PROTOCOL
                 )
@@ -166,7 +168,8 @@ class submission:
         """
 
         save_file_path = os.path.join(self.cwd, f"{file_path}")
-        
+        save_file_name = os.path.join(save_file_path, f"{file_name}.csv")
+
         os.makedirs(save_file_path, exist_ok=True)
 
         if isinstance(columns, str):
@@ -184,7 +187,7 @@ class submission:
         start_row, end_row = 0, 1000
 
         with open(
-            f"{save_file_path}\{file_name}.csv", "w", newline="", encoding="utf-8"
+            save_file_name, "w", newline="", encoding="utf-8"
         ) as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(columns if columns != "*" else self.columns)
@@ -211,7 +214,7 @@ class submission:
                     writer.writerow(list(row.values()))
 
         return console.print(
-            f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.csv"
+            f"{self.row_count} rows downloaded and saved in {save_file_name}"
         )
 
     def to_txt(self, columns: List[str] or str, file_name: str = "submission", file_path: str = "submission_exports"):
@@ -231,6 +234,7 @@ class submission:
         """
 
         save_file_path = os.path.join(self.cwd, f"{file_path}")
+        save_file_name = os.path.join(save_file_path, f"{file_name}.txt")
         
         os.makedirs(save_file_path, exist_ok=True)
 
@@ -248,9 +252,7 @@ class submission:
 
         start_row, end_row = 0, self.page_size
 
-        with open(
-            f"{save_file_path}\{file_name}.txt", "w", encoding="utf-8"
-        ) as txtfile:
+        with open(save_file_name, "w", encoding="utf-8") as txtfile:
             txtfile.write("\t".join(columns if columns != "*" else self.columns) + "\n")
 
             for page in track(
@@ -275,7 +277,7 @@ class submission:
                     txtfile.write("\t".join(map(str, row.values())) + "\n")
 
         return console.print(
-            f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.txt"
+            f"{self.row_count} rows downloaded and saved in {save_file_name}"
         )
 
     def to_json(self, columns: List[str] or str, file_name: str = "submission", file_path: str = "submission_exports"):
@@ -329,7 +331,7 @@ class submission:
                 self.submission_db.select(*columns).range(start_row, end_row).execute()
             ).model_dump()["data"]
             with open(
-                f"{save_file_path}\{file_name}_{page}.json", "w", encoding="utf-8"
+                os.path.join(save_file_path, f"{file_name}_{page}.json"), "w", encoding="utf-8"
             ) as jsonfile:
                 json.dump(paginated_submissions, jsonfile, ensure_ascii=False, indent=2)
 
@@ -522,7 +524,9 @@ class comment:
             paginated_comments = (
                 self.comment_db.select(*columns).range(start_row, end_row).execute()
             ).model_dump()["data"]
-            with open(f"{save_file_path}\{file_name}_{page}.pickle", "wb") as handle:
+            with open(
+                os.path.join(save_file_path, f"{file_name}_{page}.pickle"), "wb"
+            ) as handle:
                 pickle.dump(
                     paginated_comments, handle, protocol=pickle.HIGHEST_PROTOCOL
                 )
@@ -548,6 +552,7 @@ class comment:
         """
 
         save_file_path = os.path.join(self.cwd, f"{file_path}")
+        save_file_name = os.path.join(save_file_path, f"{file_name}.csv")
         
         os.makedirs(save_file_path, exist_ok=True)
 
@@ -566,7 +571,7 @@ class comment:
         start_row, end_row = 0, self.page_size
 
         with open(
-            f"{save_file_path}\{file_name}.csv", "w", newline="", encoding="utf-8"
+            save_file_name, "w", newline="", encoding="utf-8"
         ) as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(columns if columns != "*" else self.columns)
@@ -593,7 +598,7 @@ class comment:
                     writer.writerow(list(row.values()))
 
         return console.print(
-            f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.csv"
+            f"{self.row_count} rows downloaded and saved in {save_file_name}"
         )
 
     def to_txt(self, columns: List[str] or str, file_name: str = "comment", file_path: str = "comment_exports"):
@@ -613,6 +618,7 @@ class comment:
         """
 
         save_file_path = os.path.join(self.cwd, f"{file_path}")
+        save_file_name = os.path.join(save_file_path, f"{file_name}.txt")
         
         os.makedirs(save_file_path, exist_ok=True)
 
@@ -630,9 +636,7 @@ class comment:
 
         start_row, end_row = 0, self.page_size
 
-        with open(
-            f"{save_file_path}\{file_name}.txt", "w", encoding="utf-8"
-        ) as txtfile:
+        with open(save_file_name, "w", encoding="utf-8") as txtfile:
             txtfile.write("\t".join(columns if columns != "*" else self.columns) + "\n")
 
             for page in track(
@@ -657,7 +661,7 @@ class comment:
                     txtfile.write("\t".join(map(str, row.values())) + "\n")
 
         return console.print(
-            f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.txt"
+            f"{self.row_count} rows downloaded and saved in {save_file_name}"
         )
 
     def to_json(self, columns: List[str] or str, file_name: str = "comment", file_path: str = "comment_exports"):
@@ -711,7 +715,7 @@ class comment:
                 self.comment_db.select(*columns).range(start_row, end_row).execute()
             ).model_dump()["data"]
             with open(
-                f"{save_file_path}\{file_name}_{page}.json", "w", encoding="utf-8"
+                os.path.join(save_file_path, f"{file_name}_{page}.json"), "w", encoding="utf-8"
             ) as jsonfile:
                 json.dump(paginated_comments, jsonfile, ensure_ascii=False, indent=2)
 
@@ -833,7 +837,9 @@ class user:
             paginated_redditors = (
                 self.redditor_db.select(*columns).range(start_row, end_row).execute()
             ).model_dump()["data"]
-            with open(f"{save_file_path}\{file_name}_{page}.pickle", "wb") as handle:
+            with open(
+                os.path.join(save_file_path, f"{file_name}_{page}.pickle"), "wb"
+            ) as handle:
                 pickle.dump(
                     paginated_redditors, handle, protocol=pickle.HIGHEST_PROTOCOL
                 )
@@ -859,6 +865,7 @@ class user:
         """
 
         save_file_path = os.path.join(self.cwd, f"{file_path}")
+        save_file_name = os.path.join(save_file_path, f"{file_name}.csv")
         
         os.makedirs(save_file_path, exist_ok=True)
 
@@ -877,7 +884,7 @@ class user:
         start_row, end_row = 0, self.page_size
 
         with open(
-            f"{save_file_path}\{file_name}.csv", "w", newline="", encoding="utf-8"
+            save_file_name, "w", newline="", encoding="utf-8"
         ) as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(columns if columns != "*" else self.columns)
@@ -904,7 +911,7 @@ class user:
                     writer.writerow(list(row.values()))
 
         return console.print(
-            f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.csv"
+            f"{self.row_count} rows downloaded and saved in {save_file_name}"
         )
 
     def to_txt(self, columns: List[str] or str, file_name: str = "user", file_path: str = "user_exports"):
@@ -924,6 +931,7 @@ class user:
         """
 
         save_file_path = os.path.join(self.cwd, f"{file_path}")
+        save_file_name = os.path.join(save_file_path, f"{file_name}.txt")
         
         os.makedirs(save_file_path, exist_ok=True)
 
@@ -941,9 +949,7 @@ class user:
 
         start_row, end_row = 0, self.page_size
 
-        with open(
-            f"{save_file_path}\{file_name}.txt", "w", encoding="utf-8"
-        ) as txtfile:
+        with open(save_file_name, "w", encoding="utf-8") as txtfile:
             txtfile.write("\t".join(columns if columns != "*" else self.columns) + "\n")
 
             for page in track(
@@ -968,7 +974,7 @@ class user:
                     txtfile.write("\t".join(map(str, row.values())) + "\n")
 
         return console.print(
-            f"{self.row_count} rows downloaded and saved in {save_file_path}\{file_name}.txt"
+            f"{self.row_count} rows downloaded and saved in {save_file_name}"
         )
 
     def to_json(self, columns: List[str] or str, file_name: str = "user", file_path: str = "user_exports"):
@@ -1022,7 +1028,7 @@ class user:
                 self.redditor_db.select(*columns).range(start_row, end_row).execute()
             ).model_dump()["data"]
             with open(
-                f"{save_file_path}\{file_name}_{page}.json", "w", encoding="utf-8"
+                os.path.join(save_file_path, f"{file_name}_{page}.json"), "w", encoding="utf-8"
             ) as jsonfile:
                 json.dump(paginated_redditors, jsonfile, ensure_ascii=False, indent=2)
 
