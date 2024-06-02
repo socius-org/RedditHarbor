@@ -1,7 +1,7 @@
 from setuptools import setup
 
-with open('README.md') as f:
-    long_description = f.read()
+# with open('README.md') as f:
+#     long_description = f.read()
 
 setup(
   name = 'redditharbor',
@@ -9,7 +9,7 @@ setup(
   version = '0.2.3',      
   license='MIT',        
   description = 'Effortlessly collect and store Reddit data in your database.',
-  long_description=long_description,
+#   long_description=long_description,
   long_description_content_type='text/markdown',
   author = 'Nick S.H Oh',                   
   author_email = 'research@socius.org',      
