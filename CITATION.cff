@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "OH"
+  given-names: "NICK"
+  orcid: "https://orcid.org/0009-0003-2575-5493"
+title: "RedditHarbor"
+version: 0.2.4
+date-released: 2024-06-02
+url: "https://github.com/socius-org/RedditHarbor"
