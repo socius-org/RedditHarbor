@@ -182,3 +182,6 @@ collect.subreddit_submission(subreddits, sort_types, limit=5, mask_pii=True)
 ```
 
 For further use cases - ranging from [collecting subreddit-based data](https://socius-org.github.io/RedditHarbor/hands_on/subreddit_based.html), [collecting keyword-based data](https://socius-org.github.io/RedditHarbor/hands_on/keyword_based.html) and [database-driven data collection](https://socius-org.github.io/RedditHarbor/hands_on/database_driven.html), to [downloading data](https://socius-org.github.io/RedditHarbor/hands_on/download_data.html) and [updating data](https://socius-org.github.io/RedditHarbor/hands_on/update_data.html) - please refer to our [documentation](https://socius-org.github.io/RedditHarbor). 
+
+## Why RedditHarbor is "Lawful"
+### GDPR 
