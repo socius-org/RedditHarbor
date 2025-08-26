@@ -12,7 +12,7 @@ except FileNotFoundError:
 setup(
     name='redditharbor',
     packages=find_packages(),
-    version='0.2.4',
+    version='0.3',
     license='MIT',
     description='Effortlessly collect and store Reddit data in your database.',
     long_description=long_description,
@@ -20,7 +20,7 @@ setup(
     author='Nick Oh',
     author_email='nick.sh.oh@socius.org',
     url='https://github.com/socius-org/RedditHarbor/',
-    download_url='https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.2.4.tar.gz',
+    download_url='https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.3.tar.gz',
     keywords=['Reddit', 'Supabase', 'reddit-api', 'database', 'reddit-crawler', 'reddit-scraper'],
     include_package_data=True,
     python_requires='>=3.8',

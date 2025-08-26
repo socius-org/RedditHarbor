@@ -1,9 +1,9 @@
 Metadata-Version: 2.4
 Name: redditharbor
-Version: 0.2.4
+Version: 0.3
 Summary: Effortlessly collect and store Reddit data in your database.
 Home-page: https://github.com/socius-org/RedditHarbor/
-Download-URL: https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.2.4.tar.gz
+Download-URL: https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.3.tar.gz
 Author: Nick Oh
 Author-email: nick.sh.oh@socius.org
 License: MIT
@@ -29,10 +29,10 @@ Classifier: Topic :: Database
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: praw<8.0.0,>=7.7.1
-Requires-Dist: supabase<2.0.0,>=1.0.3
-Requires-Dist: rich<14.0.0,>=13.4.2
-Requires-Dist: python-dotenv<2.0.0,>=1.0.0
+Requires-Dist: praw>=7.7.1
+Requires-Dist: supabase>=1.0.3
+Requires-Dist: rich>=13.4.2
+Requires-Dist: python-dotenv>=1.0.0
 Requires-Dist: pillow<12.0.0,>=10.3.0
 Requires-Dist: requests<3.0.0,>=2.32.4
 Provides-Extra: pii
