@@ -1,7 +1,11 @@
 {
-  "name": "app",
+  "name": "reddit-harbor-app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "imports": {
+    "#app/*": "./src/app/*"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
