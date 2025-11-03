@@ -4,6 +4,13 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { theme } from './theme';
+import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut } from './clerk';
+
+const RAW_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+if (!RAW_PUBLISHABLE_KEY) {
+  throw new Error('Missing Clerk publishable key');
+}
+const PUBLISHABLE_KEY = RAW_PUBLISHABLE_KEY;
 
 const roboto = Roboto({
   display: 'swap',
@@ -23,15 +30,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={roboto.variable}>
-      <body>
-        <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            {children}
-          </ThemeProvider>
-        </AppRouterCacheProvider>
-      </body>
-    </html>
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <html lang="en" className={roboto.variable}>
+        <body>
+          <AppRouterCacheProvider>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <SignedIn>{children}</SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </ThemeProvider>
+          </AppRouterCacheProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
