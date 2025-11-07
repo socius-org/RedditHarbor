@@ -4,7 +4,17 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { theme } from './theme';
-import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut } from './clerk';
+import {
+  ClerkProvider,
+  RedirectToSignIn,
+  SignedIn,
+  SignedOut,
+  SignOutButton,
+} from './clerk';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 
 const RAW_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 if (!RAW_PUBLISHABLE_KEY) {
@@ -24,6 +34,22 @@ export const metadata: Metadata = {
   title: 'RedditHarbor',
 };
 
+function AppHeader() {
+  return (
+    <AppBar position="sticky">
+      <Toolbar variant="dense">
+        <Stack direction="row" alignItems="center" spacing={2} flex={1}>
+          <Typography variant="h6" component="div">
+            RedditHarbor
+          </Typography>
+          <Typography color="textSecondary">PETLP framework</Typography>
+        </Stack>
+        <SignOutButton />
+      </Toolbar>
+    </AppBar>
+  );
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,7 +62,10 @@ export default function RootLayout({
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              <SignedIn>{children}</SignedIn>
+              <SignedIn>
+                <AppHeader />
+                {children}
+              </SignedIn>
               <SignedOut>
                 <RedirectToSignIn />
               </SignedOut>
