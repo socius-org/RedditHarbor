@@ -42,7 +42,9 @@ function AppHeader() {
           <Typography variant="h6" component="div">
             RedditHarbor
           </Typography>
-          <Typography color="textSecondary">PETLP framework</Typography>
+          <Typography color="inherit" sx={{ opacity: 0.7 }}>
+            PETLP framework
+          </Typography>
         </Stack>
         <SignOutButton />
       </Toolbar>
