@@ -26,6 +26,11 @@ const eslintConfig = defineConfig([
     'build/**',
     'next-env.d.ts',
   ]),
+  {
+    rules: {
+      '@typescript-eslint/consistent-type-definitions': 'off',
+    },
+  },
 ]);
 
 export default eslintConfig;

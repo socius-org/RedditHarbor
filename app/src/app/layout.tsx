@@ -15,6 +15,7 @@ import {
   SignedOut,
   SignOutButton,
 } from './clerk';
+import { ApiKeysButton } from './ApiKeysButton';
 
 const RAW_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 if (!RAW_PUBLISHABLE_KEY) {
@@ -46,7 +47,10 @@ function AppHeader() {
             PETLP framework
           </Typography>
         </Stack>
-        <SignOutButton />
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <ApiKeysButton />
+          <SignOutButton />
+        </Stack>
       </Toolbar>
     </AppBar>
   );
