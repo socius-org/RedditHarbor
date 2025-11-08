@@ -1,8 +1,12 @@
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import { ThemeProvider } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
 import CssBaseline from '@mui/material/CssBaseline';
+import Stack from '@mui/material/Stack';
+import { ThemeProvider } from '@mui/material/styles';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import { theme } from './theme';
 import {
   ClerkProvider,
@@ -11,10 +15,6 @@ import {
   SignedOut,
   SignOutButton,
 } from './clerk';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
 
 const RAW_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 if (!RAW_PUBLISHABLE_KEY) {
