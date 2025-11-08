@@ -10,4 +10,12 @@ export const theme = createTheme({
       textTransform: 'initial',
     },
   },
+  components: {
+    MuiStack: {
+      defaultProps: {
+        // https://mui.com/material-ui/react-stack/#flexbox-gap
+        useFlexGap: true,
+      },
+    },
+  },
 });
