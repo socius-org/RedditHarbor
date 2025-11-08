@@ -34,6 +34,3 @@ jobs:
       - run: pnpm install
       - run: pnpm prettier . --check
       - run: pnpm lint
-      - run: pnpm build
-        env:
-          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
