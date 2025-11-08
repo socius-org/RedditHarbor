@@ -1,9 +1,14 @@
-import Container from '@mui/material/Container';
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  return (
-    <Container maxWidth="lg" sx={{ paddingY: 3 }}>
-      TODO
-    </Container>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/dashboard');
+  }, [router]);
+
+  return null;
 }
