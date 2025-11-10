@@ -66,6 +66,7 @@ export function ApiKeysButton() {
             <form action={action} id={formId}>
               <TextField
                 autoFocus
+                autoComplete="off"
                 name="claudeKey"
                 label="Claude API key"
                 helperText="Used for DPIA and compliance document generation"
@@ -76,6 +77,7 @@ export function ApiKeysButton() {
                 fullWidth
               />
               <TextField
+                autoComplete="off"
                 name="openaiKey"
                 label="OpenAI API key"
                 helperText="Alternative to Claude for document generation"
