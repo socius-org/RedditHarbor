@@ -1,6 +1,8 @@
 'use client';
 
 import {
+  Suspense,
+  use,
   useActionState,
   useId,
   useImperativeHandle,
@@ -8,9 +10,11 @@ import {
   useState,
   type Ref,
 } from 'react';
+import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { useUser } from '@clerk/clerk-react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -19,8 +23,19 @@ import DialogActions from '@mui/material/DialogActions';
 import KeyIcon from '@mui/icons-material/Key';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { saveApiKeys, type SaveApiKeysState } from './actions/saveApiKeys';
-import { addPasskey, type Passkey, passkeySchema } from './utils/passkey';
+import {
+  apiKeysSchema,
+  saveApiKeys,
+  type ApiKeys,
+  type SaveApiKeysState,
+} from './actions/saveApiKeys';
+import {
+  addPasskey,
+  authenticateAndDeriveKey,
+  type Passkey,
+  passkeySchema,
+} from './utils/passkey';
+import { decryptText, encryptedDataSchema } from './utils/encryption';
 
 function getStoredPasskey(): Passkey | null {
   const stored = localStorage.getItem('passkey');
@@ -33,14 +48,42 @@ function getStoredPasskey(): Passkey | null {
   return null;
 }
 
+async function getApiKeys(encryptionKey: CryptoKey): Promise<ApiKeys> {
+  const stored = localStorage.getItem('apiKeys');
+  if (stored) {
+    const parsed = encryptedDataSchema.safeParse(JSON.parse(stored));
+    if (parsed.success) {
+      const decrypted = await decryptText(parsed.data, encryptionKey);
+      const parsedApiKeys = apiKeysSchema.safeParse(JSON.parse(decrypted));
+      if (parsedApiKeys.success) {
+        return parsedApiKeys.data;
+      }
+    }
+  }
+
+  return { claudeKey: '', openaiKey: '' };
+}
+
 type ApiKeysDialogContentHandle = { getIsPending: () => boolean };
 
 type ApiKeysDialogContentProps = {
+  apiKeysPromise: Promise<ApiKeys>;
+  encryptionKeyPromise: Promise<CryptoKey>;
   onClose: () => void;
+  onInvalidateApiKeys: (encryptionKey: CryptoKey) => void;
   ref: Ref<ApiKeysDialogContentHandle>;
 };
 
-function ApiKeysDialogContent({ onClose, ref }: ApiKeysDialogContentProps) {
+function ApiKeysDialogContent({
+  apiKeysPromise,
+  encryptionKeyPromise,
+  onClose,
+  onInvalidateApiKeys,
+  ref,
+}: ApiKeysDialogContentProps) {
+  const encryptionKey = use(encryptionKeyPromise);
+  const apiKeys = use(apiKeysPromise);
+
   const formId = useId();
 
   function handleClose() {
@@ -51,11 +94,12 @@ function ApiKeysDialogContent({ onClose, ref }: ApiKeysDialogContentProps) {
   }
 
   async function submitAction(
-    prevState: SaveApiKeysState | undefined,
+    _prevState: SaveApiKeysState | undefined,
     formData: FormData,
   ) {
-    const result = await saveApiKeys(prevState, formData);
+    const result = await saveApiKeys(encryptionKey, formData);
     if (!result?.errors) {
+      onInvalidateApiKeys(encryptionKey);
       handleClose();
     }
     return result;
@@ -72,7 +116,8 @@ function ApiKeysDialogContent({ onClose, ref }: ApiKeysDialogContentProps) {
       <DialogContent>
         <Stack spacing={1}>
           <DialogContentText>
-            Configure API keys for document generation.
+            Configure API keys for document generation. Keys are encrypted with
+            your passkey and stored securely on your device.
           </DialogContentText>
           {state?.errors?.formErrors.map((error) => (
             <Alert key={error} severity="error" variant="filled">
@@ -90,6 +135,7 @@ function ApiKeysDialogContent({ onClose, ref }: ApiKeysDialogContentProps) {
               margin="dense"
               size="small"
               fullWidth
+              defaultValue={apiKeys.claudeKey}
             />
             <TextField
               name="openaiKey"
@@ -100,6 +146,7 @@ function ApiKeysDialogContent({ onClose, ref }: ApiKeysDialogContentProps) {
               margin="dense"
               size="small"
               fullWidth
+              defaultValue={apiKeys.openaiKey}
             />
           </form>
         </Stack>
@@ -121,11 +168,47 @@ function ApiKeysDialogContent({ onClose, ref }: ApiKeysDialogContentProps) {
   );
 }
 
-type ApiKeysDialogProps = Pick<ApiKeysDialogContentProps, 'onClose'> & {
+function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+  return (
+    <>
+      <DialogContent>
+        <Alert severity="error" variant="filled">
+          {Error.isError(error) ? `${error}` : 'An unknown error occurred'}
+        </Alert>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          autoFocus
+          variant="contained"
+          onClick={() => {
+            resetErrorBoundary();
+          }}
+        >
+          Try again
+        </Button>
+      </DialogActions>
+    </>
+  );
+}
+
+type ApiKeysDialogProps = Pick<
+  ApiKeysDialogContentProps,
+  'onClose' | 'onInvalidateApiKeys'
+> & {
+  apiKeysPromise: Promise<ApiKeys> | null;
+  encryptionKeyPromise: Promise<CryptoKey> | null;
+  onDeriveEncryptionKey: (passkey: Passkey) => void;
   open: boolean;
 };
 
-function ApiKeysDialog({ onClose, open }: ApiKeysDialogProps) {
+function ApiKeysDialog({
+  apiKeysPromise,
+  encryptionKeyPromise,
+  onClose,
+  onDeriveEncryptionKey,
+  onInvalidateApiKeys,
+  open,
+}: ApiKeysDialogProps) {
   const { user } = useUser();
 
   const [passkey, setPasskey] = useState<Passkey | null>(getStoredPasskey);
@@ -149,6 +232,7 @@ function ApiKeysDialog({ onClose, open }: ApiKeysDialogProps) {
       const newPasskey = await addPasskey(userId, email, displayName);
       localStorage.setItem('passkey', JSON.stringify(newPasskey));
       setPasskey(newPasskey);
+      onDeriveEncryptionKey(newPasskey);
     } catch (error) {
       const message = Error.isError(error)
         ? error.message
@@ -156,8 +240,6 @@ function ApiKeysDialog({ onClose, open }: ApiKeysDialogProps) {
       setAddPasskeyError(message);
     }
   }
-
-  // TODO: prefill form
 
   if (!passkey) {
     return (
@@ -194,6 +276,7 @@ function ApiKeysDialog({ onClose, open }: ApiKeysDialogProps) {
 
   return (
     <Dialog
+      fullWidth
       open={open}
       onClose={() => {
         if (apiKeysDialogContentHandleRef.current?.getIsPending()) {
@@ -203,16 +286,46 @@ function ApiKeysDialog({ onClose, open }: ApiKeysDialogProps) {
       }}
     >
       <DialogTitle>API keys</DialogTitle>
-      <ApiKeysDialogContent
-        onClose={onClose}
-        ref={apiKeysDialogContentHandleRef}
-      />
+      <ErrorBoundary
+        FallbackComponent={ErrorFallback}
+        onReset={() => {
+          onDeriveEncryptionKey(passkey);
+        }}
+      >
+        <Suspense
+          fallback={
+            <DialogContent>
+              <Stack alignItems="center" spacing={1}>
+                <CircularProgress />
+                <DialogContentText>Decrypting API keys...</DialogContentText>
+              </Stack>
+            </DialogContent>
+          }
+        >
+          {encryptionKeyPromise && apiKeysPromise ? (
+            <ApiKeysDialogContent
+              apiKeysPromise={apiKeysPromise}
+              encryptionKeyPromise={encryptionKeyPromise}
+              onClose={onClose}
+              onInvalidateApiKeys={onInvalidateApiKeys}
+              ref={apiKeysDialogContentHandleRef}
+            />
+          ) : null}
+        </Suspense>
+      </ErrorBoundary>
     </Dialog>
   );
 }
 
 export function ApiKeysButton() {
   const [open, setOpen] = useState(false);
+
+  const [encryptionKeyPromise, setEncryptionKeyPromise] =
+    useState<Promise<CryptoKey> | null>(null);
+
+  const [apiKeysPromise, setApiKeysPromise] = useState<Promise<ApiKeys> | null>(
+    null,
+  );
 
   return (
     <>
@@ -222,14 +335,31 @@ export function ApiKeysButton() {
         startIcon={<KeyIcon />}
         variant="outlined"
         onClick={() => {
+          const storedPasskey = getStoredPasskey();
+          if (storedPasskey && !encryptionKeyPromise) {
+            const newEncryptionKeyPromise =
+              authenticateAndDeriveKey(storedPasskey);
+            setEncryptionKeyPromise(newEncryptionKeyPromise);
+            setApiKeysPromise(newEncryptionKeyPromise.then(getApiKeys));
+          }
           setOpen(true);
         }}
       >
         API keys
       </Button>
       <ApiKeysDialog
+        apiKeysPromise={apiKeysPromise}
+        encryptionKeyPromise={encryptionKeyPromise}
         onClose={() => {
           setOpen(false);
+        }}
+        onDeriveEncryptionKey={(passkey) => {
+          const newEncryptionKeyPromise = authenticateAndDeriveKey(passkey);
+          setEncryptionKeyPromise(newEncryptionKeyPromise);
+          setApiKeysPromise(newEncryptionKeyPromise.then(getApiKeys));
+        }}
+        onInvalidateApiKeys={(encryptionKey) => {
+          setApiKeysPromise(getApiKeys(encryptionKey));
         }}
         open={open}
       />
