@@ -9,6 +9,7 @@
     "noEmit": true,
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
