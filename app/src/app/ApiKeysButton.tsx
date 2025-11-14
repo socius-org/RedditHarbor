@@ -20,33 +20,33 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { saveApiKeys, type SaveApiKeysState } from './actions/saveApiKeys';
 
+type Passkey = {
+  id: string;
+  publicKey: string;
+};
+
 type ApiKeysDialogHandle = { getIsPending: () => boolean };
 
 type ApiKeysDialogProps = {
+  onAddPasskey: () => void;
   onClose: () => void;
+  passkey: Passkey | null;
   ref: Ref<ApiKeysDialogHandle>;
 };
 
-function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
+function ApiKeysDialog({
+  onAddPasskey,
+  onClose,
+  passkey,
+  ref,
+}: ApiKeysDialogProps) {
   const formId = useId();
-  const [passkey, setPasskey] = useState<{
-    id: string;
-    publicKey: string;
-  } | null>(null);
 
   function handleClose() {
     if (isPending) {
       return;
     }
     onClose();
-  }
-
-  function handleAddPasskey() {
-    // TODO: Implement actual WebAuthn registration
-    setPasskey({
-      id: 'stub-id',
-      publicKey: 'stub-public-key',
-    });
   }
 
   async function submitAction(
@@ -79,7 +79,7 @@ function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus variant="contained" onClick={handleAddPasskey}>
+          <Button autoFocus variant="contained" onClick={onAddPasskey}>
             Add passkey
           </Button>
         </DialogActions>
@@ -144,8 +144,17 @@ function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
 
 export function ApiKeysButton() {
   const [open, setOpen] = useState(false);
+  const [passkey, setPasskey] = useState<Passkey | null>(null);
 
   const dialogRef = useRef<ApiKeysDialogHandle>(null);
+
+  function handleAddPasskey() {
+    // TODO: Implement actual WebAuthn registration
+    setPasskey({
+      id: 'stub-id',
+      publicKey: 'stub-public-key',
+    });
+  }
 
   return (
     <>
@@ -175,10 +184,12 @@ export function ApiKeysButton() {
         }}
       >
         <ApiKeysDialog
+          ref={dialogRef}
+          onAddPasskey={handleAddPasskey}
           onClose={() => {
             setOpen(false);
           }}
-          ref={dialogRef}
+          passkey={passkey}
         />
       </Dialog>
     </>
