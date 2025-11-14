@@ -1,6 +1,13 @@
 'use client';
 
-import { useActionState, useId, useState } from 'react';
+import {
+  useActionState,
+  useId,
+  useImperativeHandle,
+  useRef,
+  useState,
+  type Ref,
+} from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -13,12 +20,14 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { saveApiKeys, type SaveApiKeysState } from './actions/saveApiKeys';
 
+type ApiKeysDialogHandle = { getIsPending: () => boolean };
+
 type ApiKeysDialogProps = {
-  open: boolean;
   onClose: () => void;
+  ref: Ref<ApiKeysDialogHandle>;
 };
 
-function ApiKeysDialog({ open, onClose }: ApiKeysDialogProps) {
+function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
   const formId = useId();
 
   function handleClose() {
@@ -42,8 +51,12 @@ function ApiKeysDialog({ open, onClose }: ApiKeysDialogProps) {
   // TODO: prefill form
   const [state, action, isPending] = useActionState(submitAction, undefined);
 
+  useImperativeHandle(ref, () => ({ getIsPending: () => isPending }), [
+    isPending,
+  ]);
+
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <>
       <DialogTitle>API keys</DialogTitle>
       <DialogContent>
         <Stack spacing={1}>
@@ -93,12 +106,14 @@ function ApiKeysDialog({ open, onClose }: ApiKeysDialogProps) {
           Save
         </Button>
       </DialogActions>
-    </Dialog>
+    </>
   );
 }
 
 export function ApiKeysButton() {
   const [open, setOpen] = useState(false);
+
+  const dialogRef = useRef<ApiKeysDialogHandle>(null);
 
   return (
     <>
@@ -113,12 +128,27 @@ export function ApiKeysButton() {
       >
         API keys
       </Button>
-      <ApiKeysDialog
+      <Dialog
         open={open}
         onClose={() => {
+          // Since the pending state is managed inside the dialog,
+          // we need a ref to check the value.
+          // Note that we're not checking it in the handler below
+          // because it seems like when the action fires,
+          // `ref.getIsPending()` is still true.
+          if (dialogRef.current?.getIsPending()) {
+            return;
+          }
           setOpen(false);
         }}
-      />
+      >
+        <ApiKeysDialog
+          onClose={() => {
+            setOpen(false);
+          }}
+          ref={dialogRef}
+        />
+      </Dialog>
     </>
   );
 }
