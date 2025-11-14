@@ -13,15 +13,19 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { saveApiKeys, type SaveApiKeysState } from './actions/saveApiKeys';
 
-export function ApiKeysButton() {
+type ApiKeysDialogProps = {
+  open: boolean;
+  onClose: () => void;
+};
+
+function ApiKeysDialog({ open, onClose }: ApiKeysDialogProps) {
   const formId = useId();
-  const [open, setOpen] = useState(false);
 
   function handleClose() {
     if (isPending) {
       return;
     }
-    setOpen(false);
+    onClose();
   }
 
   async function submitAction(
@@ -39,6 +43,64 @@ export function ApiKeysButton() {
   const [state, action, isPending] = useActionState(submitAction, undefined);
 
   return (
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>API keys</DialogTitle>
+      <DialogContent>
+        <Stack spacing={1}>
+          <DialogContentText>
+            Configure API keys for document generation.
+          </DialogContentText>
+          {state?.errors?.formErrors.map((error) => (
+            <Alert key={error} severity="error" variant="filled">
+              {error}
+            </Alert>
+          ))}
+          <form action={action} id={formId}>
+            <TextField
+              autoFocus
+              name="claudeKey"
+              label="Claude API key"
+              helperText="Used for DPIA and compliance document generation"
+              placeholder="sk-ant-api03-..."
+              type="password"
+              margin="dense"
+              size="small"
+              fullWidth
+            />
+            <TextField
+              name="openaiKey"
+              label="OpenAI API key"
+              helperText="Alternative to Claude for document generation"
+              placeholder="sk-..."
+              type="password"
+              margin="dense"
+              size="small"
+              fullWidth
+            />
+          </form>
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button disabled={isPending} onClick={handleClose}>
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          form={formId}
+          variant="contained"
+          loading={isPending}
+        >
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+export function ApiKeysButton() {
+  const [open, setOpen] = useState(false);
+
+  return (
     <>
       <Button
         color="inherit"
@@ -51,57 +113,12 @@ export function ApiKeysButton() {
       >
         API keys
       </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>API keys</DialogTitle>
-        <DialogContent>
-          <Stack spacing={1}>
-            <DialogContentText>
-              Configure API keys for document generation.
-            </DialogContentText>
-            {state?.errors?.formErrors.map((error) => (
-              <Alert key={error} severity="error" variant="filled">
-                {error}
-              </Alert>
-            ))}
-            <form action={action} id={formId}>
-              <TextField
-                autoFocus
-                name="claudeKey"
-                label="Claude API key"
-                helperText="Used for DPIA and compliance document generation"
-                placeholder="sk-ant-api03-..."
-                type="password"
-                margin="dense"
-                size="small"
-                fullWidth
-              />
-              <TextField
-                name="openaiKey"
-                label="OpenAI API key"
-                helperText="Alternative to Claude for document generation"
-                placeholder="sk-..."
-                type="password"
-                margin="dense"
-                size="small"
-                fullWidth
-              />
-            </form>
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button disabled={isPending} onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            form={formId}
-            variant="contained"
-            loading={isPending}
-          >
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ApiKeysDialog
+        open={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+      />
     </>
   );
 }
