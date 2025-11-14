@@ -13,11 +13,6 @@ const eslintConfig = defineConfig([
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
   { languageOptions: { parserOptions: { projectService: true } } },
-  {
-    // https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
-    files: ['eslint.config.mjs', 'postcss.config.mjs'],
-    extends: [tseslint.configs.disableTypeChecked],
-  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
@@ -29,7 +24,13 @@ const eslintConfig = defineConfig([
   {
     rules: {
       '@typescript-eslint/consistent-type-definitions': 'off',
+      '@typescript-eslint/no-unsafe-type-assertion': 'error',
     },
+  },
+  {
+    // https://typescript-eslint.io/troubleshooting/typed-linting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
+    files: ['eslint.config.mjs', 'postcss.config.mjs'],
+    extends: [tseslint.configs.disableTypeChecked],
   },
 ]);
 
