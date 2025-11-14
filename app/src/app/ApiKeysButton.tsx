@@ -20,33 +20,50 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { saveApiKeys, type SaveApiKeysState } from './actions/saveApiKeys';
 
-type Passkey = {
-  id: string;
-  publicKey: string;
-};
+const passkeySchema = z.object({
+  id: z.string(),
+  publicKey: z.string(),
+});
+
+type Passkey = z.infer<typeof passkeySchema>;
 
 type ApiKeysDialogHandle = { getIsPending: () => boolean };
 
 type ApiKeysDialogProps = {
-  onAddPasskey: () => void;
   onClose: () => void;
-  passkey: Passkey | null;
   ref: Ref<ApiKeysDialogHandle>;
 };
 
-function ApiKeysDialog({
-  onAddPasskey,
-  onClose,
-  passkey,
-  ref,
-}: ApiKeysDialogProps) {
+function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
   const formId = useId();
+
+  const [passkey, setPasskey] = useState<Passkey | null>(() => {
+    const stored = localStorage.getItem('passkey');
+    if (stored) {
+      const parsed = passkeySchema.safeParse(JSON.parse(stored));
+      if (parsed.success) {
+        return parsed.data;
+      }
+    }
+    return null;
+  });
 
   function handleClose() {
     if (isPending) {
       return;
     }
     onClose();
+  }
+
+  function handleAddPasskey() {
+    // TODO: Implement actual WebAuthn registration
+    const newPasskey: Passkey = {
+      id: 'stub-id',
+      publicKey: 'stub-public-key',
+    };
+
+    localStorage.setItem('passkey', JSON.stringify(newPasskey));
+    setPasskey(newPasskey);
   }
 
   async function submitAction(
@@ -79,7 +96,7 @@ function ApiKeysDialog({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus variant="contained" onClick={onAddPasskey}>
+          <Button autoFocus variant="contained" onClick={handleAddPasskey}>
             Add passkey
           </Button>
         </DialogActions>
@@ -144,17 +161,7 @@ function ApiKeysDialog({
 
 export function ApiKeysButton() {
   const [open, setOpen] = useState(false);
-  const [passkey, setPasskey] = useState<Passkey | null>(null);
-
   const dialogRef = useRef<ApiKeysDialogHandle>(null);
-
-  function handleAddPasskey() {
-    // TODO: Implement actual WebAuthn registration
-    setPasskey({
-      id: 'stub-id',
-      publicKey: 'stub-public-key',
-    });
-  }
 
   return (
     <>
@@ -185,11 +192,9 @@ export function ApiKeysButton() {
       >
         <ApiKeysDialog
           ref={dialogRef}
-          onAddPasskey={handleAddPasskey}
           onClose={() => {
             setOpen(false);
           }}
-          passkey={passkey}
         />
       </Dialog>
     </>
