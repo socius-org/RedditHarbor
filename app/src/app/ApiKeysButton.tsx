@@ -29,12 +29,24 @@ type ApiKeysDialogProps = {
 
 function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
   const formId = useId();
+  const [passkey, setPasskey] = useState<{
+    id: string;
+    publicKey: string;
+  } | null>(null);
 
   function handleClose() {
     if (isPending) {
       return;
     }
     onClose();
+  }
+
+  function handleAddPasskey() {
+    // TODO: Implement actual WebAuthn registration
+    setPasskey({
+      id: 'stub-id',
+      publicKey: 'stub-public-key',
+    });
   }
 
   async function submitAction(
@@ -54,6 +66,26 @@ function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
   useImperativeHandle(ref, () => ({ getIsPending: () => isPending }), [
     isPending,
   ]);
+
+  if (!passkey) {
+    return (
+      <>
+        <DialogTitle>Add a passkey</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To securely store your API keys, you need to add a passkey. This
+            will use your device&apos;s biometric authentication (like
+            fingerprint or face recognition) to protect your keys.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus variant="contained" onClick={handleAddPasskey}>
+            Add passkey
+          </Button>
+        </DialogActions>
+      </>
+    );
+  }
 
   return (
     <>
