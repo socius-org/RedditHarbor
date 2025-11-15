@@ -8,6 +8,7 @@ import {
   useState,
   type Ref,
 } from 'react';
+import { useUser } from '@clerk/clerk-react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -19,6 +20,7 @@ import KeyIcon from '@mui/icons-material/Key';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { saveApiKeys, type SaveApiKeysState } from './actions/saveApiKeys';
+import { addPasskey, type Passkey, passkeySchema } from './utils/passkey';
 
 type ApiKeysDialogHandle = { getIsPending: () => boolean };
 
@@ -29,12 +31,49 @@ type ApiKeysDialogProps = {
 
 function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
   const formId = useId();
+  const { user } = useUser();
+
+  const [passkey, setPasskey] = useState<Passkey | null>(() => {
+    const stored = localStorage.getItem('passkey');
+    if (stored) {
+      const parsed = passkeySchema.safeParse(JSON.parse(stored));
+      if (parsed.success) {
+        return parsed.data;
+      }
+    }
+    return null;
+  });
+
+  const [addPasskeyError, setAddPasskeyError] = useState<string | null>(null);
 
   function handleClose() {
     if (isPending) {
       return;
     }
     onClose();
+  }
+
+  async function handleAddPasskey() {
+    setAddPasskeyError(null);
+
+    try {
+      const userId = user?.id;
+      const email = user?.primaryEmailAddress?.emailAddress;
+      const displayName = user?.fullName ?? '';
+
+      if (!userId || !email) {
+        throw new Error('User information not available');
+      }
+
+      const newPasskey = await addPasskey(userId, email, displayName);
+      localStorage.setItem('passkey', JSON.stringify(newPasskey));
+      setPasskey(newPasskey);
+    } catch (error) {
+      const message = Error.isError(error)
+        ? error.message
+        : 'Failed to add passkey';
+      setAddPasskeyError(message);
+    }
   }
 
   async function submitAction(
@@ -54,6 +93,39 @@ function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
   useImperativeHandle(ref, () => ({ getIsPending: () => isPending }), [
     isPending,
   ]);
+
+  if (!passkey) {
+    return (
+      <>
+        <DialogTitle>Add a passkey</DialogTitle>
+        <DialogContent>
+          <Stack spacing={2}>
+            <DialogContentText>
+              To securely store your API keys, you need to add a passkey. This
+              will use your device&apos;s biometric authentication (like
+              fingerprint or face recognition) to protect your keys.
+            </DialogContentText>
+            {addPasskeyError && (
+              <Alert severity="error" variant="filled">
+                {addPasskeyError}
+              </Alert>
+            )}
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            autoFocus
+            variant="contained"
+            onClick={() => {
+              void handleAddPasskey();
+            }}
+          >
+            Add passkey
+          </Button>
+        </DialogActions>
+      </>
+    );
+  }
 
   return (
     <>
@@ -112,7 +184,6 @@ function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
 
 export function ApiKeysButton() {
   const [open, setOpen] = useState(false);
-
   const dialogRef = useRef<ApiKeysDialogHandle>(null);
 
   return (
@@ -143,10 +214,10 @@ export function ApiKeysButton() {
         }}
       >
         <ApiKeysDialog
+          ref={dialogRef}
           onClose={() => {
             setOpen(false);
           }}
-          ref={dialogRef}
         />
       </Dialog>
     </>
