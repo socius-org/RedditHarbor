@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
@@ -16,6 +17,7 @@ import {
   SignOutButton,
 } from './clerk';
 import { ApiKeysButton } from './ApiKeysButton';
+import { ReactQueryClientProvider } from './ReactQueryClientProvider';
 
 const RAW_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 if (!RAW_PUBLISHABLE_KEY) {
@@ -59,7 +61,7 @@ function AppHeader() {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
@@ -68,13 +70,15 @@ export default function RootLayout({
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              <SignedIn>
-                <AppHeader />
-                {children}
-              </SignedIn>
-              <SignedOut>
-                <RedirectToSignIn />
-              </SignedOut>
+              <ReactQueryClientProvider>
+                <SignedIn>
+                  <AppHeader />
+                  {children}
+                </SignedIn>
+                <SignedOut>
+                  <RedirectToSignIn />
+                </SignedOut>
+              </ReactQueryClientProvider>
             </ThemeProvider>
           </AppRouterCacheProvider>
         </body>
