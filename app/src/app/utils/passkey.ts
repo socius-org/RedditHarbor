@@ -5,7 +5,6 @@ const RELYING_PARTY_NAME = 'RedditHarbor';
 
 export const passkeySchema = z.object({
   id: z.string(),
-  publicKey: z.string(),
   prfSalt: z.string(),
 });
 
@@ -17,7 +16,7 @@ export type Passkey = z.infer<typeof passkeySchema>;
  * @param userId - Clerk user ID
  * @param email - User's email address
  * @param displayName - User's display name
- * @returns Passkey metadata (credential ID, public key, and PRF salt in base64 format)
+ * @returns Passkey metadata (credential ID and PRF salt in base64 format)
  * @throws Error if passkey creation fails or is cancelled
  */
 export async function addPasskey(
@@ -64,16 +63,10 @@ export async function addPasskey(
     throw new Error('Expected PRF extension to be enabled');
   }
 
-  const publicKeyBytes = credential.response.getPublicKey();
-  if (!publicKeyBytes) {
-    throw new Error('Credential public key not available');
-  }
-
   const id = new Uint8Array(credential.rawId).toBase64();
-  const publicKey = new Uint8Array(publicKeyBytes).toBase64();
   const prfSalt = crypto.getRandomValues(new Uint8Array(32)).toBase64();
 
-  return { id, publicKey, prfSalt };
+  return { id, prfSalt };
 }
 
 /**
