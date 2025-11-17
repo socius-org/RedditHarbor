@@ -49,3 +49,32 @@ export async function decryptText(
   );
   return new TextDecoder().decode(decrypted);
 }
+
+/**
+ * Derives an AES-256-GCM encryption key from PRF output using HKDF.
+ *
+ * @param prfOutput - PRF output from passkey authentication
+ * @returns CryptoKey for AES-GCM encryption/decryption
+ */
+export async function deriveKey(prfOutput: BufferSource): Promise<CryptoKey> {
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    prfOutput,
+    'HKDF',
+    /* extractable */ false,
+    ['deriveKey'],
+  );
+
+  return await crypto.subtle.deriveKey(
+    {
+      name: 'HKDF',
+      salt: new Uint8Array(),
+      info: new TextEncoder().encode('RedditHarbor API key encryption v1'),
+      hash: 'SHA-256',
+    },
+    keyMaterial,
+    { name: 'AES-GCM', length: 256 },
+    /* extractable */ false,
+    ['encrypt', 'decrypt'],
+  );
+}
