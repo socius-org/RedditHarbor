@@ -1,13 +1,6 @@
 'use client';
 
-import {
-  useActionState,
-  useId,
-  useImperativeHandle,
-  useRef,
-  useState,
-  type Ref,
-} from 'react';
+import { startTransition, useActionState, useId, useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -22,14 +15,21 @@ import TextField from '@mui/material/TextField';
 import { saveApiKeys, type SaveApiKeysState } from './actions/saveApiKeys';
 import { addPasskey, type Passkey, passkeySchema } from './utils/passkey';
 
-type ApiKeysDialogHandle = { getIsPending: () => boolean };
-
 type ApiKeysDialogProps = {
+  action: (formData: FormData) => void;
+  isPending: boolean;
   onClose: () => void;
-  ref: Ref<ApiKeysDialogHandle>;
+  open: boolean;
+  state: SaveApiKeysState | undefined;
 };
 
-function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
+function ApiKeysDialog({
+  action,
+  isPending,
+  onClose,
+  open,
+  state,
+}: ApiKeysDialogProps) {
   const formId = useId();
   const { user } = useUser();
 
@@ -45,13 +45,6 @@ function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
   });
 
   const [addPasskeyError, setAddPasskeyError] = useState<string | null>(null);
-
-  function handleClose() {
-    if (isPending) {
-      return;
-    }
-    onClose();
-  }
 
   async function handleAddPasskey() {
     setAddPasskeyError(null);
@@ -76,27 +69,11 @@ function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
     }
   }
 
-  async function submitAction(
-    prevState: SaveApiKeysState | undefined,
-    formData: FormData,
-  ) {
-    const result = await saveApiKeys(prevState, formData);
-    if (!result?.errors) {
-      handleClose();
-    }
-    return result;
-  }
-
   // TODO: prefill form
-  const [state, action, isPending] = useActionState(submitAction, undefined);
-
-  useImperativeHandle(ref, () => ({ getIsPending: () => isPending }), [
-    isPending,
-  ]);
 
   if (!passkey) {
     return (
-      <>
+      <Dialog open={open} onClose={onClose}>
         <DialogTitle>Add a passkey</DialogTitle>
         <DialogContent>
           <Stack spacing={2}>
@@ -123,12 +100,12 @@ function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
             Add passkey
           </Button>
         </DialogActions>
-      </>
+      </Dialog>
     );
   }
 
   return (
-    <>
+    <Dialog open={open} onClose={onClose}>
       <DialogTitle>API keys</DialogTitle>
       <DialogContent>
         <Stack spacing={1}>
@@ -166,7 +143,7 @@ function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button disabled={isPending} onClick={handleClose}>
+        <Button disabled={isPending} onClick={onClose}>
           Cancel
         </Button>
         <Button
@@ -178,13 +155,40 @@ function ApiKeysDialog({ onClose, ref }: ApiKeysDialogProps) {
           Save
         </Button>
       </DialogActions>
-    </>
+    </Dialog>
   );
 }
 
 export function ApiKeysButton() {
   const [open, setOpen] = useState(false);
-  const dialogRef = useRef<ApiKeysDialogHandle>(null);
+
+  const initialState = undefined;
+  const [state, action, isPending] = useActionState(submitAction, initialState);
+
+  function handleClose() {
+    if (isPending) {
+      return;
+    }
+    setOpen(false);
+    startTransition(() => {
+      action('reset');
+    });
+  }
+
+  async function submitAction(
+    prevState: SaveApiKeysState | undefined,
+    formData: FormData | 'reset',
+  ) {
+    if (formData === 'reset') {
+      return initialState;
+    }
+
+    const result = await saveApiKeys(prevState, formData);
+    if (!result?.errors) {
+      handleClose();
+    }
+    return result;
+  }
 
   return (
     <>
@@ -199,27 +203,13 @@ export function ApiKeysButton() {
       >
         API keys
       </Button>
-      <Dialog
+      <ApiKeysDialog
+        action={action}
+        isPending={isPending}
+        onClose={handleClose}
         open={open}
-        onClose={() => {
-          // Since the pending state is managed inside the dialog,
-          // we need a ref to check the value.
-          // Note that we're not checking it in the handler below
-          // because it seems like when the action fires,
-          // `ref.getIsPending()` is still true.
-          if (dialogRef.current?.getIsPending()) {
-            return;
-          }
-          setOpen(false);
-        }}
-      >
-        <ApiKeysDialog
-          ref={dialogRef}
-          onClose={() => {
-            setOpen(false);
-          }}
-        />
-      </Dialog>
+        state={state}
+      />
     </>
   );
 }
