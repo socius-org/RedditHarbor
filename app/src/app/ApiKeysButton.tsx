@@ -170,9 +170,11 @@ export function ApiKeysButton() {
       return;
     }
     setOpen(false);
-    startTransition(() => {
-      action('reset');
-    });
+    if (state !== initialState) {
+      startTransition(() => {
+        action('reset');
+      });
+    }
   }
 
   async function submitAction(
