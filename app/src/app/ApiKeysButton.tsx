@@ -26,12 +26,77 @@ function getStoredPasskey(): Passkey | null {
   return null;
 }
 
-type ApiKeysDialogProps = {
+type ApiKeysDialogContentProps = {
   action: (formData: FormData) => void;
   isPending: boolean;
   onClose: () => void;
-  open: boolean;
   state: SaveApiKeysState | undefined;
+};
+
+function ApiKeysDialogContent({
+  action,
+  isPending,
+  onClose,
+  state,
+}: ApiKeysDialogContentProps) {
+  const formId = useId();
+
+  return (
+    <>
+      <DialogContent>
+        <Stack spacing={1}>
+          <DialogContentText>
+            Configure API keys for document generation.
+          </DialogContentText>
+          {state?.errors?.formErrors.map((error) => (
+            <Alert key={error} severity="error" variant="filled">
+              {error}
+            </Alert>
+          ))}
+          <form action={action} id={formId}>
+            <TextField
+              autoFocus
+              name="claudeKey"
+              label="Claude API key"
+              helperText="Used for DPIA and compliance document generation"
+              placeholder="sk-ant-api03-..."
+              type="password"
+              margin="dense"
+              size="small"
+              fullWidth
+            />
+            <TextField
+              name="openaiKey"
+              label="OpenAI API key"
+              helperText="Alternative to Claude for document generation"
+              placeholder="sk-..."
+              type="password"
+              margin="dense"
+              size="small"
+              fullWidth
+            />
+          </form>
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button disabled={isPending} onClick={onClose}>
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          form={formId}
+          variant="contained"
+          loading={isPending}
+        >
+          Save
+        </Button>
+      </DialogActions>
+    </>
+  );
+}
+
+type ApiKeysDialogProps = ApiKeysDialogContentProps & {
+  open: boolean;
 };
 
 function ApiKeysDialog({
@@ -41,7 +106,6 @@ function ApiKeysDialog({
   open,
   state,
 }: ApiKeysDialogProps) {
-  const formId = useId();
   const { user } = useUser();
 
   const [passkey, setPasskey] = useState<Passkey | null>(getStoredPasskey);
@@ -109,54 +173,12 @@ function ApiKeysDialog({
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>API keys</DialogTitle>
-      <DialogContent>
-        <Stack spacing={1}>
-          <DialogContentText>
-            Configure API keys for document generation.
-          </DialogContentText>
-          {state?.errors?.formErrors.map((error) => (
-            <Alert key={error} severity="error" variant="filled">
-              {error}
-            </Alert>
-          ))}
-          <form action={action} id={formId}>
-            <TextField
-              autoFocus
-              name="claudeKey"
-              label="Claude API key"
-              helperText="Used for DPIA and compliance document generation"
-              placeholder="sk-ant-api03-..."
-              type="password"
-              margin="dense"
-              size="small"
-              fullWidth
-            />
-            <TextField
-              name="openaiKey"
-              label="OpenAI API key"
-              helperText="Alternative to Claude for document generation"
-              placeholder="sk-..."
-              type="password"
-              margin="dense"
-              size="small"
-              fullWidth
-            />
-          </form>
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button disabled={isPending} onClick={onClose}>
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          form={formId}
-          variant="contained"
-          loading={isPending}
-        >
-          Save
-        </Button>
-      </DialogActions>
+      <ApiKeysDialogContent
+        action={action}
+        isPending={isPending}
+        onClose={onClose}
+        state={state}
+      />
     </Dialog>
   );
 }
