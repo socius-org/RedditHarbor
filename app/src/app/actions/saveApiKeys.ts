@@ -2,7 +2,7 @@
 
 import * as z from 'zod';
 
-const schema = z
+export const apiKeysSchema = z
   .object({
     claudeKey: z.string().trim(),
     openaiKey: z.string().trim(),
@@ -12,7 +12,7 @@ const schema = z
   });
 
 export type SaveApiKeysState = {
-  errors?: z.core.$ZodFlattenedError<z.infer<typeof schema>>;
+  errors?: z.core.$ZodFlattenedError<z.infer<typeof apiKeysSchema>>;
 };
 
 export async function saveApiKeys(
@@ -20,7 +20,7 @@ export async function saveApiKeys(
   formData: FormData,
 ): Promise<SaveApiKeysState | undefined> {
   const rawFormData = Object.fromEntries(formData);
-  const parsedResult = schema.safeParse(rawFormData);
+  const parsedResult = apiKeysSchema.safeParse(rawFormData);
   if (!parsedResult.success) {
     return {
       errors: z.flattenError(parsedResult.error),

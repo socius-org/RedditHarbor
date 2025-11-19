@@ -15,6 +15,17 @@ import TextField from '@mui/material/TextField';
 import { saveApiKeys, type SaveApiKeysState } from './actions/saveApiKeys';
 import { addPasskey, type Passkey, passkeySchema } from './utils/passkey';
 
+function getStoredPasskey(): Passkey | null {
+  const stored = localStorage.getItem('passkey');
+  if (stored) {
+    const parsed = passkeySchema.safeParse(JSON.parse(stored));
+    if (parsed.success) {
+      return parsed.data;
+    }
+  }
+  return null;
+}
+
 type ApiKeysDialogProps = {
   action: (formData: FormData) => void;
   isPending: boolean;
@@ -33,16 +44,7 @@ function ApiKeysDialog({
   const formId = useId();
   const { user } = useUser();
 
-  const [passkey, setPasskey] = useState<Passkey | null>(() => {
-    const stored = localStorage.getItem('passkey');
-    if (stored) {
-      const parsed = passkeySchema.safeParse(JSON.parse(stored));
-      if (parsed.success) {
-        return parsed.data;
-      }
-    }
-    return null;
-  });
+  const [passkey, setPasskey] = useState<Passkey | null>(getStoredPasskey);
 
   const [addPasskeyError, setAddPasskeyError] = useState<string | null>(null);
 
