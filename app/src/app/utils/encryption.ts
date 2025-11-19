@@ -1,9 +1,13 @@
-export type EncryptedData = {
+import * as z from 'zod';
+
+export const encryptedDataSchema = z.object({
   /** Base64-encoded encrypted data */
-  ciphertext: string;
+  ciphertext: z.string(),
   /** Base64-encoded initialisation vector */
-  iv: string;
-};
+  iv: z.string(),
+});
+
+export type EncryptedData = z.infer<typeof encryptedDataSchema>;
 
 /**
  * Encrypts text using AES-256-GCM.
