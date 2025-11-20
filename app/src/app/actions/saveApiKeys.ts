@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { encryptText } from '#app/utils/encryption.ts';
 
 export const apiKeysSchema = z
   .object({
@@ -9,12 +10,14 @@ export const apiKeysSchema = z
     message: 'At least one API key is required',
   });
 
+export type ApiKeys = z.infer<typeof apiKeysSchema>;
+
 export type SaveApiKeysState = {
-  errors?: z.core.$ZodFlattenedError<z.infer<typeof apiKeysSchema>>;
+  errors?: z.core.$ZodFlattenedError<ApiKeys>;
 };
 
 export async function saveApiKeys(
-  _prevState: SaveApiKeysState | undefined,
+  encryptionKey: CryptoKey,
   formData: FormData,
 ): Promise<SaveApiKeysState | undefined> {
   const rawFormData = Object.fromEntries(formData);
@@ -25,7 +28,23 @@ export async function saveApiKeys(
     };
   }
 
-  // TODO: store API keys
-  console.log('Validated API Keys:', parsedResult.data);
-  await new Promise((resolve) => setTimeout(resolve, 2500));
+  try {
+    const encrypted = await encryptText(
+      JSON.stringify(parsedResult.data),
+      encryptionKey,
+    );
+
+    localStorage.setItem('apiKeys', JSON.stringify(encrypted));
+  } catch (error) {
+    return {
+      errors: {
+        fieldErrors: {},
+        formErrors: [
+          Error.isError(error)
+            ? `${error}`
+            : 'An unknown error occurred while saving API keys.',
+        ],
+      },
+    };
+  }
 }
