@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  startTransition,
   Suspense,
   use,
   useActionState,
@@ -107,7 +108,11 @@ function ApiKeysDialogContent({
   ) {
     const result = await saveApiKeys(encryptionKey, formData);
     if (!result?.errors) {
-      onInvalidateApiKeys(encryptionKey);
+      // Avoid invalidation from causing the closing dialog to suspend
+      // by wrapping it in a transition.
+      startTransition(() => {
+        onInvalidateApiKeys(encryptionKey);
+      });
       handleClose();
     }
     return result;
