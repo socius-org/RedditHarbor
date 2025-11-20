@@ -17,13 +17,17 @@ import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import DialogActions from '@mui/material/DialogActions';
-import KeyIcon from '@mui/icons-material/Key';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
+import TextField, { type TextFieldProps } from '@mui/material/TextField';
+import KeyIcon from '@mui/icons-material/Key';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   apiKeysSchema,
   saveApiKeys,
@@ -70,6 +74,56 @@ async function getApiKeys(encryptionKey: CryptoKey): Promise<ApiKeys> {
     supabaseProjectUrl: '',
     supabaseApiKey: '',
     osfApiKey: '',
+  };
+}
+
+function usePasswordToggle() {
+  const [showKeys, setShowKeys] = useState<Record<keyof ApiKeys, boolean>>({
+    claudeKey: false,
+    openaiKey: false,
+    redditClientId: false,
+    redditClientSecret: false,
+    supabaseProjectUrl: false,
+    supabaseApiKey: false,
+    osfApiKey: false,
+  });
+
+  function toggleShowKey(key: keyof ApiKeys) {
+    setShowKeys((prev) => ({ ...prev, [key]: !prev[key] }));
+  }
+
+  return function getPasswordToggleProps(
+    fieldName: keyof ApiKeys,
+  ): Pick<TextFieldProps, 'type' | 'slotProps'> {
+    const isVisible = showKeys[fieldName];
+    return {
+      type: isVisible ? 'text' : 'password',
+      slotProps: {
+        input: {
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                edge="end"
+                size="small"
+                title={isVisible ? 'Hide' : 'Show'}
+                onClick={() => {
+                  toggleShowKey(fieldName);
+                }}
+                // https://github.com/mui/material-ui/blob/6da6eb2/docs/data/material/components/text-fields/InputAdornments.tsx#L20-L26
+                onMouseDown={(event) => {
+                  event.preventDefault();
+                }}
+                onMouseUp={(event) => {
+                  event.preventDefault();
+                }}
+              >
+                {isVisible ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        },
+      },
+    };
   };
 }
 
@@ -124,6 +178,8 @@ function ApiKeysDialogContent({
     isPending,
   ]);
 
+  const getPasswordToggleProps = usePasswordToggle();
+
   /**
    * Gets the default value for a form field, prioritising user input from failed
    * submissions over stored values. This prevents React 19's form reset behaviour
@@ -154,22 +210,22 @@ function ApiKeysDialogContent({
               label="Claude API key"
               helperText="Used for DPIA and compliance document generation"
               placeholder="sk-ant-api03-..."
-              type="password"
               margin="dense"
               size="small"
               fullWidth
               defaultValue={getDefaultValue('claudeKey')}
+              {...getPasswordToggleProps('claudeKey')}
             />
             <TextField
               name={'openaiKey' satisfies keyof ApiKeys}
               label="OpenAI API key"
               helperText="Alternative to Claude for document generation"
               placeholder="sk-..."
-              type="password"
               margin="dense"
               size="small"
               fullWidth
               defaultValue={getDefaultValue('openaiKey')}
+              {...getPasswordToggleProps('openaiKey')}
             />
             <TextField
               name={'redditClientId' satisfies keyof ApiKeys}
@@ -184,11 +240,11 @@ function ApiKeysDialogContent({
             <TextField
               name={'redditClientSecret' satisfies keyof ApiKeys}
               label="Reddit client secret"
-              type="password"
               margin="dense"
               size="small"
               fullWidth
               defaultValue={getDefaultValue('redditClientSecret')}
+              {...getPasswordToggleProps('redditClientSecret')}
             />
             <TextField
               name={'supabaseProjectUrl' satisfies keyof ApiKeys}
@@ -207,21 +263,21 @@ function ApiKeysDialogContent({
             <TextField
               name={'supabaseApiKey' satisfies keyof ApiKeys}
               label="Supabase API key"
-              type="password"
               margin="dense"
               size="small"
               fullWidth
               defaultValue={getDefaultValue('supabaseApiKey')}
+              {...getPasswordToggleProps('supabaseApiKey')}
             />
             <TextField
               name={'osfApiKey' satisfies keyof ApiKeys}
               label="OSF API key"
               helperText="Open Science Framework API key"
-              type="password"
               margin="dense"
               size="small"
               fullWidth
               defaultValue={getDefaultValue('osfApiKey')}
+              {...getPasswordToggleProps('osfApiKey')}
             />
           </form>
         </Stack>
