@@ -119,6 +119,16 @@ function ApiKeysDialogContent({
     isPending,
   ]);
 
+  /**
+   * Gets the default value for a form field, prioritising user input from failed
+   * submissions over stored values. This prevents React 19's form reset behaviour
+   * where failed form submissions would result in user input getting lost.
+   */
+  function getDefaultValue(key: keyof ApiKeys): string {
+    const value = state?.formData.get(key);
+    return typeof value === 'string' ? value : apiKeys[key];
+  }
+
   return (
     <>
       <DialogContent>
@@ -127,7 +137,7 @@ function ApiKeysDialogContent({
             Configure API keys for document generation. Keys are encrypted with
             your passkey and stored securely on your device.
           </DialogContentText>
-          {state?.errors?.formErrors.map((error) => (
+          {state?.errors.formErrors.map((error) => (
             <Alert key={error} severity="error" variant="filled">
               {error}
             </Alert>
@@ -143,7 +153,7 @@ function ApiKeysDialogContent({
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={apiKeys.claudeKey}
+              defaultValue={getDefaultValue('claudeKey')}
             />
             <TextField
               name={'openaiKey' satisfies keyof ApiKeys}
@@ -154,7 +164,7 @@ function ApiKeysDialogContent({
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={apiKeys.openaiKey}
+              defaultValue={getDefaultValue('openaiKey')}
             />
             <TextField
               name={'redditClientId' satisfies keyof ApiKeys}
@@ -164,7 +174,7 @@ function ApiKeysDialogContent({
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={apiKeys.redditClientId}
+              defaultValue={getDefaultValue('redditClientId')}
             />
             <TextField
               name={'redditClientSecret' satisfies keyof ApiKeys}
@@ -173,21 +183,21 @@ function ApiKeysDialogContent({
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={apiKeys.redditClientSecret}
+              defaultValue={getDefaultValue('redditClientSecret')}
             />
             <TextField
               name={'supabaseProjectUrl' satisfies keyof ApiKeys}
               label="Supabase project URL"
               placeholder="https://your-project.supabase.co"
-              error={!!state?.errors?.fieldErrors.supabaseProjectUrl?.length}
-              helperText={state?.errors?.fieldErrors.supabaseProjectUrl?.join(
+              error={!!state?.errors.fieldErrors.supabaseProjectUrl?.length}
+              helperText={state?.errors.fieldErrors.supabaseProjectUrl?.join(
                 '. ',
               )}
               type="url"
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={apiKeys.supabaseProjectUrl}
+              defaultValue={getDefaultValue('supabaseProjectUrl')}
             />
             <TextField
               name={'supabaseApiKey' satisfies keyof ApiKeys}
@@ -196,7 +206,7 @@ function ApiKeysDialogContent({
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={apiKeys.supabaseApiKey}
+              defaultValue={getDefaultValue('supabaseApiKey')}
             />
             <TextField
               name={'osfApiKey' satisfies keyof ApiKeys}
@@ -206,7 +216,7 @@ function ApiKeysDialogContent({
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={apiKeys.osfApiKey}
+              defaultValue={getDefaultValue('osfApiKey')}
             />
           </form>
         </Stack>

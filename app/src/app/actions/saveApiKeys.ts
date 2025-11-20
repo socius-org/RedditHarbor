@@ -18,7 +18,8 @@ export const apiKeysSchema = z
 export type ApiKeys = z.infer<typeof apiKeysSchema>;
 
 export type SaveApiKeysState = {
-  errors?: z.core.$ZodFlattenedError<ApiKeys>;
+  errors: z.core.$ZodFlattenedError<ApiKeys>;
+  formData: FormData;
 };
 
 export async function saveApiKeys(
@@ -30,6 +31,7 @@ export async function saveApiKeys(
   if (!parsedResult.success) {
     return {
       errors: z.flattenError(parsedResult.error),
+      formData,
     };
   }
 
@@ -50,6 +52,7 @@ export async function saveApiKeys(
             : 'An unknown error occurred while saving API keys.',
         ],
       },
+      formData,
     };
   }
 }
