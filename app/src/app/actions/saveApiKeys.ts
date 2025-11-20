@@ -5,6 +5,11 @@ export const apiKeysSchema = z
   .object({
     claudeKey: z.string().trim(),
     openaiKey: z.string().trim(),
+    redditClientId: z.string().trim(),
+    redditClientSecret: z.string().trim(),
+    supabaseProjectUrl: z.union([z.literal(''), z.url()]),
+    supabaseApiKey: z.string().trim(),
+    osfApiKey: z.string().trim(),
   })
   .refine((data) => data.claudeKey || data.openaiKey, {
     message: 'At least one API key is required',
