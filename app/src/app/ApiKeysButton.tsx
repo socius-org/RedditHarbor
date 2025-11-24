@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
   type Ref,
+  type RefObject,
 } from 'react';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { useUser } from '@clerk/clerk-react';
@@ -21,10 +22,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import TextField, { type TextFieldProps } from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import KeyIcon from '@mui/icons-material/Key';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -34,6 +37,10 @@ import {
   type ApiKeys,
   type SaveApiKeysState,
 } from './actions/saveApiKeys';
+import {
+  testConnection,
+  type TestConnectionService,
+} from './actions/testConnection';
 import {
   addPasskey,
   authenticateAndDeriveKey,
@@ -75,6 +82,69 @@ async function getApiKeys(encryptionKey: CryptoKey): Promise<ApiKeys> {
     supabaseApiKey: '',
     osfApiKey: '',
   };
+}
+
+const connectionTestServices: { id: TestConnectionService; label: string }[] = [
+  { id: 'claude', label: 'Claude' },
+  { id: 'openai', label: 'OpenAI' },
+  { id: 'reddit', label: 'Reddit' },
+  { id: 'supabase', label: 'Supabase' },
+  { id: 'osf', label: 'OSF' },
+];
+
+type ConnectionTestSectionProps = {
+  formRef: RefObject<HTMLFormElement | null>;
+};
+
+function ConnectionTestSection({ formRef }: ConnectionTestSectionProps) {
+  const [connectionTestState, connectionTestAction, isConnectionTestPending] =
+    useActionState(testConnection, undefined);
+
+  const [connectionTestService, setConnectionTestService] =
+    useState<TestConnectionService | null>(null);
+
+  function handleTestConnection(service: TestConnectionService) {
+    const form = formRef.current;
+    if (!form) {
+      return;
+    }
+
+    setConnectionTestService(service);
+    const formData = new FormData(form);
+    formData.append('service', service);
+
+    startTransition(() => {
+      connectionTestAction(formData);
+    });
+  }
+
+  return (
+    <>
+      <Typography variant="h6" gutterBottom>
+        Test connections
+      </Typography>
+      <Stack direction="row" spacing={1} flexWrap="wrap">
+        {connectionTestServices.map(({ id, label }) => (
+          <Button
+            key={id}
+            variant="outlined"
+            disabled={isConnectionTestPending}
+            loading={isConnectionTestPending && connectionTestService === id}
+            onClick={() => {
+              handleTestConnection(id);
+            }}
+          >
+            {label}
+          </Button>
+        ))}
+      </Stack>
+      {connectionTestState && (
+        <Alert severity={connectionTestState.success ? 'success' : 'error'}>
+          {connectionTestState.message}
+        </Alert>
+      )}
+    </>
+  );
 }
 
 function usePasswordToggle() {
@@ -148,6 +218,7 @@ function ApiKeysDialogContent({
   const apiKeys = use(apiKeysPromise);
 
   const formId = useId();
+  const formRef = useRef<HTMLFormElement>(null);
 
   function handleClose() {
     if (isPending) {
@@ -203,7 +274,7 @@ function ApiKeysDialogContent({
               {error}
             </Alert>
           ))}
-          <form action={action} id={formId}>
+          <form action={action} id={formId} ref={formRef}>
             <TextField
               autoFocus
               name={'claudeKey' satisfies keyof ApiKeys}
@@ -280,6 +351,8 @@ function ApiKeysDialogContent({
               {...getPasswordToggleProps('osfApiKey')}
             />
           </form>
+          <Divider />
+          <ConnectionTestSection formRef={formRef} />
         </Stack>
       </DialogContent>
       <DialogActions>
