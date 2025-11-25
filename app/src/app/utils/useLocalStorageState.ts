@@ -45,12 +45,9 @@ function emitCurrentTabStorageChange(key: string) {
 
 function subscribe(
   area: Storage,
-  key: string | null,
+  key: string,
   callback: () => void,
 ): () => void {
-  if (!key) {
-    return noop;
-  }
   const storageHandler = (event: StorageEvent) => {
     if (event.storageArea === area && event.key === key) {
       callback();
@@ -64,10 +61,7 @@ function subscribe(
   };
 }
 
-function getSnapshot(area: Storage, key: string | null): string | null {
-  if (!key) {
-    return null;
-  }
+function getSnapshot(area: Storage, key: string): string | null {
   try {
     return area.getItem(key);
   } catch {
@@ -77,10 +71,7 @@ function getSnapshot(area: Storage, key: string | null): string | null {
   }
 }
 
-function setValue(area: Storage, key: string | null, value: string | null) {
-  if (!key) {
-    return;
-  }
+function setValue(area: Storage, key: string, value: string | null) {
   try {
     if (value === null) {
       area.removeItem(key);
@@ -117,7 +108,7 @@ function useLocalStorageStateServer(): UseStorageStateHookResult {
  * return null during SSR and hydration.
  */
 function useLocalStorageStateBrowser(
-  key: string | null,
+  key: string,
   initializer: string | null | Initializer = null,
 ): UseStorageStateHookResult {
   const [initialValue] = React.useState(initializer);
@@ -148,12 +139,6 @@ function useLocalStorageStateBrowser(
     },
     [area, key, storedValue],
   );
-
-  const [nonStoredValue, setNonStoredValue] = React.useState(initialValue);
-
-  if (!key) {
-    return [nonStoredValue, setNonStoredValue];
-  }
 
   return [storedValue, setStoredValue];
 }
