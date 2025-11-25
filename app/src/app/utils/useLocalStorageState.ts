@@ -54,11 +54,11 @@ function subscribe(
   key: string,
   callback: () => void,
 ): () => void {
-  const storageHandler = (event: StorageEvent) => {
+  function storageHandler(event: StorageEvent) {
     if (event.storageArea === area && event.key === key) {
       callback();
     }
-  };
+  }
   window.addEventListener('storage', storageHandler);
   onCurrentTabStorageChange(key, callback);
   return () => {
@@ -129,7 +129,9 @@ function useLocalStorageStateBrowser(
   );
 
   // Start with null for the hydration, and then switch to the actual value.
-  const getKeyServerSnapshot = () => null;
+  function getKeyServerSnapshot() {
+    return null;
+  }
 
   const storedValue = useSyncExternalStore(
     subscribeKey,
