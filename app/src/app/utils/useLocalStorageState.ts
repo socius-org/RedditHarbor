@@ -119,17 +119,9 @@ function useLocalStorageStateBrowser(
   const [initialValue] = useState(initializer);
   const area = window.localStorage;
 
-  function subscribeKey(callback: () => void) {
-    return subscribe(area, key, callback);
-  }
-
-  function getKeySnapshot() {
-    return getSnapshot(area, key) ?? initialValue;
-  }
-
   const storedValue = useSyncExternalStore(
-    subscribeKey,
-    getKeySnapshot,
+    (callback) => subscribe(area, key, callback),
+    () => getSnapshot(area, key) ?? initialValue,
     // Start with null for the hydration, and then switch to the actual value.
     () => null,
   );
