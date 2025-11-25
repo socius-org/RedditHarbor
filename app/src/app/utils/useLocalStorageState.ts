@@ -2,7 +2,6 @@
 
 'use client';
 import {
-  useCallback,
   useState,
   useSyncExternalStore,
   type Dispatch,
@@ -119,14 +118,14 @@ function useLocalStorageStateBrowser(
 ): UseStorageStateHookResult {
   const [initialValue] = useState(initializer);
   const area = window.localStorage;
-  const subscribeKey = useCallback(
-    (callback: () => void) => subscribe(area, key, callback),
-    [area, key],
-  );
-  const getKeySnapshot = useCallback(
-    () => getSnapshot(area, key) ?? initialValue,
-    [area, initialValue, key],
-  );
+
+  function subscribeKey(callback: () => void) {
+    return subscribe(area, key, callback);
+  }
+
+  function getKeySnapshot() {
+    return getSnapshot(area, key) ?? initialValue;
+  }
 
   // Start with null for the hydration, and then switch to the actual value.
   function getKeyServerSnapshot() {
@@ -139,14 +138,10 @@ function useLocalStorageStateBrowser(
     getKeyServerSnapshot,
   );
 
-  const setStoredValue = useCallback(
-    (value: SetStateAction<string | null>) => {
-      const valueToStore =
-        value instanceof Function ? value(storedValue) : value;
-      setValue(area, key, valueToStore);
-    },
-    [area, key, storedValue],
-  );
+  function setStoredValue(value: SetStateAction<string | null>) {
+    const valueToStore = value instanceof Function ? value(storedValue) : value;
+    setValue(area, key, valueToStore);
+  }
 
   return [storedValue, setStoredValue];
 }
