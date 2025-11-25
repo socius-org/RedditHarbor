@@ -6,6 +6,10 @@ import * as React from 'react';
 // storage events only work across tabs, we'll use an event emitter to announce within the current tab
 const currentTabChangeListeners = new Map<string, Set<() => void>>();
 
+function noop() {
+  // Do nothing.
+}
+
 function onCurrentTabStorageChange(key: string, handler: () => void) {
   let listeners = currentTabChangeListeners.get(key);
 
@@ -33,7 +37,9 @@ function offCurrentTabStorageChange(key: string, handler: () => void) {
 function emitCurrentTabStorageChange(key: string) {
   const listeners = currentTabChangeListeners.get(key);
   if (listeners) {
-    listeners.forEach((listener) => listener());
+    listeners.forEach((listener) => {
+      listener();
+    });
   }
 }
 
@@ -43,7 +49,7 @@ function subscribe(
   callback: () => void,
 ): () => void {
   if (!key) {
-    return () => {};
+    return noop;
   }
   const storageHandler = (event: StorageEvent) => {
     if (event.storageArea === area && event.key === key) {
@@ -79,7 +85,7 @@ function setValue(area: Storage, key: string | null, value: string | null) {
     if (value === null) {
       area.removeItem(key);
     } else {
-      area.setItem(key, String(value));
+      area.setItem(key, value);
     }
   } catch {
     // ignore
@@ -96,7 +102,7 @@ type UseStorageStateHookResult = [
   React.Dispatch<React.SetStateAction<string | null>>,
 ];
 
-const serverValue: UseStorageStateHookResult = [null, () => {}];
+const serverValue: UseStorageStateHookResult = [null, noop];
 
 function useLocalStorageStateServer(): UseStorageStateHookResult {
   return serverValue;
