@@ -1,7 +1,13 @@
 // Based on https://github.com/mui/material-ui/blob/755f39474ef3f2497e8953944fdc783416e1a113/packages/mui-utils/src/useLocalStorageState/useLocalStorageState.ts
 
 'use client';
-import * as React from 'react';
+import {
+  useCallback,
+  useState,
+  useSyncExternalStore,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
 
 // storage events only work across tabs, we'll use an event emitter to announce within the current tab
 const currentTabChangeListeners = new Map<string, Set<() => void>>();
@@ -90,7 +96,7 @@ type Initializer = () => string | null;
 
 type UseStorageStateHookResult = [
   string | null,
-  React.Dispatch<React.SetStateAction<string | null>>,
+  Dispatch<SetStateAction<string | null>>,
 ];
 
 const serverValue: UseStorageStateHookResult = [null, noop];
@@ -111,13 +117,13 @@ function useLocalStorageStateBrowser(
   key: string,
   initializer: string | null | Initializer = null,
 ): UseStorageStateHookResult {
-  const [initialValue] = React.useState(initializer);
+  const [initialValue] = useState(initializer);
   const area = window.localStorage;
-  const subscribeKey = React.useCallback(
+  const subscribeKey = useCallback(
     (callback: () => void) => subscribe(area, key, callback),
     [area, key],
   );
-  const getKeySnapshot = React.useCallback(
+  const getKeySnapshot = useCallback(
     () => getSnapshot(area, key) ?? initialValue,
     [area, initialValue, key],
   );
@@ -125,14 +131,14 @@ function useLocalStorageStateBrowser(
   // Start with null for the hydration, and then switch to the actual value.
   const getKeyServerSnapshot = () => null;
 
-  const storedValue = React.useSyncExternalStore(
+  const storedValue = useSyncExternalStore(
     subscribeKey,
     getKeySnapshot,
     getKeyServerSnapshot,
   );
 
-  const setStoredValue = React.useCallback(
-    (value: React.SetStateAction<string | null>) => {
+  const setStoredValue = useCallback(
+    (value: SetStateAction<string | null>) => {
       const valueToStore =
         value instanceof Function ? value(storedValue) : value;
       setValue(area, key, valueToStore);
