@@ -127,15 +127,11 @@ function useLocalStorageStateBrowser(
     return getSnapshot(area, key) ?? initialValue;
   }
 
-  // Start with null for the hydration, and then switch to the actual value.
-  function getKeyServerSnapshot() {
-    return null;
-  }
-
   const storedValue = useSyncExternalStore(
     subscribeKey,
     getKeySnapshot,
-    getKeyServerSnapshot,
+    // Start with null for the hydration, and then switch to the actual value.
+    () => null,
   );
 
   function setStoredValue(value: SetStateAction<string | null>) {
