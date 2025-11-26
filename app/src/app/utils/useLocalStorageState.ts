@@ -139,3 +139,11 @@ export const useLocalStorageState =
   typeof window === 'undefined'
     ? useLocalStorageStateServer
     : useLocalStorageStateBrowser;
+
+/**
+ * Set a localStorage item and emit a change event so that any
+ * `useLocalStorageState` hooks listening to this key will update.
+ */
+export function setLocalStorageItem(key: string, value: string | null) {
+  setValue(window.localStorage, key, value);
+}
