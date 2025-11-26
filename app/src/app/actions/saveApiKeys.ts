@@ -1,5 +1,6 @@
 import * as z from 'zod';
 import { encryptText } from '#app/utils/encryption.ts';
+import { setLocalStorageItem } from '#app/utils/useLocalStorageState.ts';
 
 export const apiKeysSchema = z
   .object({
@@ -41,7 +42,7 @@ export async function saveApiKeys(
       encryptionKey,
     );
 
-    localStorage.setItem('apiKeys', JSON.stringify(encrypted));
+    setLocalStorageItem('apiKeys', JSON.stringify(encrypted));
   } catch (error) {
     return {
       errors: {

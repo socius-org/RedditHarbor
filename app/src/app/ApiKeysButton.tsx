@@ -48,16 +48,24 @@ import {
   passkeySchema,
 } from './utils/passkey';
 import { decryptText, encryptedDataSchema } from './utils/encryption';
+import { useLocalStorageState } from './utils/useLocalStorageState';
 
-function getStoredPasskey(): Passkey | null {
-  const stored = localStorage.getItem('passkey');
-  if (stored) {
-    const parsed = passkeySchema.safeParse(JSON.parse(stored));
+function parsePasskey(value: string | null) {
+  if (value) {
+    const parsed = passkeySchema.safeParse(JSON.parse(value));
     if (parsed.success) {
       return parsed.data;
     }
   }
   return null;
+}
+
+function usePasskey() {
+  const [storedPasskey, setStoredPasskey] = useLocalStorageState('passkey');
+  function setPasskey(newPasskey: Passkey) {
+    setStoredPasskey(JSON.stringify(newPasskey));
+  }
+  return [parsePasskey(storedPasskey), setPasskey] as const;
 }
 
 async function getApiKeys(encryptionKey: CryptoKey): Promise<ApiKeys> {
@@ -402,7 +410,9 @@ type ApiKeysDialogProps = Pick<
   apiKeysPromise: Promise<ApiKeys> | null;
   encryptionKeyPromise: Promise<CryptoKey> | null;
   onDeriveEncryptionKey: (passkey: Passkey) => void;
+  onPasskeyChange: (passkey: Passkey) => void;
   open: boolean;
+  passkey: Passkey | null;
 };
 
 function ApiKeysDialog({
@@ -411,11 +421,12 @@ function ApiKeysDialog({
   onClose,
   onDeriveEncryptionKey,
   onInvalidateApiKeys,
+  onPasskeyChange,
   open,
+  passkey,
 }: ApiKeysDialogProps) {
   const { user } = useUser();
 
-  const [passkey, setPasskey] = useState<Passkey | null>(getStoredPasskey);
   const [addPasskeyError, setAddPasskeyError] = useState<string | null>(null);
 
   const apiKeysDialogContentHandleRef =
@@ -434,8 +445,7 @@ function ApiKeysDialog({
       }
 
       const newPasskey = await addPasskey(userId, email, displayName);
-      localStorage.setItem('passkey', JSON.stringify(newPasskey));
-      setPasskey(newPasskey);
+      onPasskeyChange(newPasskey);
       onDeriveEncryptionKey(newPasskey);
     } catch (error) {
       const message = Error.isError(error)
@@ -531,6 +541,8 @@ export function ApiKeysButton() {
     null,
   );
 
+  const [passkey, setPasskey] = usePasskey();
+
   return (
     <>
       <Button
@@ -539,10 +551,8 @@ export function ApiKeysButton() {
         startIcon={<KeyIcon />}
         variant="outlined"
         onClick={() => {
-          const storedPasskey = getStoredPasskey();
-          if (storedPasskey && !encryptionKeyPromise) {
-            const newEncryptionKeyPromise =
-              authenticateAndDeriveKey(storedPasskey);
+          if (passkey && !encryptionKeyPromise) {
+            const newEncryptionKeyPromise = authenticateAndDeriveKey(passkey);
             setEncryptionKeyPromise(newEncryptionKeyPromise);
             setApiKeysPromise(newEncryptionKeyPromise.then(getApiKeys));
           }
@@ -565,7 +575,9 @@ export function ApiKeysButton() {
         onInvalidateApiKeys={(encryptionKey) => {
           setApiKeysPromise(getApiKeys(encryptionKey));
         }}
+        onPasskeyChange={setPasskey}
         open={open}
+        passkey={passkey}
       />
     </>
   );
