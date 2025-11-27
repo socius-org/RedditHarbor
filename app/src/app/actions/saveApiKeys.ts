@@ -1,6 +1,5 @@
 import * as z from 'zod';
-import { encryptText } from '#app/utils/encryption.ts';
-import { setLocalStorageItem } from '#app/utils/useLocalStorageState.ts';
+import { encryptText, type EncryptedData } from '#app/utils/encryption.ts';
 
 export const apiKeysSchema = z
   .object({
@@ -25,6 +24,8 @@ export type SaveApiKeysState = {
 
 export async function saveApiKeys(
   encryptionKey: CryptoKey,
+  setApiKeys: (value: EncryptedData) => void,
+  invalidateApiKeys: (newApiKeys: ApiKeys) => void,
   formData: FormData,
 ): Promise<SaveApiKeysState | undefined> {
   const rawFormData = Object.fromEntries(formData);
@@ -42,7 +43,7 @@ export async function saveApiKeys(
       encryptionKey,
     );
 
-    setLocalStorageItem('apiKeys', JSON.stringify(encrypted));
+    setApiKeys(encrypted);
   } catch (error) {
     return {
       errors: {
@@ -56,4 +57,5 @@ export async function saveApiKeys(
       formData,
     };
   }
+  invalidateApiKeys(parsedResult.data);
 }

@@ -47,7 +47,11 @@ import {
   type Passkey,
   passkeySchema,
 } from './utils/passkey';
-import { decryptText, encryptedDataSchema } from './utils/encryption';
+import {
+  decryptText,
+  encryptedDataSchema,
+  type EncryptedData,
+} from './utils/encryption';
 import { useLocalStorageState } from './utils/useLocalStorageState';
 
 function parsePasskey(value: string | null) {
@@ -68,16 +72,25 @@ function usePasskey() {
   return [parsePasskey(storedPasskey), setPasskey] as const;
 }
 
-async function getApiKeys(encryptionKey: CryptoKey): Promise<ApiKeys> {
-  const stored = localStorage.getItem('apiKeys');
-  if (stored) {
-    const parsed = encryptedDataSchema.safeParse(JSON.parse(stored));
+function parseApiKeys(value: string | null): EncryptedData | null {
+  if (value) {
+    const parsed = encryptedDataSchema.safeParse(JSON.parse(value));
     if (parsed.success) {
-      const decrypted = await decryptText(parsed.data, encryptionKey);
-      const parsedApiKeys = apiKeysSchema.safeParse(JSON.parse(decrypted));
-      if (parsedApiKeys.success) {
-        return parsedApiKeys.data;
-      }
+      return parsed.data;
+    }
+  }
+  return null;
+}
+
+async function decryptApiKeys(
+  storedApiKeys: EncryptedData | null,
+  encryptionKey: CryptoKey,
+): Promise<ApiKeys> {
+  if (storedApiKeys) {
+    const decrypted = await decryptText(storedApiKeys, encryptionKey);
+    const parsedApiKeys = apiKeysSchema.safeParse(JSON.parse(decrypted));
+    if (parsedApiKeys.success) {
+      return parsedApiKeys.data;
     }
   }
 
@@ -90,6 +103,14 @@ async function getApiKeys(encryptionKey: CryptoKey): Promise<ApiKeys> {
     supabaseApiKey: '',
     osfApiKey: '',
   };
+}
+
+function useApiKeys() {
+  const [storedApiKeys, setStoredApiKeys] = useLocalStorageState('apiKeys');
+  function setApiKeys(newApiKeys: EncryptedData) {
+    setStoredApiKeys(JSON.stringify(newApiKeys));
+  }
+  return [parseApiKeys(storedApiKeys), setApiKeys] as const;
 }
 
 const connectionTestServices: { id: TestConnectionService; label: string }[] = [
@@ -210,14 +231,16 @@ type ApiKeysDialogContentHandle = { getIsPending: () => boolean };
 type ApiKeysDialogContentProps = {
   apiKeysPromise: Promise<ApiKeys>;
   encryptionKeyPromise: Promise<CryptoKey>;
+  onApiKeysChange: (value: EncryptedData) => void;
   onClose: () => void;
-  onInvalidateApiKeys: (encryptionKey: CryptoKey) => void;
+  onInvalidateApiKeys: (newApiKeys: ApiKeys) => void;
   ref: Ref<ApiKeysDialogContentHandle>;
 };
 
 function ApiKeysDialogContent({
   apiKeysPromise,
   encryptionKeyPromise,
+  onApiKeysChange,
   onClose,
   onInvalidateApiKeys,
   ref,
@@ -232,13 +255,13 @@ function ApiKeysDialogContent({
     _prevState: SaveApiKeysState | undefined,
     formData: FormData,
   ) {
-    const result = await saveApiKeys(encryptionKey, formData);
+    const result = await saveApiKeys(
+      encryptionKey,
+      onApiKeysChange,
+      onInvalidateApiKeys,
+      formData,
+    );
     if (!result?.errors) {
-      // Avoid invalidation from causing the closing dialog to suspend
-      // by wrapping it in a transition.
-      startTransition(() => {
-        onInvalidateApiKeys(encryptionKey);
-      });
       onClose();
     }
     return result;
@@ -398,7 +421,7 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 
 type ApiKeysDialogProps = Pick<
   ApiKeysDialogContentProps,
-  'onClose' | 'onInvalidateApiKeys'
+  'onApiKeysChange' | 'onClose' | 'onInvalidateApiKeys'
 > & {
   apiKeysPromise: Promise<ApiKeys> | null;
   encryptionKeyPromise: Promise<CryptoKey> | null;
@@ -411,6 +434,7 @@ type ApiKeysDialogProps = Pick<
 function ApiKeysDialog({
   apiKeysPromise,
   encryptionKeyPromise,
+  onApiKeysChange,
   onClose,
   onDeriveEncryptionKey,
   onInvalidateApiKeys,
@@ -513,6 +537,7 @@ function ApiKeysDialog({
             <ApiKeysDialogContent
               apiKeysPromise={apiKeysPromise}
               encryptionKeyPromise={encryptionKeyPromise}
+              onApiKeysChange={onApiKeysChange}
               onClose={onClose}
               onInvalidateApiKeys={onInvalidateApiKeys}
               ref={apiKeysDialogContentHandleRef}
@@ -535,6 +560,7 @@ export function ApiKeysButton() {
   );
 
   const [passkey, setPasskey] = usePasskey();
+  const [storedApiKeys, setStoredApiKeys] = useApiKeys();
 
   return (
     <>
@@ -547,7 +573,11 @@ export function ApiKeysButton() {
           if (passkey && !encryptionKeyPromise) {
             const newEncryptionKeyPromise = authenticateAndDeriveKey(passkey);
             setEncryptionKeyPromise(newEncryptionKeyPromise);
-            setApiKeysPromise(newEncryptionKeyPromise.then(getApiKeys));
+            setApiKeysPromise(
+              newEncryptionKeyPromise.then((key) =>
+                decryptApiKeys(storedApiKeys, key),
+              ),
+            );
           }
           setOpen(true);
         }}
@@ -557,16 +587,21 @@ export function ApiKeysButton() {
       <ApiKeysDialog
         apiKeysPromise={apiKeysPromise}
         encryptionKeyPromise={encryptionKeyPromise}
+        onApiKeysChange={setStoredApiKeys}
         onClose={() => {
           setOpen(false);
         }}
         onDeriveEncryptionKey={(passkey) => {
           const newEncryptionKeyPromise = authenticateAndDeriveKey(passkey);
           setEncryptionKeyPromise(newEncryptionKeyPromise);
-          setApiKeysPromise(newEncryptionKeyPromise.then(getApiKeys));
+          setApiKeysPromise(
+            newEncryptionKeyPromise.then((key) =>
+              decryptApiKeys(storedApiKeys, key),
+            ),
+          );
         }}
-        onInvalidateApiKeys={(encryptionKey) => {
-          setApiKeysPromise(getApiKeys(encryptionKey));
+        onInvalidateApiKeys={(newApiKeys) => {
+          setApiKeysPromise(Promise.resolve(newApiKeys));
         }}
         onPasskeyChange={setPasskey}
         open={open}
