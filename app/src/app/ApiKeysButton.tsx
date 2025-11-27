@@ -228,13 +228,6 @@ function ApiKeysDialogContent({
   const formId = useId();
   const formRef = useRef<HTMLFormElement>(null);
 
-  function handleClose() {
-    if (isPending) {
-      return;
-    }
-    onClose();
-  }
-
   async function submitAction(
     _prevState: SaveApiKeysState | undefined,
     formData: FormData,
@@ -246,7 +239,7 @@ function ApiKeysDialogContent({
       startTransition(() => {
         onInvalidateApiKeys(encryptionKey);
       });
-      handleClose();
+      onClose();
     }
     return result;
   }
