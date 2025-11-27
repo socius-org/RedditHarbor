@@ -5,6 +5,8 @@ import {
   Suspense,
   use,
   useActionState,
+  useEffect,
+  useEffectEvent,
   useId,
   useImperativeHandle,
   useRef,
@@ -13,6 +15,7 @@ import {
   type RefObject,
 } from 'react';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
+import isEqual from 'react-fast-compare';
 import { useUser } from '@clerk/clerk-react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -233,7 +236,7 @@ type ApiKeysDialogContentProps = {
   encryptionKeyPromise: Promise<CryptoKey>;
   onApiKeysChange: (value: EncryptedData) => void;
   onClose: () => void;
-  onInvalidateApiKeys: (newApiKeys: ApiKeys) => void;
+  onInvalidateApiKeys: (encrypted: EncryptedData, newApiKeys: ApiKeys) => void;
   ref: Ref<ApiKeysDialogContentHandle>;
 };
 
@@ -555,12 +558,32 @@ export function ApiKeysButton() {
   const [encryptionKeyPromise, setEncryptionKeyPromise] =
     useState<Promise<CryptoKey> | null>(null);
 
-  const [apiKeysPromise, setApiKeysPromise] = useState<Promise<ApiKeys> | null>(
-    null,
-  );
+  const [apiKeysPromise, setApiKeysPromise] = useState<{
+    encrypted: EncryptedData | null;
+    promise: Promise<ApiKeys>;
+  } | null>(null);
 
   const [passkey, setPasskey] = usePasskey();
   const [storedApiKeys, setStoredApiKeys] = useApiKeys();
+
+  const syncApiKeysPromise = useEffectEvent((stored: EncryptedData | null) => {
+    if (
+      encryptionKeyPromise &&
+      !isEqual(apiKeysPromise?.encrypted ?? null, stored)
+    ) {
+      //
+      setApiKeysPromise({
+        encrypted: stored,
+        promise: encryptionKeyPromise.then((key) =>
+          decryptApiKeys(storedApiKeys, key),
+        ),
+      });
+    }
+  });
+
+  useEffect(() => {
+    syncApiKeysPromise(storedApiKeys);
+  }, [storedApiKeys]);
 
   return (
     <>
@@ -573,11 +596,12 @@ export function ApiKeysButton() {
           if (passkey && !encryptionKeyPromise) {
             const newEncryptionKeyPromise = authenticateAndDeriveKey(passkey);
             setEncryptionKeyPromise(newEncryptionKeyPromise);
-            setApiKeysPromise(
-              newEncryptionKeyPromise.then((key) =>
+            setApiKeysPromise({
+              encrypted: storedApiKeys,
+              promise: newEncryptionKeyPromise.then((key) =>
                 decryptApiKeys(storedApiKeys, key),
               ),
-            );
+            });
           }
           setOpen(true);
         }}
@@ -585,7 +609,7 @@ export function ApiKeysButton() {
         API keys
       </Button>
       <ApiKeysDialog
-        apiKeysPromise={apiKeysPromise}
+        apiKeysPromise={apiKeysPromise?.promise ?? null}
         encryptionKeyPromise={encryptionKeyPromise}
         onApiKeysChange={setStoredApiKeys}
         onClose={() => {
@@ -594,14 +618,18 @@ export function ApiKeysButton() {
         onDeriveEncryptionKey={(passkey) => {
           const newEncryptionKeyPromise = authenticateAndDeriveKey(passkey);
           setEncryptionKeyPromise(newEncryptionKeyPromise);
-          setApiKeysPromise(
-            newEncryptionKeyPromise.then((key) =>
+          setApiKeysPromise({
+            encrypted: storedApiKeys,
+            promise: newEncryptionKeyPromise.then((key) =>
               decryptApiKeys(storedApiKeys, key),
             ),
-          );
+          });
         }}
-        onInvalidateApiKeys={(newApiKeys) => {
-          setApiKeysPromise(Promise.resolve(newApiKeys));
+        onInvalidateApiKeys={(encrypted, newApiKeys) => {
+          setApiKeysPromise({
+            encrypted,
+            promise: Promise.resolve(newApiKeys),
+          });
         }}
         onPasskeyChange={setPasskey}
         open={open}
