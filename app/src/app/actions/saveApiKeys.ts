@@ -1,7 +1,12 @@
 import * as z from 'zod';
-import { encryptText, type EncryptedData } from '#app/utils/encryption.ts';
+import {
+  decryptText,
+  encryptedDataSchema,
+  encryptText,
+  type EncryptedData,
+} from '#app/utils/encryption.ts';
 
-export const apiKeysSchema = z
+const apiKeysSchema = z
   .object({
     claudeKey: z.string().trim(),
     openaiKey: z.string().trim(),
@@ -17,12 +22,110 @@ export const apiKeysSchema = z
 
 export type ApiKeys = z.infer<typeof apiKeysSchema>;
 
-export type EncryptedApiKeys = EncryptedData;
+export const encryptedApiKeysSchema = z.object({
+  claudeKey: encryptedDataSchema.nullable(),
+  openaiKey: encryptedDataSchema.nullable(),
+  redditClientId: encryptedDataSchema.nullable(),
+  redditClientSecret: encryptedDataSchema.nullable(),
+  supabaseProjectUrl: encryptedDataSchema.nullable(),
+  supabaseApiKey: encryptedDataSchema.nullable(),
+  osfApiKey: encryptedDataSchema.nullable(),
+} satisfies Record<keyof ApiKeys, z.ZodNullable<typeof encryptedDataSchema>>);
+
+export type EncryptedApiKeys = z.infer<typeof encryptedApiKeysSchema>;
 
 export type SaveApiKeysState = {
   errors: z.core.$ZodFlattenedError<ApiKeys>;
   formData: FormData;
 };
+
+async function encryptApiKeys(
+  apiKeys: ApiKeys,
+  encryptionKey: CryptoKey,
+): Promise<EncryptedApiKeys> {
+  async function encryptField(value: string): Promise<EncryptedData | null> {
+    return value ? encryptText(value, encryptionKey) : null;
+  }
+
+  const [
+    claudeKey,
+    openaiKey,
+    redditClientId,
+    redditClientSecret,
+    supabaseProjectUrl,
+    supabaseApiKey,
+    osfApiKey,
+  ] = await Promise.all([
+    encryptField(apiKeys.claudeKey),
+    encryptField(apiKeys.openaiKey),
+    encryptField(apiKeys.redditClientId),
+    encryptField(apiKeys.redditClientSecret),
+    encryptField(apiKeys.supabaseProjectUrl),
+    encryptField(apiKeys.supabaseApiKey),
+    encryptField(apiKeys.osfApiKey),
+  ]);
+
+  return {
+    claudeKey,
+    openaiKey,
+    redditClientId,
+    redditClientSecret,
+    supabaseProjectUrl,
+    supabaseApiKey,
+    osfApiKey,
+  };
+}
+
+export async function decryptApiKeys(
+  storedApiKeys: EncryptedApiKeys | null,
+  encryptionKey: CryptoKey,
+): Promise<ApiKeys> {
+  if (!storedApiKeys) {
+    return {
+      claudeKey: '',
+      openaiKey: '',
+      redditClientId: '',
+      redditClientSecret: '',
+      supabaseProjectUrl: '',
+      supabaseApiKey: '',
+      osfApiKey: '',
+    };
+  }
+
+  async function decryptField(
+    encrypted: EncryptedData | null,
+  ): Promise<string> {
+    return encrypted ? decryptText(encrypted, encryptionKey) : '';
+  }
+
+  const [
+    claudeKey,
+    openaiKey,
+    redditClientId,
+    redditClientSecret,
+    supabaseProjectUrl,
+    supabaseApiKey,
+    osfApiKey,
+  ] = await Promise.all([
+    decryptField(storedApiKeys.claudeKey),
+    decryptField(storedApiKeys.openaiKey),
+    decryptField(storedApiKeys.redditClientId),
+    decryptField(storedApiKeys.redditClientSecret),
+    decryptField(storedApiKeys.supabaseProjectUrl),
+    decryptField(storedApiKeys.supabaseApiKey),
+    decryptField(storedApiKeys.osfApiKey),
+  ]);
+
+  return {
+    claudeKey,
+    openaiKey,
+    redditClientId,
+    redditClientSecret,
+    supabaseProjectUrl,
+    supabaseApiKey,
+    osfApiKey,
+  };
+}
 
 export async function saveApiKeys(
   encryptionKey: CryptoKey,
@@ -42,10 +145,7 @@ export async function saveApiKeys(
   let encrypted;
 
   try {
-    encrypted = await encryptText(
-      JSON.stringify(parsedResult.data),
-      encryptionKey,
-    );
+    encrypted = await encryptApiKeys(parsedResult.data, encryptionKey);
 
     setApiKeys(encrypted);
   } catch (error) {
