@@ -17,6 +17,8 @@ export const apiKeysSchema = z
 
 export type ApiKeys = z.infer<typeof apiKeysSchema>;
 
+export type EncryptedApiKeys = EncryptedData;
+
 export type SaveApiKeysState = {
   errors: z.core.$ZodFlattenedError<ApiKeys>;
   formData: FormData;
@@ -24,8 +26,8 @@ export type SaveApiKeysState = {
 
 export async function saveApiKeys(
   encryptionKey: CryptoKey,
-  setApiKeys: (value: EncryptedData) => void,
-  invalidateApiKeys: (encrypted: EncryptedData, newApiKeys: ApiKeys) => void,
+  setApiKeys: (value: EncryptedApiKeys) => void,
+  invalidateApiKeys: (encrypted: EncryptedApiKeys, newApiKeys: ApiKeys) => void,
   formData: FormData,
 ): Promise<SaveApiKeysState | undefined> {
   const rawFormData = Object.fromEntries(formData);

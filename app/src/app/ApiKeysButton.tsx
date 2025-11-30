@@ -39,6 +39,7 @@ import {
   apiKeysSchema,
   saveApiKeys,
   type ApiKeys,
+  type EncryptedApiKeys,
   type SaveApiKeysState,
 } from './actions/saveApiKeys';
 import {
@@ -51,11 +52,7 @@ import {
   type Passkey,
   passkeySchema,
 } from './utils/passkey';
-import {
-  decryptText,
-  encryptedDataSchema,
-  type EncryptedData,
-} from './utils/encryption';
+import { decryptText, encryptedDataSchema } from './utils/encryption';
 import { useLocalStorageState } from './utils/useLocalStorageState';
 
 function parsePasskey(value: string | null) {
@@ -76,7 +73,7 @@ function usePasskey() {
   return [parsePasskey(storedPasskey), setPasskey] as const;
 }
 
-function parseApiKeys(value: string | null): EncryptedData | null {
+function parseApiKeys(value: string | null): EncryptedApiKeys | null {
   if (value) {
     const parsed = encryptedDataSchema.safeParse(JSON.parse(value));
     if (parsed.success) {
@@ -87,7 +84,7 @@ function parseApiKeys(value: string | null): EncryptedData | null {
 }
 
 async function decryptApiKeys(
-  storedApiKeys: EncryptedData | null,
+  storedApiKeys: EncryptedApiKeys | null,
   encryptionKey: CryptoKey,
 ): Promise<ApiKeys> {
   if (storedApiKeys) {
@@ -111,7 +108,7 @@ async function decryptApiKeys(
 
 function useApiKeys() {
   const [storedApiKeys, setStoredApiKeys] = useLocalStorageState('apiKeys');
-  function setApiKeys(newApiKeys: EncryptedData) {
+  function setApiKeys(newApiKeys: EncryptedApiKeys) {
     setStoredApiKeys(JSON.stringify(newApiKeys));
   }
   return [parseApiKeys(storedApiKeys), setApiKeys] as const;
@@ -233,12 +230,18 @@ function usePasswordToggle() {
 type ApiKeysDialogContentHandle = { getIsPending: () => boolean };
 
 type ApiKeysDialogContentProps = {
-  apiKeysState: { encrypted: EncryptedData | null; promise: Promise<ApiKeys> };
+  apiKeysState: {
+    encrypted: EncryptedApiKeys | null;
+    promise: Promise<ApiKeys>;
+  };
   encryptionKeyPromise: Promise<CryptoKey>;
   formRef: Ref<HTMLFormElement>;
-  onApiKeysChange: (value: EncryptedData) => void;
+  onApiKeysChange: (value: EncryptedApiKeys) => void;
   onClose: () => void;
-  onInvalidateApiKeys: (encrypted: EncryptedData, newApiKeys: ApiKeys) => void;
+  onInvalidateApiKeys: (
+    encrypted: EncryptedApiKeys,
+    newApiKeys: ApiKeys,
+  ) => void;
   ref: Ref<ApiKeysDialogContentHandle>;
 };
 
@@ -431,7 +434,7 @@ type ApiKeysDialogProps = Pick<
   'formRef' | 'onApiKeysChange' | 'onClose' | 'onInvalidateApiKeys'
 > & {
   apiKeysState: {
-    encrypted: EncryptedData | null;
+    encrypted: EncryptedApiKeys | null;
     promise: Promise<ApiKeys>;
   } | null;
   encryptionKeyPromise: Promise<CryptoKey> | null;
@@ -568,7 +571,7 @@ export function ApiKeysButton() {
     useState<Promise<CryptoKey> | null>(null);
 
   const [apiKeysState, setApiKeysState] = useState<{
-    encrypted: EncryptedData | null;
+    encrypted: EncryptedApiKeys | null;
     promise: Promise<ApiKeys>;
   } | null>(null);
 
@@ -577,20 +580,22 @@ export function ApiKeysButton() {
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  const syncApiKeysPromise = useEffectEvent((stored: EncryptedData | null) => {
-    if (
-      encryptionKeyPromise &&
-      !isEqual(apiKeysState?.encrypted ?? null, stored)
-    ) {
-      setApiKeysState({
-        encrypted: stored,
-        promise: encryptionKeyPromise.then((key) =>
-          decryptApiKeys(stored, key),
-        ),
-      });
-      formRef.current?.reset();
-    }
-  });
+  const syncApiKeysPromise = useEffectEvent(
+    (stored: EncryptedApiKeys | null) => {
+      if (
+        encryptionKeyPromise &&
+        !isEqual(apiKeysState?.encrypted ?? null, stored)
+      ) {
+        setApiKeysState({
+          encrypted: stored,
+          promise: encryptionKeyPromise.then((key) =>
+            decryptApiKeys(stored, key),
+          ),
+        });
+        formRef.current?.reset();
+      }
+    },
+  );
 
   useEffect(() => {
     syncApiKeysPromise(storedApiKeys);
