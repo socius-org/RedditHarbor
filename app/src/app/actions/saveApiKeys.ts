@@ -25,7 +25,7 @@ export type SaveApiKeysState = {
 export async function saveApiKeys(
   encryptionKey: CryptoKey,
   setApiKeys: (value: EncryptedData) => void,
-  invalidateApiKeys: (newApiKeys: ApiKeys) => void,
+  invalidateApiKeys: (encrypted: EncryptedData, newApiKeys: ApiKeys) => void,
   formData: FormData,
 ): Promise<SaveApiKeysState | undefined> {
   const rawFormData = Object.fromEntries(formData);
@@ -37,8 +37,10 @@ export async function saveApiKeys(
     };
   }
 
+  let encrypted;
+
   try {
-    const encrypted = await encryptText(
+    encrypted = await encryptText(
       JSON.stringify(parsedResult.data),
       encryptionKey,
     );
@@ -57,5 +59,5 @@ export async function saveApiKeys(
       formData,
     };
   }
-  invalidateApiKeys(parsedResult.data);
+  invalidateApiKeys(encrypted, parsedResult.data);
 }
