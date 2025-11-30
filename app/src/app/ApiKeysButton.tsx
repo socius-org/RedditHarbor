@@ -36,7 +36,8 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import useForkRef from '@mui/utils/useForkRef';
 import {
-  apiKeysSchema,
+  decryptApiKeys,
+  encryptedApiKeysSchema,
   saveApiKeys,
   type ApiKeys,
   type EncryptedApiKeys,
@@ -52,7 +53,6 @@ import {
   type Passkey,
   passkeySchema,
 } from './utils/passkey';
-import { decryptText, encryptedDataSchema } from './utils/encryption';
 import { useLocalStorageState } from './utils/useLocalStorageState';
 
 function parsePasskey(value: string | null) {
@@ -75,35 +75,12 @@ function usePasskey() {
 
 function parseApiKeys(value: string | null): EncryptedApiKeys | null {
   if (value) {
-    const parsed = encryptedDataSchema.safeParse(JSON.parse(value));
+    const parsed = encryptedApiKeysSchema.safeParse(JSON.parse(value));
     if (parsed.success) {
       return parsed.data;
     }
   }
   return null;
-}
-
-async function decryptApiKeys(
-  storedApiKeys: EncryptedApiKeys | null,
-  encryptionKey: CryptoKey,
-): Promise<ApiKeys> {
-  if (storedApiKeys) {
-    const decrypted = await decryptText(storedApiKeys, encryptionKey);
-    const parsedApiKeys = apiKeysSchema.safeParse(JSON.parse(decrypted));
-    if (parsedApiKeys.success) {
-      return parsedApiKeys.data;
-    }
-  }
-
-  return {
-    claudeKey: '',
-    openaiKey: '',
-    redditClientId: '',
-    redditClientSecret: '',
-    supabaseProjectUrl: '',
-    supabaseApiKey: '',
-    osfApiKey: '',
-  };
 }
 
 function useApiKeys() {
