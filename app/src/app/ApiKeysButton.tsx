@@ -43,6 +43,7 @@ import {
   type EncryptedApiKeys,
   type SaveApiKeysState,
 } from './actions/saveApiKeys';
+import { useApiKeysDialog } from './ApiKeysDialogContext';
 import {
   testConnection,
   type TestConnectionService,
@@ -83,7 +84,7 @@ function parseApiKeys(value: string | null): EncryptedApiKeys | null {
   return null;
 }
 
-function useApiKeys() {
+export function useApiKeys() {
   const [storedApiKeys, setStoredApiKeys] = useLocalStorageState('apiKeys');
   function setApiKeys(newApiKeys: EncryptedApiKeys) {
     setStoredApiKeys(JSON.stringify(newApiKeys));
@@ -542,7 +543,7 @@ function ApiKeysDialog({
 }
 
 export function ApiKeysButton() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useApiKeysDialog();
 
   const [encryptionKeyPromise, setEncryptionKeyPromise] =
     useState<Promise<CryptoKey> | null>(null);
