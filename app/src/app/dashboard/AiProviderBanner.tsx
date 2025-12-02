@@ -3,11 +3,9 @@
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import { useApiKeysDialog } from '../ApiKeysDialogContext';
-import { useApiKeys } from '../ApiKeysButton';
 
 export function AiProviderBanner() {
-  const [storedApiKeys] = useApiKeys();
-  const [, setOpen] = useApiKeysDialog();
+  const { openDialog, storedApiKeys } = useApiKeysDialog();
 
   if (storedApiKeys?.claudeKey || storedApiKeys?.openaiKey) {
     return null;
@@ -21,9 +19,7 @@ export function AiProviderBanner() {
           color="inherit"
           size="small"
           variant="outlined"
-          onClick={() => {
-            setOpen(true);
-          }}
+          onClick={openDialog}
         >
           Configure now
         </Button>
