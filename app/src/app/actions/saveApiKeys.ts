@@ -92,9 +92,7 @@ export async function decryptApiKeys(
     };
   }
 
-  async function decryptField(
-    encrypted: EncryptedData | null,
-  ): Promise<string> {
+  async function decryptField(encrypted: EncryptedData | null): Promise<string> {
     return encrypted ? decryptText(encrypted, encryptionKey) : '';
   }
 
@@ -153,9 +151,7 @@ export async function saveApiKeys(
       errors: {
         fieldErrors: {},
         formErrors: [
-          Error.isError(error)
-            ? `${error}`
-            : 'An unknown error occurred while saving API keys.',
+          Error.isError(error) ? `${error}` : 'An unknown error occurred while saving API keys.',
         ],
       },
       formData,

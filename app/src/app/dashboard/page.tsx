@@ -52,13 +52,7 @@ function Header() {
   );
 }
 
-function ProjectCard({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+function ProjectCard({ title, description }: { title: string; description: string }) {
   return (
     <Card sx={{ height: '100%' }}>
       <CardActionArea sx={{ height: '100%' }}>
@@ -125,10 +119,7 @@ export default function Dashboard() {
         <Grid container spacing={3}>
           {PROJECTS.map((project) => (
             <GridItem key={project.id}>
-              <ProjectCard
-                title={project.title}
-                description={project.description}
-              />
+              <ProjectCard title={project.title} description={project.description} />
             </GridItem>
           ))}
           <GridItem>

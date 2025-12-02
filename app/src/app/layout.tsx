@@ -9,13 +9,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { theme } from './theme';
-import {
-  ClerkProvider,
-  RedirectToSignIn,
-  SignedIn,
-  SignedOut,
-  SignOutButton,
-} from './clerk';
+import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut, SignOutButton } from './clerk';
 import { ApiKeysButton } from './ApiKeysButton';
 import { ApiKeysDialogProvider } from './ApiKeysDialogContext';
 import { ReactQueryClientProvider } from './ReactQueryClientProvider';

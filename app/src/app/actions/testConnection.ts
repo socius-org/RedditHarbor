@@ -32,9 +32,7 @@ const testConnectionSchema = z.discriminatedUnion('service', [
   }),
 ]);
 
-export type TestConnectionService = z.infer<
-  typeof testConnectionSchema
->['service'];
+export type TestConnectionService = z.infer<typeof testConnectionSchema>['service'];
 
 export async function testConnection(
   _prevState: TestConnectionResult | undefined,
@@ -110,17 +108,14 @@ export async function testConnection(
         const auth = new TextEncoder()
           .encode(`${data.redditClientId}:${data.redditClientSecret}`)
           .toBase64();
-        const response = await fetch(
-          'https://www.reddit.com/api/v1/access_token',
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Basic ${auth}`,
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'grant_type=client_credentials',
+        const response = await fetch('https://www.reddit.com/api/v1/access_token', {
+          method: 'POST',
+          headers: {
+            Authorization: `Basic ${auth}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
-        );
+          body: 'grant_type=client_credentials',
+        });
 
         if (response.ok) {
           return {

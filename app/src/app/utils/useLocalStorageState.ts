@@ -1,12 +1,7 @@
 // Based on https://github.com/mui/material-ui/blob/755f39474ef3f2497e8953944fdc783416e1a113/packages/mui-utils/src/useLocalStorageState/useLocalStorageState.ts
 
 'use client';
-import {
-  useState,
-  useSyncExternalStore,
-  type Dispatch,
-  type SetStateAction,
-} from 'react';
+import { useState, useSyncExternalStore, type Dispatch, type SetStateAction } from 'react';
 
 // storage events only work across tabs, we'll use an event emitter to announce within the current tab
 const currentTabChangeListeners = new Map<string, Set<() => void>>();
@@ -48,11 +43,7 @@ function emitCurrentTabStorageChange(key: string) {
   }
 }
 
-function subscribe(
-  area: Storage,
-  key: string,
-  callback: () => void,
-): () => void {
+function subscribe(area: Storage, key: string, callback: () => void): () => void {
   function storageHandler(event: StorageEvent) {
     if (event.storageArea === area && event.key === key) {
       callback();
@@ -93,10 +84,7 @@ function setValue(area: Storage, key: string, value: string | null) {
 
 type Initializer = () => string | null;
 
-type UseStorageStateHookResult = [
-  string | null,
-  Dispatch<SetStateAction<string | null>>,
-];
+type UseStorageStateHookResult = [string | null, Dispatch<SetStateAction<string | null>>];
 
 const serverValue: UseStorageStateHookResult = [null, noop];
 
@@ -127,8 +115,7 @@ function useLocalStorageStateBrowser(
   );
 
   function setStoredValue(value: SetStateAction<string | null>) {
-    const valueToStore =
-      typeof value === 'function' ? value(storedValue) : value;
+    const valueToStore = typeof value === 'function' ? value(storedValue) : value;
     setValue(area, key, valueToStore);
   }
 
@@ -136,6 +123,4 @@ function useLocalStorageStateBrowser(
 }
 
 export const useLocalStorageState =
-  typeof window === 'undefined'
-    ? useLocalStorageStateServer
-    : useLocalStorageStateBrowser;
+  typeof window === 'undefined' ? useLocalStorageStateServer : useLocalStorageStateBrowser;

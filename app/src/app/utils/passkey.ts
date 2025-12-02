@@ -52,9 +52,7 @@ export async function addPasskey(
     throw new Error('Expected credential type to be `PublicKeyCredential`');
   }
   if (!(credential.response instanceof AuthenticatorAttestationResponse)) {
-    throw new Error(
-      'Expected credential response type to be `AuthenticatorAttestationResponse`',
-    );
+    throw new Error('Expected credential response type to be `AuthenticatorAttestationResponse`');
   }
 
   const clientExtensionResults = credential.getClientExtensionResults();
@@ -76,18 +74,14 @@ export async function addPasskey(
  * @returns CryptoKey for AES-GCM encryption/decryption
  * @throws Error if authentication fails, is cancelled, or PRF output is not available
  */
-export async function authenticateAndDeriveKey(
-  passkey: Passkey,
-): Promise<CryptoKey> {
+export async function authenticateAndDeriveKey(passkey: Passkey): Promise<CryptoKey> {
   const prfSalt = Uint8Array.fromBase64(passkey.prfSalt);
 
   const credential = await navigator.credentials.get({
     publicKey: {
       challenge: crypto.getRandomValues(new Uint8Array(32)),
       rpId: window.location.hostname,
-      allowCredentials: [
-        { type: 'public-key', id: Uint8Array.fromBase64(passkey.id) },
-      ],
+      allowCredentials: [{ type: 'public-key', id: Uint8Array.fromBase64(passkey.id) }],
       userVerification: 'required',
       extensions: { prf: { eval: { first: prfSalt } } },
     },
