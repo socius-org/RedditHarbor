@@ -2,7 +2,7 @@
 
 import {
   createContext,
-  useContext,
+  use,
   useEffect,
   useEffectEvent,
   useRef,
@@ -158,7 +158,7 @@ export function ApiKeysDialogProvider({ children }: { children: ReactNode }) {
 }
 
 export function useApiKeysDialog() {
-  const context = useContext(ApiKeysDialogContext);
+  const context = use(ApiKeysDialogContext);
   if (!context) {
     throw new Error('Forgot to wrap in `ApiKeysDialogProvider`');
   }
