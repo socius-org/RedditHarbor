@@ -215,9 +215,11 @@ function ApiKeysDialogContent({
 
   const [state, action, isPending] = useActionState(submitAction, undefined);
 
-  useImperativeHandle(ref, () => ({ getIsPending: () => isPending }), [
-    isPending,
-  ]);
+  useImperativeHandle(
+    ref,
+    () => ({ getIsPending: () => isPending }),
+    [isPending],
+  );
 
   const getPasswordToggleProps = usePasswordToggle();
 

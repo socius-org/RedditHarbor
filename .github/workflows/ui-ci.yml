@@ -32,5 +32,5 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: ./app/pnpm-lock.yaml
       - run: pnpm install
-      - run: pnpm prettier . --check
+      - run: pnpm format --check
       - run: pnpm lint
