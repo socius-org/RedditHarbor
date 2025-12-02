@@ -17,6 +17,7 @@ import {
   SignOutButton,
 } from './clerk';
 import { ApiKeysButton } from './ApiKeysButton';
+import { ApiKeysDialogProvider } from './ApiKeysDialogContext';
 import { ReactQueryClientProvider } from './ReactQueryClientProvider';
 
 const RAW_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
@@ -72,8 +73,10 @@ export default function RootLayout({
               <CssBaseline />
               <ReactQueryClientProvider>
                 <SignedIn>
-                  <AppHeader />
-                  {children}
+                  <ApiKeysDialogProvider>
+                    <AppHeader />
+                    {children}
+                  </ApiKeysDialogProvider>
                 </SignedIn>
                 <SignedOut>
                   <RedirectToSignIn />
