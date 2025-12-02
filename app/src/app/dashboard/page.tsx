@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
@@ -111,6 +112,10 @@ function NewProjectCard() {
   );
 }
 
+function GridItem({ children }: { children: ReactNode }) {
+  return <Grid size={{ xs: 12, sm: 6, lg: 4 }}>{children}</Grid>;
+}
+
 export default function Dashboard() {
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
@@ -119,16 +124,16 @@ export default function Dashboard() {
         <AiProviderBanner />
         <Grid container spacing={3}>
           {PROJECTS.map((project) => (
-            <Grid key={project.id} size={{ xs: 12, sm: 6, lg: 4 }}>
+            <GridItem key={project.id}>
               <ProjectCard
                 title={project.title}
                 description={project.description}
               />
-            </Grid>
+            </GridItem>
           ))}
-          <Grid size={{ xs: 12, sm: 6, lg: 4 }}>
+          <GridItem>
             <NewProjectCard />
-          </Grid>
+          </GridItem>
         </Grid>
       </Stack>
     </Container>
