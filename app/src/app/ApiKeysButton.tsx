@@ -40,15 +40,8 @@ import {
   type SaveApiKeysState,
 } from './actions/saveApiKeys';
 import { useApiKeysDialog } from './ApiKeysDialogContext';
-import {
-  testConnection,
-  type TestConnectionService,
-} from './actions/testConnection';
-import {
-  addPasskey,
-  authenticateAndDeriveKey,
-  type Passkey,
-} from './utils/passkey';
+import { testConnection, type TestConnectionService } from './actions/testConnection';
+import { addPasskey, authenticateAndDeriveKey, type Passkey } from './utils/passkey';
 
 const connectionTestServices: { id: TestConnectionService; label: string }[] = [
   { id: 'claude', label: 'Claude' },
@@ -63,11 +56,14 @@ type ConnectionTestSectionProps = {
 };
 
 function ConnectionTestSection({ formRef }: ConnectionTestSectionProps) {
-  const [connectionTestState, connectionTestAction, isConnectionTestPending] =
-    useActionState(testConnection, undefined);
+  const [connectionTestState, connectionTestAction, isConnectionTestPending] = useActionState(
+    testConnection,
+    undefined,
+  );
 
-  const [connectionTestService, setConnectionTestService] =
-    useState<TestConnectionService | null>(null);
+  const [connectionTestService, setConnectionTestService] = useState<TestConnectionService | null>(
+    null,
+  );
 
   function handleTestConnection(service: TestConnectionService) {
     const form = formRef.current;
@@ -174,10 +170,7 @@ type ApiKeysDialogContentProps = {
   formRef: Ref<HTMLFormElement>;
   onApiKeysChange: (value: EncryptedApiKeys) => void;
   onClose: () => void;
-  onInvalidateApiKeys: (
-    encrypted: EncryptedApiKeys,
-    newApiKeys: ApiKeys,
-  ) => void;
+  onInvalidateApiKeys: (encrypted: EncryptedApiKeys, newApiKeys: ApiKeys) => void;
   ref: Ref<ApiKeysDialogContentHandle>;
 };
 
@@ -197,16 +190,8 @@ function ApiKeysDialogContent({
   const formRef = useRef<HTMLFormElement>(null);
   const handleFormRef = useForkRef(formRef, formRefProp);
 
-  async function submitAction(
-    _prevState: SaveApiKeysState | undefined,
-    formData: FormData,
-  ) {
-    const result = await saveApiKeys(
-      encryptionKey,
-      onApiKeysChange,
-      onInvalidateApiKeys,
-      formData,
-    );
+  async function submitAction(_prevState: SaveApiKeysState | undefined, formData: FormData) {
+    const result = await saveApiKeys(encryptionKey, onApiKeysChange, onInvalidateApiKeys, formData);
     if (!result?.errors) {
       onClose();
     }
@@ -215,11 +200,7 @@ function ApiKeysDialogContent({
 
   const [state, action, isPending] = useActionState(submitAction, undefined);
 
-  useImperativeHandle(
-    ref,
-    () => ({ getIsPending: () => isPending }),
-    [isPending],
-  );
+  useImperativeHandle(ref, () => ({ getIsPending: () => isPending }), [isPending]);
 
   const getPasswordToggleProps = usePasswordToggle();
 
@@ -238,8 +219,8 @@ function ApiKeysDialogContent({
       <DialogContent>
         <Stack spacing={1}>
           <DialogContentText>
-            Configure API keys for document generation. Keys are encrypted with
-            your passkey and stored securely on your device.
+            Configure API keys for document generation. Keys are encrypted with your passkey and
+            stored securely on your device.
           </DialogContentText>
           {state?.errors.formErrors.map((error) => (
             <Alert key={error} severity="error" variant="filled">
@@ -294,9 +275,7 @@ function ApiKeysDialogContent({
               label="Supabase project URL"
               placeholder="https://your-project.supabase.co"
               error={!!state?.errors.fieldErrors.supabaseProjectUrl?.length}
-              helperText={state?.errors.fieldErrors.supabaseProjectUrl?.join(
-                '. ',
-              )}
+              helperText={state?.errors.fieldErrors.supabaseProjectUrl?.join('. ')}
               type="url"
               margin="dense"
               size="small"
@@ -331,12 +310,7 @@ function ApiKeysDialogContent({
         <Button disabled={isPending} onClick={onClose}>
           Cancel
         </Button>
-        <Button
-          type="submit"
-          form={formId}
-          variant="contained"
-          loading={isPending}
-        >
+        <Button type="submit" form={formId} variant="contained" loading={isPending}>
           Save
         </Button>
       </DialogActions>
@@ -398,8 +372,7 @@ function ApiKeysDialog({
 
   const [addPasskeyError, setAddPasskeyError] = useState<string | null>(null);
 
-  const apiKeysDialogContentHandleRef =
-    useRef<ApiKeysDialogContentHandle>(null);
+  const apiKeysDialogContentHandleRef = useRef<ApiKeysDialogContentHandle>(null);
 
   async function handleAddPasskey() {
     setAddPasskeyError(null);
@@ -417,9 +390,7 @@ function ApiKeysDialog({
       onPasskeyChange(newPasskey);
       onDeriveEncryptionKey(newPasskey);
     } catch (error) {
-      const message = Error.isError(error)
-        ? error.message
-        : 'Failed to add passkey';
+      const message = Error.isError(error) ? error.message : 'Failed to add passkey';
       setAddPasskeyError(message);
     }
   }
@@ -431,9 +402,9 @@ function ApiKeysDialog({
         <DialogContent>
           <Stack spacing={2}>
             <DialogContentText>
-              To securely store your API keys, you need to add a passkey. This
-              will use your device&apos;s biometric authentication (like
-              fingerprint or face recognition) to protect your keys.
+              To securely store your API keys, you need to add a passkey. This will use your
+              device&apos;s biometric authentication (like fingerprint or face recognition) to
+              protect your keys.
             </DialogContentText>
             {addPasskeyError && (
               <Alert severity="error" variant="filled">
@@ -540,9 +511,7 @@ export function ApiKeysButton() {
           setEncryptionKeyPromise(newEncryptionKeyPromise);
           setApiKeysState({
             encrypted: storedApiKeys,
-            promise: newEncryptionKeyPromise.then((key) =>
-              decryptApiKeys(storedApiKeys, key),
-            ),
+            promise: newEncryptionKeyPromise.then((key) => decryptApiKeys(storedApiKeys, key)),
           });
         }}
         onInvalidateApiKeys={(encrypted, newApiKeys) => {

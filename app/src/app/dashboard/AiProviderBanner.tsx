@@ -15,12 +15,7 @@ export function AiProviderBanner() {
     <Alert
       severity="warning"
       action={
-        <Button
-          color="inherit"
-          size="small"
-          variant="outlined"
-          onClick={openDialog}
-        >
+        <Button color="inherit" size="small" variant="outlined" onClick={openDialog}>
           Configure now
         </Button>
       }

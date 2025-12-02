@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  isServer,
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
+import { isServer, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { ReactNode } from 'react';
 
@@ -37,11 +33,7 @@ function getQueryClient() {
   }
 }
 
-export function ReactQueryClientProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export function ReactQueryClientProvider({ children }: { children: ReactNode }) {
   const queryClient = getQueryClient();
 
   return (

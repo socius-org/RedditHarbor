@@ -18,11 +18,7 @@ import {
   type ApiKeys,
   type EncryptedApiKeys,
 } from './actions/saveApiKeys';
-import {
-  authenticateAndDeriveKey,
-  passkeySchema,
-  type Passkey,
-} from './utils/passkey';
+import { authenticateAndDeriveKey, passkeySchema, type Passkey } from './utils/passkey';
 import { useLocalStorageState } from './utils/useLocalStorageState';
 
 function parsePasskey(value: string | null) {
@@ -81,15 +77,12 @@ type ApiKeysDialogContextType = {
   storedApiKeys: EncryptedApiKeys | null;
 };
 
-const ApiKeysDialogContext = createContext<ApiKeysDialogContextType | null>(
-  null,
-);
+const ApiKeysDialogContext = createContext<ApiKeysDialogContextType | null>(null);
 
 export function ApiKeysDialogProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
 
-  const [encryptionKeyPromise, setEncryptionKeyPromise] =
-    useState<Promise<CryptoKey> | null>(null);
+  const [encryptionKeyPromise, setEncryptionKeyPromise] = useState<Promise<CryptoKey> | null>(null);
 
   const [apiKeysState, setApiKeysState] = useState<ApiKeysState | null>(null);
 
@@ -98,22 +91,15 @@ export function ApiKeysDialogProvider({ children }: { children: ReactNode }) {
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  const syncApiKeysPromise = useEffectEvent(
-    (stored: EncryptedApiKeys | null) => {
-      if (
-        encryptionKeyPromise &&
-        !isEqual(apiKeysState?.encrypted ?? null, stored)
-      ) {
-        setApiKeysState({
-          encrypted: stored,
-          promise: encryptionKeyPromise.then((key) =>
-            decryptApiKeys(stored, key),
-          ),
-        });
-        formRef.current?.reset();
-      }
-    },
-  );
+  const syncApiKeysPromise = useEffectEvent((stored: EncryptedApiKeys | null) => {
+    if (encryptionKeyPromise && !isEqual(apiKeysState?.encrypted ?? null, stored)) {
+      setApiKeysState({
+        encrypted: stored,
+        promise: encryptionKeyPromise.then((key) => decryptApiKeys(stored, key)),
+      });
+      formRef.current?.reset();
+    }
+  });
 
   useEffect(() => {
     syncApiKeysPromise(storedApiKeys);
@@ -125,9 +111,7 @@ export function ApiKeysDialogProvider({ children }: { children: ReactNode }) {
       setEncryptionKeyPromise(newEncryptionKeyPromise);
       setApiKeysState({
         encrypted: storedApiKeys,
-        promise: newEncryptionKeyPromise.then((key) =>
-          decryptApiKeys(storedApiKeys, key),
-        ),
+        promise: newEncryptionKeyPromise.then((key) => decryptApiKeys(storedApiKeys, key)),
       });
     }
     setOpen(true);
