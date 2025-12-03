@@ -3,14 +3,13 @@ import * as z from 'zod';
 export const RESEARCH_OBJECTIVE_MAX_LENGTH = 500;
 
 export const projectSchema = z.object({
-  id: z.string(),
+  id: z.uuidv4(),
   title: z.string().trim().min(1),
   researchObjective: z.string().trim().min(1).max(RESEARCH_OBJECTIVE_MAX_LENGTH),
   subreddits: z.array(z.string().trim().min(1)).min(1),
   principalInvestigator: z.string().trim().min(1),
   institution: z.string().trim().min(1),
-  /** ISO date string (YYYY-MM-DD) */
-  createdAt: z.string(),
+  createdAt: z.iso.date(),
 });
 
 export type Project = z.infer<typeof projectSchema>;
