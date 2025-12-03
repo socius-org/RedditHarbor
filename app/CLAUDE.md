@@ -16,8 +16,13 @@
 - Prefer `<form action={...}>` with Server Actions over `onSubmit` handlers
 - Use `ref` as a prop directly (no need for `forwardRef`)
 - Use `<Context>` as a provider instead of `<Context.Provider>`
+- Don't manually memoise (using React Compiler)
 
 ## TypeScript
 
 - Don't unnecessarily add `try`/`catch`
 - Don't cast to `any`
+
+## Workflow
+
+- Always run `pnpm format` and `pnpm lint` after making changes
