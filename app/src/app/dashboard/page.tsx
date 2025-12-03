@@ -35,7 +35,9 @@ function ProjectCard({ project }: { project: Project }) {
       <CardActionArea sx={{ height: '100%' }}>
         <CardContent sx={{ height: '100%' }}>
           <Typography variant="h6">{title}</Typography>
-          <Typography variant="body2" color="textSecondary">Created {dateFormatter.format(createdAt)}</Typography>
+          <Typography variant="body2" color="textSecondary">
+            Created {dateFormatter.format(new Date(createdAt))}
+          </Typography>
         </CardContent>
       </CardActionArea>
     </Card>
