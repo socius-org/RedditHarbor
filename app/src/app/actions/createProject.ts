@@ -2,21 +2,22 @@ import * as z from 'zod';
 
 export const RESEARCH_OBJECTIVE_MAX_LENGTH = 500;
 
-const createProjectSchema = z.object({
+export const projectSchema = z.object({
+  id: z.string(),
   title: z.string().trim().min(1),
   researchObjective: z.string().trim().min(1).max(RESEARCH_OBJECTIVE_MAX_LENGTH),
   subreddits: z.array(z.string().trim().min(1)).min(1),
   principalInvestigator: z.string().trim().min(1),
   institution: z.string().trim().min(1),
+  /** ISO date string (YYYY-MM-DD) */
+  createdAt: z.string(),
 });
 
-export type CreateProjectInput = z.infer<typeof createProjectSchema>;
+export type Project = z.infer<typeof projectSchema>;
 
-export type Project = CreateProjectInput & {
-  id: string;
-  /** ISO date string (YYYY-MM-DD) */
-  createdAt: string;
-};
+const createProjectSchema = projectSchema.omit({ id: true, createdAt: true });
+
+export type CreateProjectInput = z.infer<typeof createProjectSchema>;
 
 export type CreateProjectState = {
   errors: z.core.$ZodFlattenedError<CreateProjectInput>;
