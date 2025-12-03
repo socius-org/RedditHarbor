@@ -374,18 +374,24 @@ function ApiKeysDialog({
 
   const apiKeysDialogContentHandleRef = useRef<ApiKeysDialogContentHandle>(null);
 
+  // Extracted due to https://github.com/facebook/react/blob/36df5e8b42a97df4092f9584e4695bf4537853d5/compiler/packages/babel-plugin-react-compiler/src/HIR/BuildHIR.ts#L279-L290
+  function validateUser() {
+    const userId = user?.id;
+    const email = user?.primaryEmailAddress?.emailAddress;
+    const displayName = user?.fullName ?? '';
+
+    if (!userId || !email) {
+      throw new Error('User information not available');
+    }
+
+    return { userId, email, displayName };
+  }
+
   async function handleAddPasskey() {
     setAddPasskeyError(null);
 
     try {
-      const userId = user?.id;
-      const email = user?.primaryEmailAddress?.emailAddress;
-      const displayName = user?.fullName ?? '';
-
-      if (!userId || !email) {
-        throw new Error('User information not available');
-      }
-
+      const { userId, email, displayName } = validateUser();
       const newPasskey = await addPasskey(userId, email, displayName);
       onPasskeyChange(newPasskey);
       onDeriveEncryptionKey(newPasskey);
