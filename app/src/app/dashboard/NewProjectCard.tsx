@@ -1,13 +1,16 @@
 'use client';
 
 import { useActionState, useId, useImperativeHandle, useRef, useState, type Ref } from 'react';
+import isEqual from 'react-fast-compare';
 import AddIcon from '@mui/icons-material/Add';
 import Alert from '@mui/material/Alert';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
+import Chip from '@mui/material/Chip';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -22,6 +25,10 @@ import {
   RESEARCH_OBJECTIVE_MAX_LENGTH,
 } from '../actions/createProject';
 
+function stripSubredditPrefix(value: string): string {
+  return value.replace(/^r\//, '');
+}
+
 type NewProjectDialogContentHandle = { getIsPending: () => boolean };
 
 type NewProjectDialogContentProps = {
@@ -32,9 +39,10 @@ type NewProjectDialogContentProps = {
 function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps) {
   const formId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(0);
+  const [subreddits, setSubreddits] = useState<string[]>([]);
 
   function submitAction(_prevState: CreateProjectState | undefined, formData: FormData) {
-    const result = createProject(formData);
+    const result = createProject(formData, subreddits);
     if (!result?.errors) {
       onClose();
     }
@@ -69,7 +77,7 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
               required
               name={'title' satisfies keyof CreateProjectInput}
               label="Project title"
-              placeholder="e.g., Political Discourse Analysis 2024"
+              placeholder="Political Discourse Analysis 2024"
               error={!!state?.errors.fieldErrors.title?.length}
               helperText={
                 state?.errors.fieldErrors.title?.[0] ??
@@ -110,6 +118,46 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
               size="small"
               fullWidth
               defaultValue={getDefaultValue('researchObjective')}
+            />
+            <Autocomplete
+              multiple
+              freeSolo
+              options={[]}
+              value={subreddits}
+              isOptionEqualToValue={(option, value) => stripSubredditPrefix(option) === value}
+              onChange={(_, values) => {
+                const next = values.map(stripSubredditPrefix).filter(Boolean);
+                setSubreddits((prev) => (isEqual(prev, next) ? prev : next));
+              }}
+              renderValue={(value, getItemProps) =>
+                value.map((option, index) => {
+                  const { key, ...itemProps } = getItemProps({ index });
+                  return <Chip key={key} {...itemProps} label={`r/${option}`} size="small" />;
+                })
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  // https://github.com/mui/material-ui/issues/21663#issuecomment-732298594
+                  required
+                  label="Target subreddits"
+                  placeholder="politics"
+                  error={!!state?.errors.fieldErrors.subreddits?.length}
+                  helperText={
+                    state?.errors.fieldErrors.subreddits?.[0] ?? (
+                      <>
+                        Add at least one (press <kbd>Enter</kbd> to add). You can refine this list
+                        during the Extract phase.
+                      </>
+                    )
+                  }
+                  slotProps={{
+                    htmlInput: { ...params.inputProps, required: subreddits.length === 0 },
+                  }}
+                  margin="dense"
+                  size="small"
+                />
+              )}
             />
             <Stack direction="row" spacing={2}>
               <TextField

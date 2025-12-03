@@ -5,6 +5,7 @@ export const RESEARCH_OBJECTIVE_MAX_LENGTH = 500;
 const createProjectSchema = z.object({
   title: z.string().trim().min(1),
   researchObjective: z.string().trim().min(1).max(RESEARCH_OBJECTIVE_MAX_LENGTH),
+  subreddits: z.array(z.string().trim().min(1)).min(1),
   principalInvestigator: z.string().trim().min(1),
   institution: z.string().trim().min(1),
 });
@@ -16,8 +17,14 @@ export type CreateProjectState = {
   formData: FormData;
 };
 
-export function createProject(formData: FormData): CreateProjectState | undefined {
-  const rawFormData = Object.fromEntries(formData);
+export function createProject(
+  formData: FormData,
+  subreddits: string[],
+): CreateProjectState | undefined {
+  const rawFormData = {
+    ...Object.fromEntries(formData),
+    subreddits,
+  };
   const parsedResult = createProjectSchema.safeParse(rawFormData);
 
   if (!parsedResult.success) {
