@@ -12,7 +12,11 @@ const createProjectSchema = z.object({
 
 export type CreateProjectInput = z.infer<typeof createProjectSchema>;
 
-export type Project = CreateProjectInput & { id: string; createdAt: Date };
+export type Project = CreateProjectInput & {
+  id: string;
+  /** ISO date string (YYYY-MM-DD) */
+  createdAt: string;
+};
 
 export type CreateProjectState = {
   errors: z.core.$ZodFlattenedError<CreateProjectInput>;
@@ -40,7 +44,7 @@ export function createProject(
   const project: Project = {
     ...parsedResult.data,
     id: crypto.randomUUID(),
-    createdAt: new Date(),
+    createdAt: new Date().toISOString().slice(0, 10),
   };
 
   onCreate(project);
