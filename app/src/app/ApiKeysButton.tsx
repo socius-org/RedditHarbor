@@ -275,7 +275,7 @@ function ApiKeysDialogContent({
               label="Supabase project URL"
               placeholder="https://your-project.supabase.co"
               error={!!state?.errors.fieldErrors.supabaseProjectUrl?.length}
-              helperText={state?.errors.fieldErrors.supabaseProjectUrl?.join('. ')}
+              helperText={state?.errors.fieldErrors.supabaseProjectUrl?.[0]}
               type="url"
               margin="dense"
               size="small"
