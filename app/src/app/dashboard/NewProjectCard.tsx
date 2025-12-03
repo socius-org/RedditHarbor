@@ -22,6 +22,7 @@ import {
   createProject,
   type CreateProjectInput,
   type CreateProjectState,
+  type Project,
   RESEARCH_OBJECTIVE_MAX_LENGTH,
 } from '../actions/createProject';
 
@@ -33,16 +34,17 @@ type NewProjectDialogContentHandle = { getIsPending: () => boolean };
 
 type NewProjectDialogContentProps = {
   onClose: () => void;
+  onCreate: (project: Project) => void;
   ref: Ref<NewProjectDialogContentHandle>;
 };
 
-function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps) {
+function NewProjectDialogContent({ onClose, onCreate, ref }: NewProjectDialogContentProps) {
   const formId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(0);
   const [subreddits, setSubreddits] = useState<string[]>([]);
 
   function submitAction(_prevState: CreateProjectState | undefined, formData: FormData) {
-    const result = createProject(formData, subreddits);
+    const result = createProject(subreddits, onCreate, formData);
     if (!result?.errors) {
       onClose();
     }
@@ -200,7 +202,7 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
   );
 }
 
-export function NewProjectCard() {
+export function NewProjectCard({ onCreate }: Pick<NewProjectDialogContentProps, 'onCreate'>) {
   const [open, setOpen] = useState(false);
   const dialogContentRef = useRef<NewProjectDialogContentHandle>(null);
 
@@ -262,7 +264,7 @@ export function NewProjectCard() {
         }}
       >
         <DialogTitle>Create new research project</DialogTitle>
-        <NewProjectDialogContent onClose={handleClose} ref={dialogContentRef} />
+        <NewProjectDialogContent onClose={handleClose} onCreate={onCreate} ref={dialogContentRef} />
       </Dialog>
     </>
   );

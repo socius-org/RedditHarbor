@@ -1,4 +1,6 @@
-import type { ReactNode } from 'react';
+'use client';
+
+import { useState, type ReactNode } from 'react';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
@@ -6,37 +8,9 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import type { Project } from '../actions/createProject';
 import { AiProviderBanner } from './AiProviderBanner';
 import { NewProjectCard } from './NewProjectCard';
-
-const PROJECTS = [
-  {
-    id: '1',
-    title: 'Community migration patterns',
-    description: 'Placeholder content',
-  },
-  {
-    id: '2',
-    title: 'Political discourse analysis 2024',
-    description: 'Placeholder content',
-  },
-  {
-    id: '3',
-    title: 'Mental health support analysis',
-    description: 'Placeholder content',
-  },
-  {
-    id: '4',
-    title: 'Sentiment analysis Q3 2024',
-    description:
-      'This project analyzes sentiment trends across multiple subreddits over Q3 2024, tracking emotional patterns and community reactions to major events. Includes data from r/news, r/politics, and r/worldnews.',
-  },
-  {
-    id: '5',
-    title: 'Gaming community trends',
-    description: 'Placeholder content',
-  },
-];
 
 function Header() {
   return (
@@ -69,19 +43,25 @@ function GridItem({ children }: { children: ReactNode }) {
 }
 
 export default function Dashboard() {
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  function handleCreate(project: Project) {
+    setProjects((prev) => [...prev, project]);
+  }
+
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
       <Stack spacing={3}>
         <Header />
         <AiProviderBanner />
         <Grid container spacing={3}>
-          {PROJECTS.map((project) => (
+          {projects.map((project) => (
             <GridItem key={project.id}>
-              <ProjectCard title={project.title} description={project.description} />
+              <ProjectCard title={project.title} description={project.researchObjective} />
             </GridItem>
           ))}
           <GridItem>
-            <NewProjectCard />
+            <NewProjectCard onCreate={handleCreate} />
           </GridItem>
         </Grid>
       </Stack>
