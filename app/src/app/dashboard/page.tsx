@@ -12,6 +12,8 @@ import type { Project } from '../actions/createProject';
 import { AiProviderBanner } from './AiProviderBanner';
 import { NewProjectCard } from './NewProjectCard';
 
+const dateFormatter = new Intl.DateTimeFormat(/* locales */ undefined, { dateStyle: 'medium' });
+
 function Header() {
   return (
     <div>
@@ -25,13 +27,15 @@ function Header() {
   );
 }
 
-function ProjectCard({ title, description }: { title: string; description: string }) {
+function ProjectCard({ project }: { project: Project }) {
+  const { title, createdAt } = project;
+
   return (
     <Card sx={{ height: '100%' }}>
       <CardActionArea sx={{ height: '100%' }}>
-        <CardContent>
+        <CardContent sx={{ height: '100%' }}>
           <Typography variant="h6">{title}</Typography>
-          <Typography>{description}</Typography>
+          <Typography variant="body2" color="textSecondary">Created {dateFormatter.format(createdAt)}</Typography>
         </CardContent>
       </CardActionArea>
     </Card>
@@ -57,7 +61,7 @@ export default function Dashboard() {
         <Grid container spacing={3}>
           {projects.map((project) => (
             <GridItem key={project.id}>
-              <ProjectCard title={project.title} description={project.researchObjective} />
+              <ProjectCard project={project} />
             </GridItem>
           ))}
           <GridItem>
