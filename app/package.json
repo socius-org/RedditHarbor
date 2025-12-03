@@ -32,14 +32,14 @@
     "zod": "^4.1.13"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.0",
+    "@eslint/js": "^9.39.1",
     "@tanstack/eslint-plugin-query": "^5.91.2",
     "@tanstack/react-query-devtools": "^5.90.2",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9",
+    "eslint": "^9.39.1",
     "eslint-config-next": "16.0.5",
     "oxfmt": "^0.16.0",
     "prettier": "~3.7.3",
