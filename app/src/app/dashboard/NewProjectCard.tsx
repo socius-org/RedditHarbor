@@ -111,6 +111,32 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
               fullWidth
               defaultValue={getDefaultValue('researchObjective')}
             />
+            <Stack direction="row" spacing={2}>
+              <TextField
+                required
+                name={'principalInvestigator' satisfies keyof CreateProjectInput}
+                label="Principal investigator"
+                placeholder="Full name"
+                error={!!state?.errors.fieldErrors.principalInvestigator?.length}
+                helperText={state?.errors.fieldErrors.principalInvestigator?.[0]}
+                margin="dense"
+                size="small"
+                fullWidth
+                defaultValue={getDefaultValue('principalInvestigator')}
+              />
+              <TextField
+                required
+                name={'institution' satisfies keyof CreateProjectInput}
+                label="Institution"
+                placeholder="University or organisation"
+                error={!!state?.errors.fieldErrors.institution?.length}
+                helperText={state?.errors.fieldErrors.institution?.[0]}
+                margin="dense"
+                size="small"
+                fullWidth
+                defaultValue={getDefaultValue('institution')}
+              />
+            </Stack>
           </form>
         </Stack>
       </DialogContent>
