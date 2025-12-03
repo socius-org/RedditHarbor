@@ -44,6 +44,6 @@
     "oxfmt": "^0.16.0",
     "prettier": "~3.7.3",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.2"
+    "typescript-eslint": "^8.48.0"
   }
 }
