@@ -2,6 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:best-practices"],
   "ignorePresets": [":pinDevDependencies"],
+  "prHourlyLimit": 0,
   "rangeStrategy": "bump",
   "pip_requirements": {
     "enabled": false
