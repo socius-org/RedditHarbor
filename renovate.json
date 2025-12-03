@@ -1,5 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:best-practices"],
-  "ignorePresets": [":pinDevDependencies"]
+  "ignorePresets": [":pinDevDependencies"],
+  "pip_requirements": {
+    "enabled": false
+  },
+  "pip_setup": {
+    "enabled": false
+  }
 }
