@@ -12,14 +12,17 @@ const createProjectSchema = z.object({
 
 export type CreateProjectInput = z.infer<typeof createProjectSchema>;
 
+export type Project = CreateProjectInput & { id: string };
+
 export type CreateProjectState = {
   errors: z.core.$ZodFlattenedError<CreateProjectInput>;
   formData: FormData;
 };
 
 export function createProject(
-  formData: FormData,
   subreddits: string[],
+  onCreate: (project: Project) => void,
+  formData: FormData,
 ): CreateProjectState | undefined {
   const rawFormData = {
     ...Object.fromEntries(formData),
@@ -34,6 +37,10 @@ export function createProject(
     };
   }
 
-  // TODO: Implement actual project creation
-  console.log('Creating project:', parsedResult.data);
+  const project: Project = {
+    ...parsedResult.data,
+    id: crypto.randomUUID(),
+  };
+
+  onCreate(project);
 }
