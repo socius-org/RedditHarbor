@@ -19,6 +19,7 @@ import {
   createProject,
   type CreateProjectInput,
   type CreateProjectState,
+  RESEARCH_OBJECTIVE_MAX_LENGTH,
 } from '../actions/createProject';
 
 type NewProjectDialogContentHandle = { getIsPending: () => boolean };
@@ -30,6 +31,7 @@ type NewProjectDialogContentProps = {
 
 function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps) {
   const formId = useId();
+  const [researchObjectiveLength, setResearchObjectiveLength] = useState(0);
 
   function submitAction(_prevState: CreateProjectState | undefined, formData: FormData) {
     const result = createProject(formData);
@@ -70,13 +72,44 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
               placeholder="e.g., Political Discourse Analysis 2024"
               error={!!state?.errors.fieldErrors.title?.length}
               helperText={
-                state?.errors.fieldErrors.title?.join('. ') ??
+                state?.errors.fieldErrors.title?.[0] ??
                 'Choose a descriptive title for your Reddit research project'
               }
               margin="dense"
               size="small"
               fullWidth
               defaultValue={getDefaultValue('title')}
+            />
+            <TextField
+              required
+              multiline
+              rows={3}
+              name={'researchObjective' satisfies keyof CreateProjectInput}
+              label="Research objective"
+              placeholder="Describe the main research question or hypothesis you want to investigate..."
+              error={!!state?.errors.fieldErrors.researchObjective?.length}
+              helperText={
+                <>
+                  <span>
+                    {state?.errors.fieldErrors.researchObjective?.[0] ??
+                      'What do you aim to discover or understand through this research?'}
+                  </span>
+                  <span>
+                    {researchObjectiveLength} / {RESEARCH_OBJECTIVE_MAX_LENGTH}
+                  </span>
+                </>
+              }
+              slotProps={{
+                formHelperText: { sx: { display: 'flex', justifyContent: 'space-between' } },
+                htmlInput: { maxLength: RESEARCH_OBJECTIVE_MAX_LENGTH },
+              }}
+              onChange={(event) => {
+                setResearchObjectiveLength(event.currentTarget.value.length);
+              }}
+              margin="dense"
+              size="small"
+              fullWidth
+              defaultValue={getDefaultValue('researchObjective')}
             />
           </form>
         </Stack>
