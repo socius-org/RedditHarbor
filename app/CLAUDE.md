@@ -25,4 +25,4 @@
 
 ## Workflow
 
-- Always run `pnpm format` and `pnpm lint` after making changes
+- Always run `pnpm format` after making changes
