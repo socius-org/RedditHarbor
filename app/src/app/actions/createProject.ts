@@ -9,7 +9,7 @@ export const projectSchema = z.object({
   subreddits: z.array(z.string().trim().min(1)).min(1),
   principalInvestigator: z.string().trim().min(1),
   institution: z.string().trim().min(1),
-  createdAt: z.iso.date(),
+  createdAt: z.iso.datetime(),
 });
 
 export type Project = z.infer<typeof projectSchema>;
@@ -44,7 +44,7 @@ export function createProject(
   const project: Project = {
     ...parsedResult.data,
     id: crypto.randomUUID(),
-    createdAt: new Date().toISOString().slice(0, 10),
+    createdAt: new Date().toISOString(),
   };
 
   onCreate(project);
