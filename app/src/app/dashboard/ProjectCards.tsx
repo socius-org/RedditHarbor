@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type SyntheticEvent } from 'react';
+import { useRef, useState, type SyntheticEvent } from 'react';
 import Link from 'next/link';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Button from '@mui/material/Button';
@@ -19,6 +19,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import type { Project } from '../actions/createProject';
 import { GridItem } from './GridItem';
+import { ProjectDialogContent, type ProjectDialogContentHandle } from './NewProjectCard';
 import { useProjects } from './useProjects';
 
 const dateFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' });
@@ -68,6 +69,9 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
     setAnchorEl(null);
   }
 
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const editDialogContentRef = useRef<ProjectDialogContentHandle>(null);
+
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   function handleCloseDeleteDialog() {
     setDeleteDialogOpen(false);
@@ -105,7 +109,12 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
         </CardActionArea>
       </Card>
       <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleCloseMenu}>
-        <MenuItem onClick={handleCloseMenu} disabled>
+        <MenuItem
+          onClick={() => {
+            handleCloseMenu();
+            setEditDialogOpen(true);
+          }}
+        >
           Edit
         </MenuItem>
         <MenuItem
@@ -117,6 +126,25 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
           Delete
         </MenuItem>
       </Menu>
+      <Dialog
+        fullWidth
+        open={editDialogOpen}
+        onClose={() => {
+          if (editDialogContentRef.current?.getIsPending()) {
+            return;
+          }
+          setEditDialogOpen(false);
+        }}
+      >
+        <DialogTitle>Edit project</DialogTitle>
+        <ProjectDialogContent
+          project={project}
+          onClose={() => {
+            setEditDialogOpen(false);
+          }}
+          ref={editDialogContentRef}
+        />
+      </Dialog>
       <DeleteConfirmDialog
         open={deleteDialogOpen}
         project={project}
