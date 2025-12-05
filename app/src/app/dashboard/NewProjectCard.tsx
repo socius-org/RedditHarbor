@@ -22,29 +22,37 @@ import {
   createProject,
   type CreateProjectInput,
   type CreateProjectState,
+  type Project,
   RESEARCH_OBJECTIVE_MAX_LENGTH,
 } from '../actions/createProject';
+import { updateProject as updateProjectAction } from '../actions/updateProject';
 import { useProjects } from './useProjects';
 
 function stripSubredditPrefix(value: string): string {
   return value.replace(/^r\//, '');
 }
 
-type NewProjectDialogContentHandle = { getIsPending: () => boolean };
+export type ProjectDialogContentHandle = { getIsPending: () => boolean };
 
-type NewProjectDialogContentProps = {
+type ProjectDialogContentProps = {
+  project?: Project;
   onClose: () => void;
-  ref: Ref<NewProjectDialogContentHandle>;
+  ref: Ref<ProjectDialogContentHandle>;
 };
 
-function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps) {
-  const [, addProject] = useProjects();
+export function ProjectDialogContent({ project, onClose, ref }: ProjectDialogContentProps) {
+  const [, { addProject, updateProject }] = useProjects();
   const formId = useId();
-  const [researchObjectiveLength, setResearchObjectiveLength] = useState(0);
-  const [subreddits, setSubreddits] = useState<string[]>([]);
+  const [researchObjectiveLength, setResearchObjectiveLength] = useState(
+    project?.researchObjective.length ?? 0,
+  );
+  const [subreddits, setSubreddits] = useState<string[]>(project?.subreddits ?? []);
+  const isEditing = !!project;
 
   function submitAction(_prevState: CreateProjectState | undefined, formData: FormData) {
-    const result = createProject(subreddits, addProject, formData);
+    const result = project
+      ? updateProjectAction(project, subreddits, updateProject, formData)
+      : createProject(subreddits, addProject, formData);
     if (!result?.errors) {
       onClose();
     }
@@ -56,18 +64,25 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
   useImperativeHandle(ref, () => ({ getIsPending: () => isPending }), [isPending]);
 
   function getDefaultValue(key: keyof CreateProjectInput): string {
-    const value = state?.formData.get(key);
-    return typeof value === 'string' ? value : '';
+    const formValue = state?.formData.get(key);
+    if (typeof formValue === 'string') return formValue;
+    if (project) {
+      const value = project[key];
+      return typeof value === 'string' ? value : '';
+    }
+    return '';
   }
 
   return (
     <>
       <DialogContent>
         <Stack spacing={1}>
-          <Alert severity="info" variant="filled">
-            This information initialises your DPIA and will flow through all PETLP phases. You can
-            update these details later as your research evolves.
-          </Alert>
+          {!isEditing && (
+            <Alert severity="info" variant="filled">
+              This information initialises your DPIA and will flow through all PETLP phases. You can
+              update these details later as your research evolves.
+            </Alert>
+          )}
           {state?.errors.formErrors.map((error) => (
             <Alert key={error} severity="error" variant="filled">
               {error}
@@ -195,7 +210,7 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
           Cancel
         </Button>
         <Button type="submit" form={formId} variant="contained" loading={isPending}>
-          Create project
+          {isEditing ? 'Save changes' : 'Create project'}
         </Button>
       </DialogActions>
     </>
@@ -204,7 +219,7 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
 
 export function NewProjectCard() {
   const [open, setOpen] = useState(false);
-  const dialogContentRef = useRef<NewProjectDialogContentHandle>(null);
+  const dialogContentRef = useRef<ProjectDialogContentHandle>(null);
 
   function handleClose() {
     setOpen(false);
@@ -264,7 +279,7 @@ export function NewProjectCard() {
         }}
       >
         <DialogTitle>Create new research project</DialogTitle>
-        <NewProjectDialogContent onClose={handleClose} ref={dialogContentRef} />
+        <ProjectDialogContent onClose={handleClose} ref={dialogContentRef} />
       </Dialog>
     </>
   );
