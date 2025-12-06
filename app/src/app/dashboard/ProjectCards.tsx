@@ -35,28 +35,30 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
   }
 
   return (
-    <Card sx={{ height: '100%' }}>
-      <CardActionArea sx={{ height: '100%' }}>
-        <Stack sx={{ height: '100%' }}>
-          <CardHeader
-            action={
-              <IconButton
-                aria-label="Project menu"
-                onMouseDown={preventRipple}
-                onTouchStart={preventRipple}
-                onClick={(event) => {
-                  setAnchorEl(event.currentTarget);
-                }}
-              >
-                <MoreVertIcon />
-              </IconButton>
-            }
-            title={title}
-            subheader={`Created ${dateFormatter.format(new Date(createdAt))}`}
-          />
-          <CardContent sx={{ flex: 1 }}>{/* TODO */}</CardContent>
-        </Stack>
-      </CardActionArea>
+    <>
+      <Card sx={{ height: '100%' }}>
+        <CardActionArea sx={{ height: '100%' }}>
+          <Stack sx={{ height: '100%' }}>
+            <CardHeader
+              action={
+                <IconButton
+                  aria-label="Project menu"
+                  onMouseDown={preventRipple}
+                  onTouchStart={preventRipple}
+                  onClick={(event) => {
+                    setAnchorEl(event.currentTarget);
+                  }}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+              }
+              title={title}
+              subheader={`Created ${dateFormatter.format(new Date(createdAt))}`}
+            />
+            <CardContent sx={{ flex: 1 }}>{/* TODO */}</CardContent>
+          </Stack>
+        </CardActionArea>
+      </Card>
       <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleCloseMenu}>
         <MenuItem onClick={handleCloseMenu} disabled>
           Edit
@@ -70,7 +72,7 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
           Delete
         </MenuItem>
       </Menu>
-    </Card>
+    </>
   );
 }
 
