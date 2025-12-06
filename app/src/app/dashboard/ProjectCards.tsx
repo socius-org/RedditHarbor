@@ -59,7 +59,7 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-  function stopPropagation(event: SyntheticEvent) {
+  function preventRipple(event: SyntheticEvent) {
     event.stopPropagation();
   }
 
@@ -75,17 +75,17 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
   return (
     <>
       <Card sx={{ height: '100%' }}>
-        <CardActionArea sx={{ height: '100%' }}>
+        <CardActionArea component="a" href="#" sx={{ height: '100%' }}>
           <Stack sx={{ height: '100%' }}>
             <CardHeader
               action={
                 <IconButton
                   aria-label="Project menu"
-                  // Prevent ripple effect and clicks bubbling to `CardActionArea`.
-                  onMouseDown={stopPropagation}
-                  onTouchStart={stopPropagation}
+                  onMouseDown={preventRipple}
+                  onTouchStart={preventRipple}
                   onClick={(event) => {
-                    stopPropagation(event);
+                    // Prevent navigation
+                    event.preventDefault();
                     setAnchorEl(event.currentTarget);
                   }}
                 >
