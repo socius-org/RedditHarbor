@@ -21,5 +21,9 @@ export function useProjects() {
     setStored((prev) => JSON.stringify([...parseProjects(prev), project]));
   }
 
-  return [parseProjects(stored), addProject] as const;
+  function deleteProject(project: Project) {
+    setStored((prev) => JSON.stringify(parseProjects(prev).filter(({ id }) => id !== project.id)));
+  }
+
+  return [parseProjects(stored), { addProject, deleteProject }] as const;
 }
