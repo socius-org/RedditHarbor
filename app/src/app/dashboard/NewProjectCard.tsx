@@ -38,7 +38,7 @@ type NewProjectDialogContentProps = {
 };
 
 function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps) {
-  const [, addProject] = useProjects();
+  const [, { addProject }] = useProjects();
   const formId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(0);
   const [subreddits, setSubreddits] = useState<string[]>([]);
