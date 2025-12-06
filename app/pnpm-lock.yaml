@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@clerk/clerk-react':
-        specifier: ^5.57.0
+        specifier: ^5.57.1
         version: 5.57.1(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@emotion/cache':
         specifier: ^11.14.0
