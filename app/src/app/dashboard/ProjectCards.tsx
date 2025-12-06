@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type SyntheticEvent } from 'react';
+import Link from 'next/link';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -75,7 +76,11 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
   return (
     <>
       <Card sx={{ height: '100%' }}>
-        <CardActionArea component="a" href="#" sx={{ height: '100%' }}>
+        <CardActionArea
+          component={Link}
+          href={`/dashboard/project/${project.id}`}
+          sx={{ height: '100%' }}
+        >
           <Stack sx={{ height: '100%' }}>
             <CardHeader
               action={
