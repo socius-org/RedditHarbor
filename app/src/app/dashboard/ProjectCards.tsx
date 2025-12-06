@@ -2,10 +2,16 @@
 
 import { useState, type SyntheticEvent } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,6 +21,33 @@ import { GridItem } from './GridItem';
 import { useProjects } from './useProjects';
 
 const dateFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' });
+
+type DeleteConfirmDialogProps = {
+  onClose: () => void;
+  onConfirm: () => void;
+  open: boolean;
+  project: Project;
+};
+
+function DeleteConfirmDialog({ open, onClose, onConfirm, project }: DeleteConfirmDialogProps) {
+  return (
+    <Dialog maxWidth="xs" open={open} onClose={onClose}>
+      <DialogTitle>Delete project</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Are you sure you want to delete &ldquo;{project.title}&rdquo;? This action cannot be
+          undone.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={onConfirm} color="error" variant="contained">
+          Delete
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
 
 type ProjectCardProps = {
   onDelete: (project: Project) => void;
@@ -32,6 +65,11 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
 
   function handleCloseMenu() {
     setAnchorEl(null);
+  }
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  function handleCloseDeleteDialog() {
+    setDeleteDialogOpen(false);
   }
 
   return (
@@ -65,13 +103,22 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            onDelete(project);
             handleCloseMenu();
+            setDeleteDialogOpen(true);
           }}
         >
           Delete
         </MenuItem>
       </Menu>
+      <DeleteConfirmDialog
+        open={deleteDialogOpen}
+        project={project}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={() => {
+          onDelete(project);
+          handleCloseDeleteDialog();
+        }}
+      />
     </>
   );
 }
