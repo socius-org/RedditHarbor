@@ -20,7 +20,6 @@ export type CreateProjectInput = z.infer<typeof createProjectSchema>;
 
 export type CreateProjectState = {
   errors: z.core.$ZodFlattenedError<CreateProjectInput>;
-  formData: FormData;
 };
 
 export function createProject(
@@ -37,7 +36,6 @@ export function createProject(
   if (!parsedResult.success) {
     return {
       errors: z.flattenError(parsedResult.error),
-      formData,
     };
   }
 
