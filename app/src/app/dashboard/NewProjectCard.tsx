@@ -1,6 +1,14 @@
 'use client';
 
-import { useActionState, useId, useImperativeHandle, useRef, useState, type Ref } from 'react';
+import {
+  startTransition,
+  useActionState,
+  useId,
+  useImperativeHandle,
+  useRef,
+  useState,
+  type Ref,
+} from 'react';
 import isEqual from 'react-fast-compare';
 import AddIcon from '@mui/icons-material/Add';
 import Alert from '@mui/material/Alert';
@@ -55,11 +63,6 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
 
   useImperativeHandle(ref, () => ({ getIsPending: () => isPending }), [isPending]);
 
-  function getDefaultValue(key: keyof CreateProjectInput): string {
-    const value = state?.formData.get(key);
-    return typeof value === 'string' ? value : '';
-  }
-
   return (
     <>
       <DialogContent>
@@ -73,7 +76,16 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
               {error}
             </Alert>
           ))}
-          <form action={action} id={formId}>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              const formData = new FormData(event.currentTarget);
+              startTransition(() => {
+                action(formData);
+              });
+            }}
+            id={formId}
+          >
             <TextField
               autoFocus
               required
@@ -88,7 +100,6 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={getDefaultValue('title')}
             />
             <TextField
               required
@@ -119,7 +130,6 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={getDefaultValue('researchObjective')}
             />
             <Autocomplete
               multiple
@@ -172,7 +182,6 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
                 margin="dense"
                 size="small"
                 fullWidth
-                defaultValue={getDefaultValue('principalInvestigator')}
               />
               <TextField
                 required
@@ -184,7 +193,6 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
                 margin="dense"
                 size="small"
                 fullWidth
-                defaultValue={getDefaultValue('institution')}
               />
             </Stack>
           </form>
