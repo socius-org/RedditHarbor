@@ -77,6 +77,7 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
             </Alert>
           ))}
           <form
+            id={formId}
             onSubmit={(event) => {
               event.preventDefault();
               const formData = new FormData(event.currentTarget);
@@ -84,7 +85,6 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
                 action(formData);
               });
             }}
-            id={formId}
           >
             <TextField
               autoFocus
