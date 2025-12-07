@@ -217,7 +217,17 @@ function ApiKeysDialogContent({
               {error}
             </Alert>
           ))}
-          <form action={action} id={formId} ref={handleFormRef}>
+          <form
+            id={formId}
+            ref={handleFormRef}
+            onSubmit={(event) => {
+              event.preventDefault();
+              const formData = new FormData(event.currentTarget);
+              startTransition(() => {
+                action(formData);
+              });
+            }}
+          >
             <TextField
               autoFocus
               name={'claudeKey' satisfies keyof ApiKeys}
