@@ -36,7 +36,6 @@ export type EncryptedApiKeys = z.infer<typeof encryptedApiKeysSchema>;
 
 export type SaveApiKeysState = {
   errors: z.core.$ZodFlattenedError<ApiKeys>;
-  formData: FormData;
 };
 
 async function encryptApiKeys(
@@ -136,7 +135,6 @@ export async function saveApiKeys(
   if (!parsedResult.success) {
     return {
       errors: z.flattenError(parsedResult.error),
-      formData,
     };
   }
 
@@ -154,7 +152,6 @@ export async function saveApiKeys(
           Error.isError(error) ? `${error}` : 'An unknown error occurred while saving API keys.',
         ],
       },
-      formData,
     };
   }
   invalidateApiKeys(encrypted, parsedResult.data);

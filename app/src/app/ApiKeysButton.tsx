@@ -204,16 +204,6 @@ function ApiKeysDialogContent({
 
   const getPasswordToggleProps = usePasswordToggle();
 
-  /**
-   * Gets the default value for a form field, prioritising user input from failed
-   * submissions over stored values. This prevents React 19's form reset behaviour
-   * where failed form submissions would result in user input getting lost.
-   */
-  function getDefaultValue(key: keyof ApiKeys): string {
-    const value = state?.formData.get(key);
-    return typeof value === 'string' ? value : apiKeys[key];
-  }
-
   return (
     <>
       <DialogContent>
@@ -237,7 +227,7 @@ function ApiKeysDialogContent({
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={getDefaultValue('claudeKey')}
+              defaultValue={apiKeys.claudeKey}
               {...getPasswordToggleProps('claudeKey')}
             />
             <TextField
@@ -248,7 +238,7 @@ function ApiKeysDialogContent({
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={getDefaultValue('openaiKey')}
+              defaultValue={apiKeys.openaiKey}
               {...getPasswordToggleProps('openaiKey')}
             />
             <TextField
@@ -259,7 +249,7 @@ function ApiKeysDialogContent({
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={getDefaultValue('redditClientId')}
+              defaultValue={apiKeys.redditClientId}
             />
             <TextField
               name={'redditClientSecret' satisfies keyof ApiKeys}
@@ -267,7 +257,7 @@ function ApiKeysDialogContent({
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={getDefaultValue('redditClientSecret')}
+              defaultValue={apiKeys.redditClientSecret}
               {...getPasswordToggleProps('redditClientSecret')}
             />
             <TextField
@@ -280,7 +270,7 @@ function ApiKeysDialogContent({
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={getDefaultValue('supabaseProjectUrl')}
+              defaultValue={apiKeys.supabaseProjectUrl}
             />
             <TextField
               name={'supabaseApiKey' satisfies keyof ApiKeys}
@@ -288,7 +278,7 @@ function ApiKeysDialogContent({
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={getDefaultValue('supabaseApiKey')}
+              defaultValue={apiKeys.supabaseApiKey}
               {...getPasswordToggleProps('supabaseApiKey')}
             />
             <TextField
@@ -298,7 +288,7 @@ function ApiKeysDialogContent({
               margin="dense"
               size="small"
               fullWidth
-              defaultValue={getDefaultValue('osfApiKey')}
+              defaultValue={apiKeys.osfApiKey}
               {...getPasswordToggleProps('osfApiKey')}
             />
           </form>
