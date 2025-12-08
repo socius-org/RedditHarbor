@@ -40,7 +40,7 @@ function stripSubredditPrefix(value: string): string {
   return value.replace(/^r\//, '');
 }
 
-export type ProjectDialogContentHandle = { getIsPending: () => boolean };
+type ProjectDialogContentHandle = { getIsPending: () => boolean };
 
 type ProjectDialogContentProps = {
   project?: Project;
@@ -48,7 +48,7 @@ type ProjectDialogContentProps = {
   ref: Ref<ProjectDialogContentHandle>;
 };
 
-export function ProjectDialogContent({ project, onClose, ref }: ProjectDialogContentProps) {
+function ProjectDialogContent({ project, onClose, ref }: ProjectDialogContentProps) {
   const [, { addProject, updateProject }] = useProjects();
   const formId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(
@@ -224,13 +224,34 @@ export function ProjectDialogContent({ project, onClose, ref }: ProjectDialogCon
   );
 }
 
-export function NewProjectCard() {
-  const [open, setOpen] = useState(false);
+type ProjectDialogProps = {
+  open: boolean;
+  onClose: () => void;
+  project?: Project;
+};
+
+export function ProjectDialog({ open, onClose, project }: ProjectDialogProps) {
   const dialogContentRef = useRef<ProjectDialogContentHandle>(null);
 
-  function handleClose() {
-    setOpen(false);
-  }
+  return (
+    <Dialog
+      fullWidth
+      open={open}
+      onClose={() => {
+        if (dialogContentRef.current?.getIsPending()) {
+          return;
+        }
+        onClose();
+      }}
+    >
+      <DialogTitle>{project ? 'Edit project' : 'Create new research project'}</DialogTitle>
+      <ProjectDialogContent project={project} onClose={onClose} ref={dialogContentRef} />
+    </Dialog>
+  );
+}
+
+export function NewProjectCard() {
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -275,19 +296,12 @@ export function NewProjectCard() {
           </CardContent>
         </CardActionArea>
       </Card>
-      <Dialog
-        fullWidth
+      <ProjectDialog
         open={open}
         onClose={() => {
-          if (dialogContentRef.current?.getIsPending()) {
-            return;
-          }
-          handleClose();
+          setOpen(false);
         }}
-      >
-        <DialogTitle>Create new research project</DialogTitle>
-        <ProjectDialogContent onClose={handleClose} ref={dialogContentRef} />
-      </Dialog>
+      />
     </>
   );
 }

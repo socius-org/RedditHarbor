@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, type SyntheticEvent } from 'react';
+import { useState, type SyntheticEvent } from 'react';
 import Link from 'next/link';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Button from '@mui/material/Button';
@@ -19,7 +19,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import type { Project } from '../actions/createProject';
 import { GridItem } from './GridItem';
-import { ProjectDialogContent, type ProjectDialogContentHandle } from './NewProjectCard';
+import { ProjectDialog } from './NewProjectCard';
 import { useProjects } from './useProjects';
 
 const dateFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' });
@@ -70,7 +70,6 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
   }
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const editDialogContentRef = useRef<ProjectDialogContentHandle>(null);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   function handleCloseDeleteDialog() {
@@ -126,25 +125,13 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
           Delete
         </MenuItem>
       </Menu>
-      <Dialog
-        fullWidth
+      <ProjectDialog
         open={editDialogOpen}
         onClose={() => {
-          if (editDialogContentRef.current?.getIsPending()) {
-            return;
-          }
           setEditDialogOpen(false);
         }}
-      >
-        <DialogTitle>Edit project</DialogTitle>
-        <ProjectDialogContent
-          project={project}
-          onClose={() => {
-            setEditDialogOpen(false);
-          }}
-          ref={editDialogContentRef}
-        />
-      </Dialog>
+        project={project}
+      />
       <DeleteConfirmDialog
         open={deleteDialogOpen}
         project={project}
