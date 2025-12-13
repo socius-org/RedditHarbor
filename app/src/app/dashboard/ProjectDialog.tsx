@@ -16,13 +16,26 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import {
   type CreateProjectInput,
   type CreateProjectState,
+  type EstimatedDataVolume,
   RESEARCH_OBJECTIVE_MAX_LENGTH,
 } from '../actions/createProject';
+
+const ESTIMATED_DATA_VOLUME_OPTIONS: EstimatedDataVolume[] = [
+  [null, 10_000],
+  [10_000, 100_000],
+  [100_000, 1_000_000],
+  [1_000_000, null],
+];
 
 function normaliseSubreddit(value: string): string {
   // Remove `r/` prefix and trim whitespace.
@@ -34,12 +47,24 @@ type ProjectDialogContentHandle = { getIsPending: () => boolean };
 type ProjectDialogContentProps = {
   // TODO: ideally this generic component should no longer reference `CreateProjectState`,
   // but we can revisit this once we implement edit flow.
-  action: (subreddits: string[], formData: FormData) => CreateProjectState | undefined;
+  action: (
+    estimatedDataVolume: EstimatedDataVolume | null,
+    subreddits: string[],
+    formData: FormData,
+  ) => CreateProjectState | undefined;
   infoMessage?: string;
   onClose: () => void;
   ref: Ref<ProjectDialogContentHandle>;
   submitLabel: string;
 };
+
+function formatDataVolume(volume: EstimatedDataVolume): string {
+  const [min, max] = volume;
+  const format = (n: number) => (n >= 1_000_000 ? `${String(n / 1_000_000)}M` : n.toLocaleString());
+  if (min === null) return `< ${format(max)} posts`;
+  if (max === null) return `> ${format(min)} posts`;
+  return `${format(min)} - ${format(max)} posts`;
+}
 
 function ProjectDialogContent({
   action: actionProp,
@@ -49,11 +74,17 @@ function ProjectDialogContent({
   submitLabel,
 }: ProjectDialogContentProps) {
   const formId = useId();
+  const dataVolumeLabelId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(0);
   const [subreddits, setSubreddits] = useState<string[]>([]);
+  const [estimatedDataVolumeIndex, setEstimatedDataVolumeIndex] = useState<number | null>(null);
 
   function submitAction(_prevState: CreateProjectState | undefined, formData: FormData) {
-    const result = actionProp(subreddits, formData);
+    const estimatedDataVolume =
+      estimatedDataVolumeIndex !== null
+        ? (ESTIMATED_DATA_VOLUME_OPTIONS[estimatedDataVolumeIndex] ?? null)
+        : null;
+    const result = actionProp(estimatedDataVolume, subreddits, formData);
     if (!result?.errors) {
       onClose();
     }
@@ -133,6 +164,32 @@ function ProjectDialogContent({
               size="small"
               fullWidth
             />
+            <FormControl
+              required
+              error={!!state?.errors.fieldErrors.estimatedDataVolume?.length}
+              margin="dense"
+              size="small"
+              fullWidth
+            >
+              <InputLabel id={dataVolumeLabelId}>Estimated data volume</InputLabel>
+              <Select
+                labelId={dataVolumeLabelId}
+                label="Estimated data volume"
+                value={estimatedDataVolumeIndex ?? ''}
+                onChange={(event) => {
+                  setEstimatedDataVolumeIndex(event.target.value);
+                }}
+              >
+                {ESTIMATED_DATA_VOLUME_OPTIONS.map((option, index) => (
+                  <MenuItem key={index} value={index}>
+                    {formatDataVolume(option)}
+                  </MenuItem>
+                ))}
+              </Select>
+              {state?.errors.fieldErrors.estimatedDataVolume?.[0] && (
+                <FormHelperText>{state.errors.fieldErrors.estimatedDataVolume[0]}</FormHelperText>
+              )}
+            </FormControl>
             <Autocomplete
               multiple
               freeSolo
