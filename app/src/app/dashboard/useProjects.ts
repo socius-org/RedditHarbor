@@ -25,11 +25,5 @@ export function useProjects() {
     setStored((prev) => JSON.stringify(parseProjects(prev).filter(({ id }) => id !== project.id)));
   }
 
-  function updateProject(project: Project) {
-    setStored((prev) =>
-      JSON.stringify(parseProjects(prev).map((p) => (p.id === project.id ? project : p))),
-    );
-  }
-
-  return [parseProjects(stored), { addProject, deleteProject, updateProject }] as const;
+  return [parseProjects(stored), { addProject, deleteProject }] as const;
 }

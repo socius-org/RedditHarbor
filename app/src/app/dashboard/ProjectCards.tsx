@@ -19,7 +19,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import type { Project } from '../actions/createProject';
 import { GridItem } from './GridItem';
-import { ProjectDialog } from './NewProjectCard';
 import { useProjects } from './useProjects';
 
 const dateFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' });
@@ -69,8 +68,6 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
     setAnchorEl(null);
   }
 
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   function handleCloseDeleteDialog() {
     setDeleteDialogOpen(false);
@@ -108,12 +105,7 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
         </CardActionArea>
       </Card>
       <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleCloseMenu}>
-        <MenuItem
-          onClick={() => {
-            handleCloseMenu();
-            setEditDialogOpen(true);
-          }}
-        >
+        <MenuItem onClick={handleCloseMenu} disabled>
           Edit
         </MenuItem>
         <MenuItem
@@ -125,13 +117,6 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
           Delete
         </MenuItem>
       </Menu>
-      <ProjectDialog
-        open={editDialogOpen}
-        onClose={() => {
-          setEditDialogOpen(false);
-        }}
-        project={project}
-      />
       <DeleteConfirmDialog
         open={deleteDialogOpen}
         project={project}
