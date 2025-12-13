@@ -19,12 +19,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import {
-  createProject,
   type CreateProjectInput,
   type CreateProjectState,
   RESEARCH_OBJECTIVE_MAX_LENGTH,
 } from '../actions/createProject';
-import { useProjects } from './useProjects';
 
 function stripSubredditPrefix(value: string): string {
   return value.replace(/^r\//, '');
@@ -33,18 +31,28 @@ function stripSubredditPrefix(value: string): string {
 type ProjectDialogContentHandle = { getIsPending: () => boolean };
 
 type ProjectDialogContentProps = {
+  // TODO: ideally this generic component should no longer reference `CreateProjectState`,
+  // but we can revisit this once we implement edit flow.
+  action: (subreddits: string[], formData: FormData) => CreateProjectState | undefined;
+  infoMessage?: string;
   onClose: () => void;
   ref: Ref<ProjectDialogContentHandle>;
+  submitLabel: string;
 };
 
-function ProjectDialogContent({ onClose, ref }: ProjectDialogContentProps) {
-  const [, { addProject }] = useProjects();
+function ProjectDialogContent({
+  action: actionProp,
+  infoMessage,
+  onClose,
+  ref,
+  submitLabel,
+}: ProjectDialogContentProps) {
   const formId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(0);
   const [subreddits, setSubreddits] = useState<string[]>([]);
 
   function submitAction(_prevState: CreateProjectState | undefined, formData: FormData) {
-    const result = createProject(subreddits, addProject, formData);
+    const result = actionProp(subreddits, formData);
     if (!result?.errors) {
       onClose();
     }
@@ -59,10 +67,11 @@ function ProjectDialogContent({ onClose, ref }: ProjectDialogContentProps) {
     <>
       <DialogContent>
         <Stack spacing={1}>
-          <Alert severity="info" variant="filled">
-            This information initialises your DPIA and will flow through all PETLP phases. You can
-            update these details later as your research evolves.
-          </Alert>
+          {infoMessage && (
+            <Alert severity="info" variant="filled">
+              {infoMessage}
+            </Alert>
+          )}
           {state?.errors.formErrors.map((error) => (
             <Alert key={error} severity="error" variant="filled">
               {error}
@@ -195,18 +204,26 @@ function ProjectDialogContent({ onClose, ref }: ProjectDialogContentProps) {
           Cancel
         </Button>
         <Button type="submit" form={formId} variant="contained" loading={isPending}>
-          Create project
+          {submitLabel}
         </Button>
       </DialogActions>
     </>
   );
 }
 
-type ProjectDialogProps = Pick<ProjectDialogContentProps, 'onClose'> & {
+type ProjectDialogProps = Omit<ProjectDialogContentProps, 'ref'> & {
   open: boolean;
+  title: string;
 };
 
-export function ProjectDialog({ onClose, open }: ProjectDialogProps) {
+export function ProjectDialog({
+  action,
+  infoMessage,
+  onClose,
+  open,
+  submitLabel,
+  title,
+}: ProjectDialogProps) {
   const dialogContentRef = useRef<ProjectDialogContentHandle>(null);
 
   return (
@@ -220,8 +237,14 @@ export function ProjectDialog({ onClose, open }: ProjectDialogProps) {
         onClose();
       }}
     >
-      <DialogTitle>Create new research project</DialogTitle>
-      <ProjectDialogContent onClose={onClose} ref={dialogContentRef} />
+      <DialogTitle>{title}</DialogTitle>
+      <ProjectDialogContent
+        ref={dialogContentRef}
+        action={action}
+        infoMessage={infoMessage}
+        onClose={onClose}
+        submitLabel={submitLabel}
+      />
     </Dialog>
   );
 }
