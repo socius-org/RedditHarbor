@@ -24,8 +24,9 @@ import {
   RESEARCH_OBJECTIVE_MAX_LENGTH,
 } from '../actions/createProject';
 
-function stripSubredditPrefix(value: string): string {
-  return value.replace(/^r\//, '');
+function normaliseSubreddit(value: string): string {
+  // Remove `r/` prefix and trim whitespace.
+  return value.replace(/^r\//, '').trim();
 }
 
 type ProjectDialogContentHandle = { getIsPending: () => boolean };
@@ -137,9 +138,9 @@ function ProjectDialogContent({
               freeSolo
               options={[]}
               value={subreddits}
-              isOptionEqualToValue={(option, value) => stripSubredditPrefix(option) === value}
+              isOptionEqualToValue={(option, value) => normaliseSubreddit(option) === value}
               onChange={(_, values) => {
-                const next = values.map(stripSubredditPrefix).filter(Boolean);
+                const next = values.map(normaliseSubreddit).filter(Boolean);
                 setSubreddits((prev) => (isEqual(prev, next) ? prev : next));
               }}
               renderValue={(value, getItemProps) =>
