@@ -59,7 +59,13 @@ export function NewProjectCard() {
           </CardContent>
         </CardActionArea>
       </Card>
-      <ProjectDialog open={open} onClose={handleClose} />
+      <ProjectDialog
+        infoMessage="This information initialises your DPIA and will flow through all PETLP phases. You can update these details later as your research evolves."
+        open={open}
+        onClose={handleClose}
+        submitLabel="Create project"
+        title="Create new research project"
+      />
     </>
   );
 }

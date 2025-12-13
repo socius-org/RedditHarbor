@@ -33,11 +33,18 @@ function stripSubredditPrefix(value: string): string {
 type ProjectDialogContentHandle = { getIsPending: () => boolean };
 
 type ProjectDialogContentProps = {
+  infoMessage?: string;
   onClose: () => void;
   ref: Ref<ProjectDialogContentHandle>;
+  submitLabel: string;
 };
 
-function ProjectDialogContent({ onClose, ref }: ProjectDialogContentProps) {
+function ProjectDialogContent({
+  infoMessage,
+  onClose,
+  ref,
+  submitLabel,
+}: ProjectDialogContentProps) {
   const [, { addProject }] = useProjects();
   const formId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(0);
@@ -59,10 +66,11 @@ function ProjectDialogContent({ onClose, ref }: ProjectDialogContentProps) {
     <>
       <DialogContent>
         <Stack spacing={1}>
-          <Alert severity="info" variant="filled">
-            This information initialises your DPIA and will flow through all PETLP phases. You can
-            update these details later as your research evolves.
-          </Alert>
+          {infoMessage && (
+            <Alert severity="info" variant="filled">
+              {infoMessage}
+            </Alert>
+          )}
           {state?.errors.formErrors.map((error) => (
             <Alert key={error} severity="error" variant="filled">
               {error}
@@ -195,18 +203,25 @@ function ProjectDialogContent({ onClose, ref }: ProjectDialogContentProps) {
           Cancel
         </Button>
         <Button type="submit" form={formId} variant="contained" loading={isPending}>
-          Create project
+          {submitLabel}
         </Button>
       </DialogActions>
     </>
   );
 }
 
-type ProjectDialogProps = Pick<ProjectDialogContentProps, 'onClose'> & {
+type ProjectDialogProps = Omit<ProjectDialogContentProps, 'ref'> & {
   open: boolean;
+  title: string;
 };
 
-export function ProjectDialog({ onClose, open }: ProjectDialogProps) {
+export function ProjectDialog({
+  infoMessage,
+  onClose,
+  open,
+  submitLabel,
+  title,
+}: ProjectDialogProps) {
   const dialogContentRef = useRef<ProjectDialogContentHandle>(null);
 
   return (
@@ -220,8 +235,13 @@ export function ProjectDialog({ onClose, open }: ProjectDialogProps) {
         onClose();
       }}
     >
-      <DialogTitle>Create new research project</DialogTitle>
-      <ProjectDialogContent onClose={onClose} ref={dialogContentRef} />
+      <DialogTitle>{title}</DialogTitle>
+      <ProjectDialogContent
+        ref={dialogContentRef}
+        infoMessage={infoMessage}
+        onClose={onClose}
+        submitLabel={submitLabel}
+      />
     </Dialog>
   );
 }
