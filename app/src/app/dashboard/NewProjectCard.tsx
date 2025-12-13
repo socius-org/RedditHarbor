@@ -60,7 +60,7 @@ export function NewProjectCard() {
         </CardActionArea>
       </Card>
       <ProjectDialog
-        infoMessage="This information initialises your DPIA and will flow through all PETLP phases. You can update these details later as your research evolves."
+        infoMessage="This information initialises your DPIA and will flow through all PETLP phases."
         open={open}
         onClose={handleClose}
         submitLabel="Create project"
