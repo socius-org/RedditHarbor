@@ -19,12 +19,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import {
-  createProject,
   type CreateProjectInput,
   type CreateProjectState,
   RESEARCH_OBJECTIVE_MAX_LENGTH,
 } from '../actions/createProject';
-import { useProjects } from './useProjects';
 
 function stripSubredditPrefix(value: string): string {
   return value.replace(/^r\//, '');
@@ -33,6 +31,9 @@ function stripSubredditPrefix(value: string): string {
 type ProjectDialogContentHandle = { getIsPending: () => boolean };
 
 type ProjectDialogContentProps = {
+  // TODO: ideally this generic component should no longer reference `CreateProjectState`,
+  // but we can revisit this once we implement edit flow.
+  action: (subreddits: string[], formData: FormData) => CreateProjectState | undefined;
   infoMessage?: string;
   onClose: () => void;
   ref: Ref<ProjectDialogContentHandle>;
@@ -40,18 +41,18 @@ type ProjectDialogContentProps = {
 };
 
 function ProjectDialogContent({
+  action: actionProp,
   infoMessage,
   onClose,
   ref,
   submitLabel,
 }: ProjectDialogContentProps) {
-  const [, { addProject }] = useProjects();
   const formId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(0);
   const [subreddits, setSubreddits] = useState<string[]>([]);
 
   function submitAction(_prevState: CreateProjectState | undefined, formData: FormData) {
-    const result = createProject(subreddits, addProject, formData);
+    const result = actionProp(subreddits, formData);
     if (!result?.errors) {
       onClose();
     }
@@ -216,6 +217,7 @@ type ProjectDialogProps = Omit<ProjectDialogContentProps, 'ref'> & {
 };
 
 export function ProjectDialog({
+  action,
   infoMessage,
   onClose,
   open,
@@ -238,6 +240,7 @@ export function ProjectDialog({
       <DialogTitle>{title}</DialogTitle>
       <ProjectDialogContent
         ref={dialogContentRef}
+        action={action}
         infoMessage={infoMessage}
         onClose={onClose}
         submitLabel={submitLabel}
