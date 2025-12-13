@@ -64,7 +64,9 @@ export function NewProjectCard() {
         </CardActionArea>
       </Card>
       <ProjectDialog
-        action={(subreddits, formData) => createProject(subreddits, addProject, formData)}
+        action={(estimatedDataVolume, subreddits, formData) =>
+          createProject(estimatedDataVolume, subreddits, addProject, formData)
+        }
         infoMessage="This information initialises your DPIA and will flow through all PETLP phases."
         open={open}
         onClose={handleClose}
