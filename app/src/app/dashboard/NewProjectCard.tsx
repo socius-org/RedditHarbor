@@ -38,14 +38,14 @@ function stripSubredditPrefix(value: string): string {
   return value.replace(/^r\//, '');
 }
 
-type NewProjectDialogContentHandle = { getIsPending: () => boolean };
+type ProjectDialogContentHandle = { getIsPending: () => boolean };
 
-type NewProjectDialogContentProps = {
+type ProjectDialogContentProps = {
   onClose: () => void;
-  ref: Ref<NewProjectDialogContentHandle>;
+  ref: Ref<ProjectDialogContentHandle>;
 };
 
-function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps) {
+function ProjectDialogContent({ onClose, ref }: ProjectDialogContentProps) {
   const [, { addProject }] = useProjects();
   const formId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(0);
@@ -212,7 +212,7 @@ function NewProjectDialogContent({ onClose, ref }: NewProjectDialogContentProps)
 
 export function NewProjectCard() {
   const [open, setOpen] = useState(false);
-  const dialogContentRef = useRef<NewProjectDialogContentHandle>(null);
+  const dialogContentRef = useRef<ProjectDialogContentHandle>(null);
 
   function handleClose() {
     setOpen(false);
@@ -272,7 +272,7 @@ export function NewProjectCard() {
         }}
       >
         <DialogTitle>Create new research project</DialogTitle>
-        <NewProjectDialogContent onClose={handleClose} ref={dialogContentRef} />
+        <ProjectDialogContent onClose={handleClose} ref={dialogContentRef} />
       </Dialog>
     </>
   );
