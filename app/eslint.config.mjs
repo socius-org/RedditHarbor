@@ -26,6 +26,8 @@ const eslintConfig = defineConfig([
   {
     rules: {
       '@typescript-eslint/consistent-type-definitions': 'off',
+      'no-shadow': 'off',
+      '@typescript-eslint/no-shadow': 'error',
       '@typescript-eslint/no-unsafe-type-assertion': 'error',
     },
   },

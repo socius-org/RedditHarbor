@@ -512,8 +512,8 @@ export function ApiKeysButton() {
         formRef={formRef}
         onApiKeysChange={setStoredApiKeys}
         onClose={closeDialog}
-        onDeriveEncryptionKey={(passkey) => {
-          const newEncryptionKeyPromise = authenticateAndDeriveKey(passkey);
+        onDeriveEncryptionKey={(newPasskey) => {
+          const newEncryptionKeyPromise = authenticateAndDeriveKey(newPasskey);
           setEncryptionKeyPromise(newEncryptionKeyPromise);
           setApiKeysState({
             encrypted: storedApiKeys,
