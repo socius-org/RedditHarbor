@@ -10,11 +10,5 @@
   },
   "pip_setup": {
     "enabled": false
-  },
-  "packageRules": [
-    {
-      "matchPackageNames": ["oxfmt"],
-      "minimumReleaseAge": null
-    }
-  ]
+  }
 }
