@@ -41,12 +41,12 @@ export const projectSchema = z.object({
 
 export type Project = z.infer<typeof projectSchema>;
 
-const createProjectSchema = projectSchema.omit({ id: true, createdAt: true });
+const projectInputSchema = projectSchema.omit({ id: true, createdAt: true });
 
-export type CreateProjectInput = z.infer<typeof createProjectSchema>;
+export type ProjectInput = z.infer<typeof projectInputSchema>;
 
-export type CreateProjectState = {
-  errors: z.core.$ZodFlattenedError<CreateProjectInput>;
+export type ProjectFormState = {
+  errors: z.core.$ZodFlattenedError<ProjectInput>;
 };
 
 export function createProject(
@@ -56,7 +56,7 @@ export function createProject(
   aiMlModelPlan: AiMlModelPlan | null,
   onCreate: (project: Project) => void,
   formData: FormData,
-): CreateProjectState | undefined {
+): ProjectFormState | undefined {
   const rawFormData = {
     ...Object.fromEntries(formData),
     estimatedDataVolume,
@@ -64,7 +64,7 @@ export function createProject(
     subreddits,
     aiMlModelPlan,
   };
-  const parsedResult = createProjectSchema.safeParse(rawFormData);
+  const parsedResult = projectInputSchema.safeParse(rawFormData);
 
   if (!parsedResult.success) {
     return {
@@ -79,4 +79,37 @@ export function createProject(
   };
 
   onCreate(project);
+}
+
+export function updateProject(
+  existingProject: Project,
+  estimatedDataVolume: EstimatedDataVolume | null,
+  collectionPeriod: CollectionPeriod | null,
+  subreddits: string[],
+  aiMlModelPlan: AiMlModelPlan | null,
+  onUpdate: (project: Project) => void,
+  formData: FormData,
+): ProjectFormState | undefined {
+  const rawFormData = {
+    ...Object.fromEntries(formData),
+    estimatedDataVolume,
+    collectionPeriod,
+    subreddits,
+    aiMlModelPlan,
+  };
+  const parsedResult = projectInputSchema.safeParse(rawFormData);
+
+  if (!parsedResult.success) {
+    return {
+      errors: z.flattenError(parsedResult.error),
+    };
+  }
+
+  const project: Project = {
+    ...parsedResult.data,
+    id: existingProject.id,
+    createdAt: existingProject.createdAt,
+  };
+
+  onUpdate(project);
 }

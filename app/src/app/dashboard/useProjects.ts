@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { projectSchema, type Project } from '../actions/createProject';
+import { projectSchema, type Project } from '../actions/project';
 import { useLocalStorageState } from '../utils/useLocalStorageState';
 
 function parseProjects(value: string | null): Project[] {
@@ -21,9 +21,19 @@ export function useProjects() {
     setStored((prev) => JSON.stringify([...parseProjects(prev), project]));
   }
 
+  function updateProject(project: Project) {
+    setStored((prev) =>
+      JSON.stringify(
+        parseProjects(prev).map((existingProject) =>
+          existingProject.id === project.id ? project : existingProject,
+        ),
+      ),
+    );
+  }
+
   function deleteProject(project: Project) {
     setStored((prev) => JSON.stringify(parseProjects(prev).filter(({ id }) => id !== project.id)));
   }
 
-  return [parseProjects(stored), { addProject, deleteProject }] as const;
+  return [parseProjects(stored), { addProject, updateProject, deleteProject }] as const;
 }
