@@ -24,9 +24,11 @@ import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import {
+  AI_ML_MODEL_PLAN_OPTIONS,
   collectionPeriodSchema,
   estimatedDataVolumeSchema,
   RESEARCH_OBJECTIVE_MAX_LENGTH,
+  type AiMlModelPlan,
   type CollectionPeriod,
   type CreateProjectInput,
   type CreateProjectState,
@@ -71,6 +73,14 @@ function formatCollectionPeriod({ months }: CollectionPeriod): string {
   return formatted;
 }
 
+const AI_ML_MODEL_PLAN_LABELS: Record<AiMlModelPlan, string> = {
+  none: 'No AI/ML models',
+  classification: 'Classification models',
+  nlp: 'NLP/Text analysis',
+  llm: 'Large language models',
+  customDeepLearning: 'Custom deep learning',
+};
+
 function normaliseSubreddit(value: string): string {
   // Remove `r/` prefix and trim whitespace.
   return value.replace(/^r\//, '').trim();
@@ -85,6 +95,7 @@ type ProjectDialogContentProps = {
     estimatedDataVolume: EstimatedDataVolume | null,
     collectionPeriod: CollectionPeriod | null,
     subreddits: string[],
+    aiMlModelPlan: AiMlModelPlan | null,
     formData: FormData,
   ) => CreateProjectState | undefined;
   infoMessage?: string;
@@ -103,13 +114,21 @@ function ProjectDialogContent({
   const formId = useId();
   const dataVolumeLabelId = useId();
   const collectionPeriodLabelId = useId();
+  const aiMlModelPlanLabelId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(0);
   const [subreddits, setSubreddits] = useState<string[]>([]);
   const [estimatedDataVolume, setEstimatedDataVolume] = useState<EstimatedDataVolume | null>(null);
   const [collectionPeriod, setCollectionPeriod] = useState<CollectionPeriod | null>(null);
+  const [aiMlModelPlan, setAiMlModelPlan] = useState<AiMlModelPlan | null>(null);
 
   function submitAction(_prevState: CreateProjectState | undefined, formData: FormData) {
-    const result = actionProp(estimatedDataVolume, collectionPeriod, subreddits, formData);
+    const result = actionProp(
+      estimatedDataVolume,
+      collectionPeriod,
+      subreddits,
+      aiMlModelPlan,
+      formData,
+    );
     if (!result?.errors) {
       onClose();
     }
@@ -303,6 +322,33 @@ function ProjectDialogContent({
                 />
               )}
             />
+            <FormControl
+              required
+              error={!!state?.errors.fieldErrors.aiMlModelPlan?.length}
+              margin="dense"
+              size="small"
+              fullWidth
+            >
+              <InputLabel id={aiMlModelPlanLabelId}>AI/ML model plans</InputLabel>
+              <Select
+                labelId={aiMlModelPlanLabelId}
+                label="AI/ML model plans"
+                value={aiMlModelPlan ?? ''}
+                onChange={(event) => {
+                  setAiMlModelPlan(event.target.value);
+                }}
+              >
+                {AI_ML_MODEL_PLAN_OPTIONS.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {AI_ML_MODEL_PLAN_LABELS[option]}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>
+                {state?.errors.fieldErrors.aiMlModelPlan?.[0] ??
+                  'This helps determine privacy safeguards needed'}
+              </FormHelperText>
+            </FormControl>
             <Stack direction="row" spacing={2}>
               <TextField
                 required
