@@ -30,10 +30,10 @@ import {
   RESEARCH_OBJECTIVE_MAX_LENGTH,
   type AiMlModelPlan,
   type CollectionPeriod,
-  type CreateProjectInput,
-  type CreateProjectState,
   type EstimatedDataVolume,
-} from '../actions/createProject';
+  type ProjectFormState,
+  type ProjectInput,
+} from '../actions/project';
 
 const ESTIMATED_DATA_VOLUME_OPTIONS: EstimatedDataVolume[] = [
   [null, 10_000],
@@ -86,18 +86,37 @@ function normaliseSubreddit(value: string): string {
   return value.replace(/^r\//, '').trim();
 }
 
+type InitialProject = Omit<
+  ProjectInput,
+  'estimatedDataVolume' | 'collectionPeriod' | 'aiMlModelPlan'
+> & {
+  estimatedDataVolume: EstimatedDataVolume | null;
+  collectionPeriod: CollectionPeriod | null;
+  aiMlModelPlan: AiMlModelPlan | null;
+};
+
+const EMPTY_PROJECT: InitialProject = {
+  title: '',
+  researchObjective: '',
+  estimatedDataVolume: null,
+  collectionPeriod: null,
+  subreddits: [],
+  aiMlModelPlan: null,
+  principalInvestigator: '',
+  institution: '',
+};
+
 type ProjectDialogContentHandle = { getIsPending: () => boolean };
 
 type ProjectDialogContentProps = {
-  // TODO: ideally this generic component should no longer reference `CreateProjectState`,
-  // but we can revisit this once we implement edit flow.
   action: (
     estimatedDataVolume: EstimatedDataVolume | null,
     collectionPeriod: CollectionPeriod | null,
     subreddits: string[],
     aiMlModelPlan: AiMlModelPlan | null,
     formData: FormData,
-  ) => CreateProjectState | undefined;
+  ) => ProjectFormState | undefined;
+  initialProject?: InitialProject;
   infoMessage?: string;
   onClose: () => void;
   ref: Ref<ProjectDialogContentHandle>;
@@ -106,6 +125,7 @@ type ProjectDialogContentProps = {
 
 function ProjectDialogContent({
   action: actionProp,
+  initialProject = EMPTY_PROJECT,
   infoMessage,
   onClose,
   ref,
@@ -115,13 +135,17 @@ function ProjectDialogContent({
   const dataVolumeLabelId = useId();
   const collectionPeriodLabelId = useId();
   const aiMlModelPlanLabelId = useId();
-  const [researchObjectiveLength, setResearchObjectiveLength] = useState(0);
-  const [subreddits, setSubreddits] = useState<string[]>([]);
-  const [estimatedDataVolume, setEstimatedDataVolume] = useState<EstimatedDataVolume | null>(null);
-  const [collectionPeriod, setCollectionPeriod] = useState<CollectionPeriod | null>(null);
-  const [aiMlModelPlan, setAiMlModelPlan] = useState<AiMlModelPlan | null>(null);
+  const [researchObjectiveLength, setResearchObjectiveLength] = useState(
+    initialProject.researchObjective.length,
+  );
+  const [subreddits, setSubreddits] = useState(initialProject.subreddits);
+  const [estimatedDataVolume, setEstimatedDataVolume] = useState(
+    initialProject.estimatedDataVolume,
+  );
+  const [collectionPeriod, setCollectionPeriod] = useState(initialProject.collectionPeriod);
+  const [aiMlModelPlan, setAiMlModelPlan] = useState(initialProject.aiMlModelPlan);
 
-  function submitAction(_prevState: CreateProjectState | undefined, formData: FormData) {
+  function submitAction(_prevState: ProjectFormState | undefined, formData: FormData) {
     const result = actionProp(
       estimatedDataVolume,
       collectionPeriod,
@@ -173,7 +197,8 @@ function ProjectDialogContent({
             <TextField
               autoFocus
               required
-              name={'title' satisfies keyof CreateProjectInput}
+              name={'title' satisfies keyof ProjectInput}
+              defaultValue={initialProject.title}
               label="Project title"
               placeholder="Political Discourse Analysis 2024"
               error={!!state?.errors.fieldErrors.title?.length}
@@ -189,7 +214,8 @@ function ProjectDialogContent({
               required
               multiline
               rows={3}
-              name={'researchObjective' satisfies keyof CreateProjectInput}
+              name={'researchObjective' satisfies keyof ProjectInput}
+              defaultValue={initialProject.researchObjective}
               label="Research objective"
               placeholder="Describe the main research question or hypothesis you want to investigate..."
               error={!!state?.errors.fieldErrors.researchObjective?.length}
@@ -352,7 +378,8 @@ function ProjectDialogContent({
             <Stack direction="row" spacing={2}>
               <TextField
                 required
-                name={'principalInvestigator' satisfies keyof CreateProjectInput}
+                name={'principalInvestigator' satisfies keyof ProjectInput}
+                defaultValue={initialProject.principalInvestigator}
                 label="Principal investigator"
                 placeholder="Full name"
                 error={!!state?.errors.fieldErrors.principalInvestigator?.length}
@@ -363,7 +390,8 @@ function ProjectDialogContent({
               />
               <TextField
                 required
-                name={'institution' satisfies keyof CreateProjectInput}
+                name={'institution' satisfies keyof ProjectInput}
+                defaultValue={initialProject.institution}
                 label="Institution"
                 placeholder="University or organisation"
                 error={!!state?.errors.fieldErrors.institution?.length}
@@ -395,6 +423,7 @@ type ProjectDialogProps = Omit<ProjectDialogContentProps, 'ref'> & {
 
 export function ProjectDialog({
   action,
+  initialProject,
   infoMessage,
   onClose,
   open,
@@ -418,6 +447,7 @@ export function ProjectDialog({
       <ProjectDialogContent
         ref={dialogContentRef}
         action={action}
+        initialProject={initialProject}
         infoMessage={infoMessage}
         onClose={onClose}
         submitLabel={submitLabel}

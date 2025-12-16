@@ -17,8 +17,9 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
-import type { Project } from '../actions/createProject';
+import { updateProject, type Project } from '../actions/project';
 import { GridItem } from './GridItem';
+import { ProjectDialog } from './ProjectDialog';
 import { useProjects } from './useProjects';
 
 const dateFormatter = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
@@ -52,10 +53,11 @@ function DeleteConfirmDialog({ open, onClose, onConfirm, project }: DeleteConfir
 
 type ProjectCardProps = {
   onDelete: (project: Project) => void;
+  onUpdate: (project: Project) => void;
   project: Project;
 };
 
-function ProjectCard({ onDelete, project }: ProjectCardProps) {
+function ProjectCard({ onDelete, onUpdate, project }: ProjectCardProps) {
   const { title, createdAt } = project;
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -66,6 +68,11 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
 
   function handleCloseMenu() {
     setAnchorEl(null);
+  }
+
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  function handleCloseEditDialog() {
+    setEditDialogOpen(false);
   }
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -105,7 +112,12 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
         </CardActionArea>
       </Card>
       <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleCloseMenu}>
-        <MenuItem onClick={handleCloseMenu} disabled>
+        <MenuItem
+          onClick={() => {
+            handleCloseMenu();
+            setEditDialogOpen(true);
+          }}
+        >
           Edit
         </MenuItem>
         <MenuItem
@@ -117,6 +129,24 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
           Delete
         </MenuItem>
       </Menu>
+      <ProjectDialog
+        action={(estimatedDataVolume, collectionPeriod, subreddits, aiMlModelPlan, formData) =>
+          updateProject(
+            project,
+            estimatedDataVolume,
+            collectionPeriod,
+            subreddits,
+            aiMlModelPlan,
+            onUpdate,
+            formData,
+          )
+        }
+        initialProject={project}
+        open={editDialogOpen}
+        onClose={handleCloseEditDialog}
+        submitLabel="Save changes"
+        title="Edit project"
+      />
       <DeleteConfirmDialog
         open={deleteDialogOpen}
         project={project}
@@ -131,11 +161,11 @@ function ProjectCard({ onDelete, project }: ProjectCardProps) {
 }
 
 export function ProjectCards() {
-  const [projects, { deleteProject }] = useProjects();
+  const [projects, { updateProject: saveProject, deleteProject }] = useProjects();
 
   return projects.map((project) => (
     <GridItem key={project.id}>
-      <ProjectCard onDelete={deleteProject} project={project} />
+      <ProjectCard onDelete={deleteProject} onUpdate={saveProject} project={project} />
     </GridItem>
   ));
 }

@@ -9,7 +9,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { ProjectDialog } from './ProjectDialog';
 import { useProjects } from './useProjects';
-import { createProject } from '#app/actions/createProject.ts';
+import { createProject } from '#app/actions/project.ts';
 
 export function NewProjectCard() {
   const [open, setOpen] = useState(false);
