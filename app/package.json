@@ -42,7 +42,6 @@
     "eslint": "^9.39.2",
     "eslint-config-next": "16.0.10",
     "oxfmt": "^0.18.0",
-    "prettier": "~3.7.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.49.0"
   },
