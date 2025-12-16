@@ -24,8 +24,10 @@ import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import {
+  collectionPeriodSchema,
   estimatedDataVolumeSchema,
   RESEARCH_OBJECTIVE_MAX_LENGTH,
+  type CollectionPeriod,
   type CreateProjectInput,
   type CreateProjectState,
   type EstimatedDataVolume,
@@ -49,6 +51,26 @@ function formatDataVolume(volume: EstimatedDataVolume): string {
   return dataVolumeNumberFormat.formatRange(min, max);
 }
 
+const COLLECTION_PERIOD_OPTIONS: CollectionPeriod[] = [
+  { months: 1 },
+  { months: 3 },
+  { months: 6 },
+  { months: 12 },
+  { months: null },
+];
+
+const collectionPeriodDurationFormat = new Intl.DurationFormat('en-GB', { style: 'long' });
+
+function formatCollectionPeriod({ months }: CollectionPeriod): string {
+  const formatted = collectionPeriodDurationFormat.format(
+    months === 12 || months === null ? { years: 1 } : { months },
+  );
+  if (months === null) {
+    return `Historical (> ${formatted})`;
+  }
+  return formatted;
+}
+
 function normaliseSubreddit(value: string): string {
   // Remove `r/` prefix and trim whitespace.
   return value.replace(/^r\//, '').trim();
@@ -61,6 +83,7 @@ type ProjectDialogContentProps = {
   // but we can revisit this once we implement edit flow.
   action: (
     estimatedDataVolume: EstimatedDataVolume | null,
+    collectionPeriod: CollectionPeriod | null,
     subreddits: string[],
     formData: FormData,
   ) => CreateProjectState | undefined;
@@ -79,12 +102,14 @@ function ProjectDialogContent({
 }: ProjectDialogContentProps) {
   const formId = useId();
   const dataVolumeLabelId = useId();
+  const collectionPeriodLabelId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(0);
   const [subreddits, setSubreddits] = useState<string[]>([]);
   const [estimatedDataVolume, setEstimatedDataVolume] = useState<EstimatedDataVolume | null>(null);
+  const [collectionPeriod, setCollectionPeriod] = useState<CollectionPeriod | null>(null);
 
   function submitAction(_prevState: CreateProjectState | undefined, formData: FormData) {
-    const result = actionProp(estimatedDataVolume, subreddits, formData);
+    const result = actionProp(estimatedDataVolume, collectionPeriod, subreddits, formData);
     if (!result?.errors) {
       onClose();
     }
@@ -97,6 +122,9 @@ function ProjectDialogContent({
 
   const matchingEstimatedDataVolume = ESTIMATED_DATA_VOLUME_OPTIONS.find((option) =>
     isEqual(option, estimatedDataVolume),
+  );
+  const matchingCollectionPeriod = COLLECTION_PERIOD_OPTIONS.find((option) =>
+    isEqual(option, collectionPeriod),
   );
 
   return (
@@ -168,40 +196,73 @@ function ProjectDialogContent({
               size="small"
               fullWidth
             />
-            <FormControl
-              required
-              error={!!state?.errors.fieldErrors.estimatedDataVolume?.length}
-              margin="dense"
-              size="small"
-              fullWidth
-            >
-              <InputLabel id={dataVolumeLabelId}>Estimated data volume</InputLabel>
-              <Select
-                labelId={dataVolumeLabelId}
-                label="Estimated data volume"
-                value={
-                  matchingEstimatedDataVolume ? JSON.stringify(matchingEstimatedDataVolume) : ''
-                }
-                onChange={(event) => {
-                  setEstimatedDataVolume(
-                    estimatedDataVolumeSchema.safeParse(JSON.parse(event.target.value)).data ??
-                      null,
-                  );
-                }}
+            <Stack direction="row" spacing={2}>
+              <FormControl
+                required
+                error={!!state?.errors.fieldErrors.estimatedDataVolume?.length}
+                margin="dense"
+                size="small"
+                fullWidth
               >
-                {ESTIMATED_DATA_VOLUME_OPTIONS.map((option) => {
-                  const stringified = JSON.stringify(option);
-                  return (
-                    <MenuItem key={stringified} value={stringified}>
-                      {formatDataVolume(option)} posts
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-              {state?.errors.fieldErrors.estimatedDataVolume?.[0] ? (
-                <FormHelperText>{state.errors.fieldErrors.estimatedDataVolume[0]}</FormHelperText>
-              ) : null}
-            </FormControl>
+                <InputLabel id={dataVolumeLabelId}>Estimated data volume</InputLabel>
+                <Select
+                  labelId={dataVolumeLabelId}
+                  label="Estimated data volume"
+                  value={
+                    matchingEstimatedDataVolume ? JSON.stringify(matchingEstimatedDataVolume) : ''
+                  }
+                  onChange={(event) => {
+                    setEstimatedDataVolume(
+                      estimatedDataVolumeSchema.safeParse(JSON.parse(event.target.value)).data ??
+                        null,
+                    );
+                  }}
+                >
+                  {ESTIMATED_DATA_VOLUME_OPTIONS.map((option) => {
+                    const stringified = JSON.stringify(option);
+                    return (
+                      <MenuItem key={stringified} value={stringified}>
+                        {formatDataVolume(option)} posts
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+                {state?.errors.fieldErrors.estimatedDataVolume?.[0] ? (
+                  <FormHelperText>{state.errors.fieldErrors.estimatedDataVolume[0]}</FormHelperText>
+                ) : null}
+              </FormControl>
+              <FormControl
+                required
+                error={!!state?.errors.fieldErrors.collectionPeriod?.length}
+                margin="dense"
+                size="small"
+                fullWidth
+              >
+                <InputLabel id={collectionPeriodLabelId}>Collection period</InputLabel>
+                <Select
+                  labelId={collectionPeriodLabelId}
+                  label="Collection period"
+                  value={matchingCollectionPeriod ? JSON.stringify(matchingCollectionPeriod) : ''}
+                  onChange={(event) => {
+                    setCollectionPeriod(
+                      collectionPeriodSchema.safeParse(JSON.parse(event.target.value)).data ?? null,
+                    );
+                  }}
+                >
+                  {COLLECTION_PERIOD_OPTIONS.map((option) => {
+                    const stringified = JSON.stringify(option);
+                    return (
+                      <MenuItem key={stringified} value={stringified}>
+                        {formatCollectionPeriod(option)}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+                {state?.errors.fieldErrors.collectionPeriod?.[0] ? (
+                  <FormHelperText>{state.errors.fieldErrors.collectionPeriod[0]}</FormHelperText>
+                ) : null}
+              </FormControl>
+            </Stack>
             <Autocomplete
               multiple
               freeSolo
