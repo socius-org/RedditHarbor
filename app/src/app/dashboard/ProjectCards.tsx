@@ -21,7 +21,7 @@ import type { Project } from '../actions/createProject';
 import { GridItem } from './GridItem';
 import { useProjects } from './useProjects';
 
-const dateFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' });
+const dateFormatter = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
 
 type DeleteConfirmDialogProps = {
   onClose: () => void;
