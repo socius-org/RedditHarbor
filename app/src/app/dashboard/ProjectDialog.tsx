@@ -16,13 +16,38 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import {
+  estimatedDataVolumeSchema,
+  RESEARCH_OBJECTIVE_MAX_LENGTH,
   type CreateProjectInput,
   type CreateProjectState,
-  RESEARCH_OBJECTIVE_MAX_LENGTH,
+  type EstimatedDataVolume,
 } from '../actions/createProject';
+
+const ESTIMATED_DATA_VOLUME_OPTIONS: EstimatedDataVolume[] = [
+  [null, 10_000],
+  [10_000, 100_000],
+  [100_000, 1_000_000],
+  [1_000_000, null],
+];
+
+const dataVolumeNumberFormat = new Intl.NumberFormat('en-GB', {
+  notation: 'compact',
+});
+
+function formatDataVolume(volume: EstimatedDataVolume): string {
+  const [min, max] = volume;
+  if (min === null) return `< ${dataVolumeNumberFormat.format(max)}`;
+  if (max === null) return `> ${dataVolumeNumberFormat.format(min)}`;
+  return dataVolumeNumberFormat.formatRange(min, max);
+}
 
 function normaliseSubreddit(value: string): string {
   // Remove `r/` prefix and trim whitespace.
@@ -34,7 +59,11 @@ type ProjectDialogContentHandle = { getIsPending: () => boolean };
 type ProjectDialogContentProps = {
   // TODO: ideally this generic component should no longer reference `CreateProjectState`,
   // but we can revisit this once we implement edit flow.
-  action: (subreddits: string[], formData: FormData) => CreateProjectState | undefined;
+  action: (
+    estimatedDataVolume: EstimatedDataVolume | null,
+    subreddits: string[],
+    formData: FormData,
+  ) => CreateProjectState | undefined;
   infoMessage?: string;
   onClose: () => void;
   ref: Ref<ProjectDialogContentHandle>;
@@ -49,11 +78,13 @@ function ProjectDialogContent({
   submitLabel,
 }: ProjectDialogContentProps) {
   const formId = useId();
+  const dataVolumeLabelId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(0);
   const [subreddits, setSubreddits] = useState<string[]>([]);
+  const [estimatedDataVolume, setEstimatedDataVolume] = useState<EstimatedDataVolume | null>(null);
 
   function submitAction(_prevState: CreateProjectState | undefined, formData: FormData) {
-    const result = actionProp(subreddits, formData);
+    const result = actionProp(estimatedDataVolume, subreddits, formData);
     if (!result?.errors) {
       onClose();
     }
@@ -63,6 +94,10 @@ function ProjectDialogContent({
   const [state, action, isPending] = useActionState(submitAction, undefined);
 
   useImperativeHandle(ref, () => ({ getIsPending: () => isPending }), [isPending]);
+
+  const matchingEstimatedDataVolume = ESTIMATED_DATA_VOLUME_OPTIONS.find((option) =>
+    isEqual(option, estimatedDataVolume),
+  );
 
   return (
     <>
@@ -133,6 +168,40 @@ function ProjectDialogContent({
               size="small"
               fullWidth
             />
+            <FormControl
+              required
+              error={!!state?.errors.fieldErrors.estimatedDataVolume?.length}
+              margin="dense"
+              size="small"
+              fullWidth
+            >
+              <InputLabel id={dataVolumeLabelId}>Estimated data volume</InputLabel>
+              <Select
+                labelId={dataVolumeLabelId}
+                label="Estimated data volume"
+                value={
+                  matchingEstimatedDataVolume ? JSON.stringify(matchingEstimatedDataVolume) : ''
+                }
+                onChange={(event) => {
+                  setEstimatedDataVolume(
+                    estimatedDataVolumeSchema.safeParse(JSON.parse(event.target.value)).data ??
+                      null,
+                  );
+                }}
+              >
+                {ESTIMATED_DATA_VOLUME_OPTIONS.map((option) => {
+                  const stringified = JSON.stringify(option);
+                  return (
+                    <MenuItem key={stringified} value={stringified}>
+                      {formatDataVolume(option)} posts
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+              {state?.errors.fieldErrors.estimatedDataVolume?.[0] ? (
+                <FormHelperText>{state.errors.fieldErrors.estimatedDataVolume[0]}</FormHelperText>
+              ) : null}
+            </FormControl>
             <Autocomplete
               multiple
               freeSolo
