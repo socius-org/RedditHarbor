@@ -1,3 +1,7 @@
+'use client';
+
+import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
@@ -6,6 +10,7 @@ import { AiProviderBanner } from './AiProviderBanner';
 import { GridItem } from './GridItem';
 import { NewProjectCard } from './NewProjectCard';
 import { ProjectCards } from './ProjectCards';
+import { ProjectsErrorFallback } from './ProjectsErrorFallback';
 
 function Header() {
   return (
@@ -27,10 +32,14 @@ export default function Dashboard() {
         <Header />
         <AiProviderBanner />
         <Grid container spacing={3}>
-          <ProjectCards />
-          <GridItem>
-            <NewProjectCard />
-          </GridItem>
+          <ErrorBoundary FallbackComponent={ProjectsErrorFallback}>
+            <Suspense fallback={null}>
+              <ProjectCards />
+              <GridItem>
+                <NewProjectCard />
+              </GridItem>
+            </Suspense>
+          </ErrorBoundary>
         </Grid>
       </Stack>
     </Container>
