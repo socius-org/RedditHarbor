@@ -6,15 +6,15 @@ export function useProjects() {
   const projects = useSuspendingLiveQuery(() => db.projects.toArray(), []);
 
   function addProject(project: Project) {
-    void db.projects.add(project);
+    return db.projects.add(project);
   }
 
   function updateProject(project: Project) {
-    void db.projects.put(project);
+    return db.projects.put(project);
   }
 
   function deleteProject(project: Project) {
-    void db.projects.delete(project.id);
+    return db.projects.delete(project.id);
   }
 
   return [projects, { addProject, updateProject, deleteProject }] as const;
