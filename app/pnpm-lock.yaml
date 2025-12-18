@@ -42,7 +42,7 @@ importers:
         specifier: ^4.2.1
         version: 4.2.1
       dexie-react-hooks:
-        specifier: 4.2.1-alpha.1
+        specifier: ^4.2.1-alpha.1
         version: 4.2.1-alpha.1(@types/react@19.2.7)(dexie@4.2.1)(react@19.2.3)
       next:
         specifier: ^16.1.0
