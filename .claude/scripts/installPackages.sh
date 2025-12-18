@@ -7,4 +7,3 @@ if [ "$CLAUDE_CODE_REMOTE" != "true" ]; then
 fi
 
 apt update && apt install gh -y
-cd "$CLAUDE_PROJECT_DIR/app" && pnpm install
