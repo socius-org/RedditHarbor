@@ -70,7 +70,7 @@ export function NewProjectCard() {
             collectionPeriod,
             subreddits,
             aiMlModelPlan,
-            (p) => void addProject(p),
+            (project) => void addProject(project),
             formData,
           )
         }

@@ -166,8 +166,8 @@ export function ProjectCards() {
   return projects.map((project) => (
     <GridItem key={project.id}>
       <ProjectCard
-        onDelete={(p) => void deleteProject(p)}
-        onUpdate={(p) => void saveProject(p)}
+        onDelete={(toDelete) => void deleteProject(toDelete)}
+        onUpdate={(toUpdate) => void saveProject(toUpdate)}
         project={project}
       />
     </GridItem>
