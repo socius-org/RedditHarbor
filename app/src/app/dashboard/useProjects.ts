@@ -3,7 +3,7 @@ import { db } from '../database';
 import type { Project } from '../actions/project';
 
 export function useProjects() {
-  const projects = useSuspendingLiveQuery(() => db.projects.toArray(), []);
+  const projects = useSuspendingLiveQuery(() => db.projects.toArray(), ['projects']);
 
   function addProject(project: Project) {
     return db.projects.add(project);
