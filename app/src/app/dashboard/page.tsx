@@ -1,6 +1,5 @@
 'use client';
 
-import { Suspense } from 'react';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -49,12 +48,10 @@ export default function Dashboard() {
         <AiProviderBanner />
         <Grid container spacing={3}>
           <ErrorBoundary FallbackComponent={ProjectsErrorFallback}>
-            <Suspense fallback={null}>
-              <ProjectCards />
-              <GridItem>
-                <NewProjectCard />
-              </GridItem>
-            </Suspense>
+            <ProjectCards />
+            <GridItem>
+              <NewProjectCard />
+            </GridItem>
           </ErrorBoundary>
         </Grid>
       </Stack>
