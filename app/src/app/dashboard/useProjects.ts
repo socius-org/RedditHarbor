@@ -3,7 +3,11 @@ import { db } from '../database';
 import type { Project } from '../actions/project';
 
 export function useProjects() {
-  const projects = useSuspendingLiveQuery(() => db.projects.toArray(), ['projects']);
+  const projects = useSuspendingLiveQuery(
+    async () =>
+      (await db.projects.toArray()).toSorted((a, b) => b.updatedAt.localeCompare(a.updatedAt)),
+    ['projects'],
+  );
 
   function addProject(project: Project) {
     return db.projects.add(project);
