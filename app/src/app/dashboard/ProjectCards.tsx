@@ -53,11 +53,10 @@ function DeleteConfirmDialog({ open, onClose, onConfirm, project }: DeleteConfir
 
 type ProjectCardProps = {
   onDelete: (project: Project) => void;
-  onUpdate: (project: Project) => void;
   project: Project;
 };
 
-function ProjectCard({ onDelete, onUpdate, project }: ProjectCardProps) {
+function ProjectCard({ onDelete, project }: ProjectCardProps) {
   const { title, createdAt } = project;
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -137,7 +136,6 @@ function ProjectCard({ onDelete, onUpdate, project }: ProjectCardProps) {
             collectionPeriod,
             subreddits,
             aiMlModelPlan,
-            onUpdate,
             formData,
           )
         }
@@ -161,15 +159,11 @@ function ProjectCard({ onDelete, onUpdate, project }: ProjectCardProps) {
 }
 
 export function ProjectCards() {
-  const [projects, { updateProject: saveProject, deleteProject }] = useProjects();
+  const [projects, { deleteProject }] = useProjects();
 
   return projects.map((project) => (
     <GridItem key={project.id}>
-      <ProjectCard
-        onDelete={(toDelete) => void deleteProject(toDelete)}
-        onUpdate={(toUpdate) => void saveProject(toUpdate)}
-        project={project}
-      />
+      <ProjectCard onDelete={(toDelete) => void deleteProject(toDelete)} project={project} />
     </GridItem>
   ));
 }

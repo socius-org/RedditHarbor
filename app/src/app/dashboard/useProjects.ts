@@ -9,17 +9,9 @@ export function useProjects() {
     ['projects'],
   );
 
-  function addProject(project: Project) {
-    return db.projects.add(project);
-  }
-
-  function updateProject(project: Project) {
-    return db.projects.put(project);
-  }
-
   function deleteProject(project: Project) {
     return db.projects.delete(project.id);
   }
 
-  return [projects, { addProject, updateProject, deleteProject }] as const;
+  return [projects, { deleteProject }] as const;
 }

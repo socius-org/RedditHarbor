@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { db } from '../database';
 
 export const RESEARCH_OBJECTIVE_MAX_LENGTH = 500;
 
@@ -50,14 +51,13 @@ export type ProjectFormState = {
   errors: z.core.$ZodFlattenedError<ProjectInput>;
 };
 
-export function createProject(
+export async function createProject(
   estimatedDataVolume: EstimatedDataVolume | null,
   collectionPeriod: CollectionPeriod | null,
   subreddits: string[],
   aiMlModelPlan: AiMlModelPlan | null,
-  onCreate: (project: Project) => void,
   formData: FormData,
-): ProjectFormState | undefined {
+): Promise<ProjectFormState | undefined> {
   const rawFormData = {
     ...Object.fromEntries(formData),
     estimatedDataVolume,
@@ -81,18 +81,26 @@ export function createProject(
     updatedAt: now,
   };
 
-  onCreate(project);
+  try {
+    await db.projects.add(project);
+  } catch (error) {
+    return {
+      errors: {
+        formErrors: [String(error)],
+        fieldErrors: {},
+      },
+    };
+  }
 }
 
-export function updateProject(
+export async function updateProject(
   existingProject: Project,
   estimatedDataVolume: EstimatedDataVolume | null,
   collectionPeriod: CollectionPeriod | null,
   subreddits: string[],
   aiMlModelPlan: AiMlModelPlan | null,
-  onUpdate: (project: Project) => void,
   formData: FormData,
-): ProjectFormState | undefined {
+): Promise<ProjectFormState | undefined> {
   const rawFormData = {
     ...Object.fromEntries(formData),
     estimatedDataVolume,
@@ -115,5 +123,14 @@ export function updateProject(
     updatedAt: new Date().toISOString(),
   };
 
-  onUpdate(project);
+  try {
+    await db.projects.put(project);
+  } catch (error) {
+    return {
+      errors: {
+        formErrors: [String(error)],
+        fieldErrors: {},
+      },
+    };
+  }
 }
