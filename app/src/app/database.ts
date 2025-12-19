@@ -8,7 +8,7 @@ const db = new Dexie('RedditHarbor') as Dexie & {
 };
 
 db.version(1).stores({
-  projects: 'id, createdAt',
+  projects: 'id, updatedAt',
 });
 
 export { db };

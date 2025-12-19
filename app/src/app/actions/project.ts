@@ -37,11 +37,12 @@ export const projectSchema = z.object({
   principalInvestigator: z.string().trim().min(1),
   institution: z.string().trim().min(1),
   createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
 });
 
 export type Project = z.infer<typeof projectSchema>;
 
-const projectInputSchema = projectSchema.omit({ id: true, createdAt: true });
+const projectInputSchema = projectSchema.omit({ id: true, createdAt: true, updatedAt: true });
 
 export type ProjectInput = z.infer<typeof projectInputSchema>;
 
@@ -72,10 +73,12 @@ export function createProject(
     };
   }
 
+  const now = new Date().toISOString();
   const project: Project = {
     ...parsedResult.data,
     id: crypto.randomUUID(),
-    createdAt: new Date().toISOString(),
+    createdAt: now,
+    updatedAt: now,
   };
 
   onCreate(project);
@@ -109,6 +112,7 @@ export function updateProject(
     ...parsedResult.data,
     id: existingProject.id,
     createdAt: existingProject.createdAt,
+    updatedAt: new Date().toISOString(),
   };
 
   onUpdate(project);
