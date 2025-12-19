@@ -115,7 +115,7 @@ type ProjectDialogContentProps = {
     subreddits: string[],
     aiMlModelPlan: AiMlModelPlan | null,
     formData: FormData,
-  ) => ProjectFormState | undefined;
+  ) => Promise<ProjectFormState | undefined>;
   initialProject?: InitialProject;
   infoMessage?: string;
   onClose: () => void;
@@ -145,8 +145,8 @@ function ProjectDialogContent({
   const [collectionPeriod, setCollectionPeriod] = useState(initialProject.collectionPeriod);
   const [aiMlModelPlan, setAiMlModelPlan] = useState(initialProject.aiMlModelPlan);
 
-  function submitAction(_prevState: ProjectFormState | undefined, formData: FormData) {
-    const result = actionProp(
+  async function submitAction(_prevState: ProjectFormState | undefined, formData: FormData) {
+    const result = await actionProp(
       estimatedDataVolume,
       collectionPeriod,
       subreddits,

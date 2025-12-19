@@ -1,8 +1,17 @@
 'use client';
 
-import { useState, type SyntheticEvent } from 'react';
+import {
+  startTransition,
+  useActionState,
+  useImperativeHandle,
+  useRef,
+  useState,
+  type Ref,
+  type SyntheticEvent,
+} from 'react';
 import Link from 'next/link';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
@@ -18,46 +27,98 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import { updateProject, type Project } from '../actions/project';
+import { db } from '../database';
 import { GridItem } from './GridItem';
 import { ProjectDialog } from './ProjectDialog';
 import { useProjects } from './useProjects';
 
 const dateFormatter = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
 
-type DeleteConfirmDialogProps = {
+type DeleteConfirmDialogContentHandle = { getIsPending: () => boolean };
+
+type DeleteConfirmDialogContentProps = {
   onClose: () => void;
-  onConfirm: () => void;
-  open: boolean;
   project: Project;
+  ref: Ref<DeleteConfirmDialogContentHandle>;
 };
 
-function DeleteConfirmDialog({ open, onClose, onConfirm, project }: DeleteConfirmDialogProps) {
+function DeleteConfirmDialogContent({ onClose, project, ref }: DeleteConfirmDialogContentProps) {
+  async function deleteAction() {
+    try {
+      await db.projects.delete(project.id);
+    } catch (error) {
+      return String(error);
+    }
+    onClose();
+  }
+
+  const [error, action, isPending] = useActionState(deleteAction, undefined);
+
+  useImperativeHandle(ref, () => ({ getIsPending: () => isPending }), [isPending]);
+
   return (
-    <Dialog maxWidth="xs" open={open} onClose={onClose}>
-      <DialogTitle>Delete project</DialogTitle>
+    <>
       <DialogContent>
-        <DialogContentText>
-          Are you sure you want to delete &ldquo;{project.title}&rdquo;? This action cannot be
-          undone.
-        </DialogContentText>
+        <Stack spacing={1}>
+          <DialogContentText>
+            Are you sure you want to delete &ldquo;{project.title}&rdquo;? This action cannot be
+            undone.
+          </DialogContentText>
+          {error && (
+            <Alert severity="error" variant="filled">
+              {error}
+            </Alert>
+          )}
+        </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={onConfirm} color="error" variant="contained">
+        <Button disabled={isPending} onClick={onClose}>
+          Cancel
+        </Button>
+        <Button
+          color="error"
+          variant="contained"
+          loading={isPending}
+          onClick={() => {
+            startTransition(action);
+          }}
+        >
           Delete
         </Button>
       </DialogActions>
+    </>
+  );
+}
+
+type DeleteConfirmDialogProps = Pick<DeleteConfirmDialogContentProps, 'onClose' | 'project'> & {
+  open: boolean;
+};
+
+function DeleteConfirmDialog({ open, onClose, project }: DeleteConfirmDialogProps) {
+  const dialogContentRef = useRef<DeleteConfirmDialogContentHandle>(null);
+
+  return (
+    <Dialog
+      maxWidth="xs"
+      open={open}
+      onClose={() => {
+        if (dialogContentRef.current?.getIsPending()) {
+          return;
+        }
+        onClose();
+      }}
+    >
+      <DialogTitle>Delete project</DialogTitle>
+      <DeleteConfirmDialogContent ref={dialogContentRef} onClose={onClose} project={project} />
     </Dialog>
   );
 }
 
 type ProjectCardProps = {
-  onDelete: (project: Project) => void;
-  onUpdate: (project: Project) => void;
   project: Project;
 };
 
-function ProjectCard({ onDelete, onUpdate, project }: ProjectCardProps) {
+function ProjectCard({ project }: ProjectCardProps) {
   const { title, createdAt } = project;
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -137,7 +198,6 @@ function ProjectCard({ onDelete, onUpdate, project }: ProjectCardProps) {
             collectionPeriod,
             subreddits,
             aiMlModelPlan,
-            onUpdate,
             formData,
           )
         }
@@ -151,21 +211,17 @@ function ProjectCard({ onDelete, onUpdate, project }: ProjectCardProps) {
         open={deleteDialogOpen}
         project={project}
         onClose={handleCloseDeleteDialog}
-        onConfirm={() => {
-          onDelete(project);
-          handleCloseDeleteDialog();
-        }}
       />
     </>
   );
 }
 
 export function ProjectCards() {
-  const [projects, { updateProject: saveProject, deleteProject }] = useProjects();
+  const projects = useProjects();
 
   return projects.map((project) => (
     <GridItem key={project.id}>
-      <ProjectCard onDelete={deleteProject} onUpdate={saveProject} project={project} />
+      <ProjectCard project={project} />
     </GridItem>
   ));
 }

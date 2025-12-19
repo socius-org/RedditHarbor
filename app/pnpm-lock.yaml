@@ -38,6 +38,12 @@ importers:
       core-js:
         specifier: ^3.47.0
         version: 3.47.0
+      dexie:
+        specifier: ^4.2.1
+        version: 4.2.1
+      dexie-react-hooks:
+        specifier: ^4.2.1-alpha.1
+        version: 4.2.1-alpha.1(@types/react@19.2.7)(dexie@4.2.1)(react@19.2.3)
       next:
         specifier: ^16.1.0
         version: 16.1.0(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -1103,6 +1109,16 @@ packages:
   detect-libc@2.1.2:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
+
+  dexie-react-hooks@4.2.1-alpha.1:
+    resolution: {integrity: sha512-SP9vlFsuHM7dPoO9h3++mcF9IM+yEE4+tm1Sh/PbAe/Zqr5iI5g3nRftEy1kh7izsL/QWVHIwhD4IArnsqZlPw==}
+    peerDependencies:
+      '@types/react': '>=16'
+      dexie: '>=4.2.0-alpha.1 <5.0.0'
+      react: '>=16'
+
+  dexie@4.2.1:
+    resolution: {integrity: sha512-Ckej0NS6jxQ4Po3OrSQBFddayRhTCic2DoCAG5zacOfOVB9P2Q5Xc5uL/nVa7ZVs+HdMnvUPzLFCB/JwpB6Csg==}
 
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
@@ -3151,6 +3167,14 @@ snapshots:
 
   detect-libc@2.1.2:
     optional: true
+
+  dexie-react-hooks@4.2.1-alpha.1(@types/react@19.2.7)(dexie@4.2.1)(react@19.2.3):
+    dependencies:
+      '@types/react': 19.2.7
+      dexie: 4.2.1
+      react: 19.2.3
+
+  dexie@4.2.1: {}
 
   doctrine@2.1.0:
     dependencies:

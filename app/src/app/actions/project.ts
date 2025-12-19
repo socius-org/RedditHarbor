@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { db } from '../database';
 
 export const RESEARCH_OBJECTIVE_MAX_LENGTH = 500;
 
@@ -37,11 +38,12 @@ export const projectSchema = z.object({
   principalInvestigator: z.string().trim().min(1),
   institution: z.string().trim().min(1),
   createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
 });
 
 export type Project = z.infer<typeof projectSchema>;
 
-const projectInputSchema = projectSchema.omit({ id: true, createdAt: true });
+const projectInputSchema = projectSchema.omit({ id: true, createdAt: true, updatedAt: true });
 
 export type ProjectInput = z.infer<typeof projectInputSchema>;
 
@@ -49,14 +51,13 @@ export type ProjectFormState = {
   errors: z.core.$ZodFlattenedError<ProjectInput>;
 };
 
-export function createProject(
+export async function createProject(
   estimatedDataVolume: EstimatedDataVolume | null,
   collectionPeriod: CollectionPeriod | null,
   subreddits: string[],
   aiMlModelPlan: AiMlModelPlan | null,
-  onCreate: (project: Project) => void,
   formData: FormData,
-): ProjectFormState | undefined {
+): Promise<ProjectFormState | undefined> {
   const rawFormData = {
     ...Object.fromEntries(formData),
     estimatedDataVolume,
@@ -72,24 +73,34 @@ export function createProject(
     };
   }
 
+  const now = new Date().toISOString();
   const project: Project = {
     ...parsedResult.data,
     id: crypto.randomUUID(),
-    createdAt: new Date().toISOString(),
+    createdAt: now,
+    updatedAt: now,
   };
 
-  onCreate(project);
+  try {
+    await db.projects.add(project);
+  } catch (error) {
+    return {
+      errors: {
+        formErrors: [String(error)],
+        fieldErrors: {},
+      },
+    };
+  }
 }
 
-export function updateProject(
+export async function updateProject(
   existingProject: Project,
   estimatedDataVolume: EstimatedDataVolume | null,
   collectionPeriod: CollectionPeriod | null,
   subreddits: string[],
   aiMlModelPlan: AiMlModelPlan | null,
-  onUpdate: (project: Project) => void,
   formData: FormData,
-): ProjectFormState | undefined {
+): Promise<ProjectFormState | undefined> {
   const rawFormData = {
     ...Object.fromEntries(formData),
     estimatedDataVolume,
@@ -109,7 +120,17 @@ export function updateProject(
     ...parsedResult.data,
     id: existingProject.id,
     createdAt: existingProject.createdAt,
+    updatedAt: new Date().toISOString(),
   };
 
-  onUpdate(project);
+  try {
+    await db.projects.put(project);
+  } catch (error) {
+    return {
+      errors: {
+        formErrors: [String(error)],
+        fieldErrors: {},
+      },
+    };
+  }
 }

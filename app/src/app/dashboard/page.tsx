@@ -6,6 +6,7 @@ import { AiProviderBanner } from './AiProviderBanner';
 import { GridItem } from './GridItem';
 import { NewProjectCard } from './NewProjectCard';
 import { ProjectCards } from './ProjectCards';
+import { ProjectsErrorBoundary } from './ProjectsErrorBoundary';
 
 function Header() {
   return (
@@ -26,12 +27,14 @@ export default function Dashboard() {
       <Stack spacing={3}>
         <Header />
         <AiProviderBanner />
-        <Grid container spacing={3}>
-          <ProjectCards />
-          <GridItem>
-            <NewProjectCard />
-          </GridItem>
-        </Grid>
+        <ProjectsErrorBoundary>
+          <Grid container spacing={3}>
+            <ProjectCards />
+            <GridItem>
+              <NewProjectCard />
+            </GridItem>
+          </Grid>
+        </ProjectsErrorBoundary>
       </Stack>
     </Container>
   );
