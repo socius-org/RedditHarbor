@@ -21,10 +21,13 @@ if (!RAW_PUBLISHABLE_KEY) {
 }
 const PUBLISHABLE_KEY = RAW_PUBLISHABLE_KEY;
 
+// TODO: switch to Inter
+// const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+
 const roboto = Roboto({
   display: 'swap',
   subsets: ['latin'],
-  variable: '--font-roboto',
+  variable: '--font-sans',
   weight: ['300', '400', '500', '700'],
 });
 

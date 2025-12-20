@@ -1,6 +1,6 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "new-york",
+  "style": "base-mira",
   "rsc": true,
   "tsx": true,
   "tailwind": {
@@ -18,5 +18,7 @@
     "lib": "#app/utils",
     "hooks": "#app/hooks"
   },
+  "menuColor": "default",
+  "menuAccent": "subtle",
   "registries": {}
 }
