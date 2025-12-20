@@ -1,13 +1,15 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
+import { ThemeProvider } from 'next-themes';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import AppBar from '@mui/material/AppBar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Stack from '@mui/material/Stack';
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import './globals.css';
 import { theme } from './theme';
 import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut, SignOutButton } from './clerk';
 import { ApiKeysButton } from './ApiKeysButton';
@@ -20,10 +22,13 @@ if (!RAW_PUBLISHABLE_KEY) {
 }
 const PUBLISHABLE_KEY = RAW_PUBLISHABLE_KEY;
 
+// TODO: switch to Inter
+// const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+
 const roboto = Roboto({
   display: 'swap',
   subsets: ['latin'],
-  variable: '--font-roboto',
+  variable: '--font-sans',
   weight: ['300', '400', '500', '700'],
 });
 
@@ -60,24 +65,26 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-      <html lang="en" className={roboto.variable}>
-        <body>
-          <AppRouterCacheProvider>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <ReactQueryClientProvider>
-                <SignedIn>
-                  <ApiKeysDialogProvider>
-                    <AppHeader />
-                    {children}
-                  </ApiKeysDialogProvider>
-                </SignedIn>
-                <SignedOut>
-                  <RedirectToSignIn />
-                </SignedOut>
-              </ReactQueryClientProvider>
-            </ThemeProvider>
-          </AppRouterCacheProvider>
+      <html lang="en" className={roboto.variable} suppressHydrationWarning>
+        <body className="antialiased">
+          <ThemeProvider attribute="class" disableTransitionOnChange>
+            <AppRouterCacheProvider>
+              <MuiThemeProvider theme={theme}>
+                <CssBaseline />
+                <ReactQueryClientProvider>
+                  <SignedIn>
+                    <ApiKeysDialogProvider>
+                      <AppHeader />
+                      {children}
+                    </ApiKeysDialogProvider>
+                  </SignedIn>
+                  <SignedOut>
+                    <RedirectToSignIn />
+                  </SignedOut>
+                </ReactQueryClientProvider>
+              </MuiThemeProvider>
+            </AppRouterCacheProvider>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

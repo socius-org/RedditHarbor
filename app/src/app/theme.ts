@@ -5,7 +5,7 @@ export const theme = createTheme({
   colorSchemes: { light: true, dark: true },
   cssVariables: true,
   typography: {
-    fontFamily: 'var(--font-roboto)',
+    fontFamily: 'var(--font-sans)',
     button: {
       textTransform: 'initial',
     },
