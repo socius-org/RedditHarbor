@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
+import { ThemeProvider } from 'next-themes';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import AppBar from '@mui/material/AppBar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Stack from '@mui/material/Stack';
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import './globals.css';
@@ -64,24 +65,26 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-      <html lang="en" className={roboto.variable}>
+      <html lang="en" className={roboto.variable} suppressHydrationWarning>
         <body className="antialiased">
-          <AppRouterCacheProvider>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <ReactQueryClientProvider>
-                <SignedIn>
-                  <ApiKeysDialogProvider>
-                    <AppHeader />
-                    {children}
-                  </ApiKeysDialogProvider>
-                </SignedIn>
-                <SignedOut>
-                  <RedirectToSignIn />
-                </SignedOut>
-              </ReactQueryClientProvider>
-            </ThemeProvider>
-          </AppRouterCacheProvider>
+          <ThemeProvider attribute="class" disableTransitionOnChange>
+            <AppRouterCacheProvider>
+              <MuiThemeProvider theme={theme}>
+                <CssBaseline />
+                <ReactQueryClientProvider>
+                  <SignedIn>
+                    <ApiKeysDialogProvider>
+                      <AppHeader />
+                      {children}
+                    </ApiKeysDialogProvider>
+                  </SignedIn>
+                  <SignedOut>
+                    <RedirectToSignIn />
+                  </SignedOut>
+                </ReactQueryClientProvider>
+              </MuiThemeProvider>
+            </AppRouterCacheProvider>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
