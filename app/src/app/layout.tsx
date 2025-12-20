@@ -8,6 +8,7 @@ import Stack from '@mui/material/Stack';
 import { ThemeProvider } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import './globals.css';
 import { theme } from './theme';
 import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut, SignOutButton } from './clerk';
 import { ApiKeysButton } from './ApiKeysButton';
@@ -61,7 +62,7 @@ export default function RootLayout({
   return (
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
       <html lang="en" className={roboto.variable}>
-        <body>
+        <body className="antialiased">
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>
               <CssBaseline />
