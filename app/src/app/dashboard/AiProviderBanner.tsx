@@ -14,7 +14,7 @@ export function AiProviderBanner() {
 
   return (
     // pr-21 to fit button width
-    <Alert variant="destructive" className="has-data-[slot=alert-action]:pr-21">
+    <Alert variant="warning" className="has-data-[slot=alert-action]:pr-21">
       <TriangleAlert />
       <AlertDescription className="text-wrap">
         No AI provider configured. Add API keys to enable document generation.
