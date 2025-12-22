@@ -3,12 +3,8 @@ import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import AppBar from '@mui/material/AppBar';
 import CssBaseline from '@mui/material/CssBaseline';
-import Stack from '@mui/material/Stack';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import './globals.css';
 import { theme } from './theme';
 import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut, SignOutButton } from './clerk';
@@ -39,22 +35,18 @@ export const metadata: Metadata = {
 
 function AppHeader() {
   return (
-    <AppBar position="sticky">
-      <Toolbar variant="dense">
-        <Stack direction="row" alignItems="center" spacing={2} flex={1}>
-          <Typography variant="h6" component="div">
-            RedditHarbor
-          </Typography>
-          <Typography color="inherit" sx={{ opacity: 0.7 }}>
-            PETLP framework
-          </Typography>
-        </Stack>
-        <Stack direction="row" alignItems="center" spacing={1}>
+    <header className="sticky top-0 z-(--z-index-app-header) border-b bg-background">
+      <div className="flex h-12 px-4">
+        <div className="flex flex-1 items-center gap-4">
+          <span className="text-xl font-medium">RedditHarbor</span>
+          <span className="text-muted-foreground">PETLP framework</span>
+        </div>
+        <div className="flex items-center gap-2">
           <ApiKeysButton />
           <SignOutButton />
-        </Stack>
-      </Toolbar>
-    </AppBar>
+        </div>
+      </div>
+    </header>
   );
 }
 
