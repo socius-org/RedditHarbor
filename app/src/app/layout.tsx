@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import './globals.css';
 import { theme } from './theme';
@@ -62,7 +61,6 @@ export default function RootLayout({
           <ThemeProvider attribute="class" disableTransitionOnChange>
             <AppRouterCacheProvider>
               <MuiThemeProvider theme={theme}>
-                <CssBaseline />
                 <ReactQueryClientProvider>
                   <SignedIn>
                     <ApiKeysDialogProvider>
