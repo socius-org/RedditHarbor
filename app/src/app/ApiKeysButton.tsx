@@ -15,7 +15,7 @@ import {
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { useUser } from '@clerk/clerk-react';
 import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
+import MuiButton from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -28,10 +28,11 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import TextField, { type TextFieldProps } from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import KeyIcon from '@mui/icons-material/Key';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import useForkRef from '@mui/utils/useForkRef';
+import { KeyRound } from 'lucide-react';
+import { Button } from '#app/components/ui/button.tsx';
 import {
   decryptApiKeys,
   saveApiKeys,
@@ -87,7 +88,7 @@ function ConnectionTestSection({ formRef }: ConnectionTestSectionProps) {
       </Typography>
       <Stack direction="row" spacing={1} flexWrap="wrap">
         {connectionTestServices.map(({ id, label }) => (
-          <Button
+          <MuiButton
             key={id}
             variant="outlined"
             disabled={isConnectionTestPending}
@@ -97,7 +98,7 @@ function ConnectionTestSection({ formRef }: ConnectionTestSectionProps) {
             }}
           >
             {label}
-          </Button>
+          </MuiButton>
         ))}
       </Stack>
       {connectionTestState && (
@@ -307,12 +308,12 @@ function ApiKeysDialogContent({
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button disabled={isPending} onClick={onClose}>
+        <MuiButton disabled={isPending} onClick={onClose}>
           Cancel
-        </Button>
-        <Button type="submit" form={formId} variant="contained" loading={isPending}>
+        </MuiButton>
+        <MuiButton type="submit" form={formId} variant="contained" loading={isPending}>
           Save
-        </Button>
+        </MuiButton>
       </DialogActions>
     </>
   );
@@ -327,7 +328,7 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
         </Alert>
       </DialogContent>
       <DialogActions>
-        <Button
+        <MuiButton
           autoFocus
           variant="contained"
           onClick={() => {
@@ -335,7 +336,7 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
           }}
         >
           Try again
-        </Button>
+        </MuiButton>
       </DialogActions>
     </>
   );
@@ -420,7 +421,7 @@ function ApiKeysDialog({
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button
+          <MuiButton
             autoFocus
             variant="contained"
             onClick={() => {
@@ -428,7 +429,7 @@ function ApiKeysDialog({
             }}
           >
             Add passkey
-          </Button>
+          </MuiButton>
         </DialogActions>
       </Dialog>
     );
@@ -497,13 +498,8 @@ export function ApiKeysButton() {
 
   return (
     <>
-      <Button
-        color="inherit"
-        size="small"
-        startIcon={<KeyIcon />}
-        variant="outlined"
-        onClick={openDialog}
-      >
+      <Button variant="outline" size="lg" onClick={openDialog}>
+        <KeyRound />
         API keys
       </Button>
       <ApiKeysDialog

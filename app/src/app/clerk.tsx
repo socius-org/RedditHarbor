@@ -1,7 +1,7 @@
 'use client';
 
 import { useClerk } from '@clerk/clerk-react';
-import Button from '@mui/material/Button';
+import { Button } from '#app/components/ui/button.tsx';
 
 export { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
 
@@ -10,8 +10,8 @@ export function SignOutButton() {
 
   return (
     <Button
-      color="inherit"
-      size="small"
+      variant="ghost"
+      size="lg"
       onClick={() => {
         void signOut();
       }}
