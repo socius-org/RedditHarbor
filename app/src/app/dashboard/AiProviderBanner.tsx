@@ -1,7 +1,7 @@
 'use client';
 
 import { TriangleAlert } from 'lucide-react';
-import { Alert, AlertAction, AlertDescription } from '#app/components/ui/alert.tsx';
+import { Alert, AlertAction, AlertDescription, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
 import { useApiKeysDialog } from '../ApiKeysDialogContext';
 
@@ -13,14 +13,13 @@ export function AiProviderBanner() {
   }
 
   return (
-    // pr-21 to fit button width
-    <Alert variant="warning" className="has-data-[slot=alert-action]:pr-21">
+    // pr-0 to prevent the description text from wrapping.
+    <Alert variant="warning" className="has-data-[slot=alert-action]:pr-0">
       <TriangleAlert />
-      <AlertDescription className="text-wrap">
-        No AI provider configured. Add API keys to enable document generation.
-      </AlertDescription>
+      <AlertTitle>No AI provider configured.</AlertTitle>
+      <AlertDescription>Add API keys to enable document generation.</AlertDescription>
       <AlertAction>
-        <Button variant="outline" onClick={openDialog} size="sm">
+        <Button variant="outline" size="xs" onClick={openDialog}>
           Configure
         </Button>
       </AlertAction>
