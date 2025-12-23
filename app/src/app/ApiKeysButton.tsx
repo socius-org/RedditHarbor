@@ -17,7 +17,6 @@ import { useUser } from '@clerk/clerk-react';
 import { CircleAlert, CircleCheck } from 'lucide-react';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import MuiButton from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -34,6 +33,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import useForkRef from '@mui/utils/useForkRef';
 import { KeyRound } from 'lucide-react';
 import { Button } from '#app/components/ui/button.tsx';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '#app/components/ui/empty.tsx';
+import { Spinner } from '#app/components/ui/spinner.tsx';
 import {
   decryptApiKeys,
   saveApiKeys,
@@ -461,10 +462,14 @@ function ApiKeysDialog({
         <Suspense
           fallback={
             <DialogContent>
-              <Stack alignItems="center" spacing={1}>
-                <CircularProgress />
-                <DialogContentText>Decrypting API keys...</DialogContentText>
-              </Stack>
+              <Empty>
+                <EmptyHeader>
+                  <EmptyMedia>
+                    <Spinner />
+                  </EmptyMedia>
+                  <EmptyTitle>Decrypting API keys...</EmptyTitle>
+                </EmptyHeader>
+              </Empty>
             </DialogContent>
           }
         >
