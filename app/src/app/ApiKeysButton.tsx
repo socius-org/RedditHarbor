@@ -22,7 +22,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
@@ -34,6 +33,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import { KeyRound } from 'lucide-react';
 import { Button } from '#app/components/ui/button.tsx';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '#app/components/ui/empty.tsx';
+import { Separator } from '#app/components/ui/separator.tsx';
 import { Spinner } from '#app/components/ui/spinner.tsx';
 import {
   decryptApiKeys,
@@ -307,7 +307,7 @@ function ApiKeysDialogContent({
               {...getPasswordToggleProps('osfApiKey')}
             />
           </form>
-          <Divider />
+          <Separator />
           <ConnectionTestSection formRef={formRef} />
         </Stack>
       </DialogContent>
