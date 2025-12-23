@@ -8,7 +8,8 @@ import {
   type Ref,
 } from 'react';
 import isEqual from 'react-fast-compare';
-import Alert from '@mui/material/Alert';
+import { CircleAlert, Info } from 'lucide-react';
+import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -175,13 +176,15 @@ function ProjectDialogContent({
       <DialogContent>
         <Stack spacing={1}>
           {infoMessage && (
-            <Alert severity="info" variant="filled">
-              {infoMessage}
+            <Alert>
+              <Info />
+              <AlertTitle>{infoMessage}</AlertTitle>
             </Alert>
           )}
           {state?.errors.formErrors.map((error) => (
-            <Alert key={error} severity="error" variant="filled">
-              {error}
+            <Alert key={error} variant="destructive">
+              <CircleAlert />
+              <AlertTitle>{error}</AlertTitle>
             </Alert>
           ))}
           <form

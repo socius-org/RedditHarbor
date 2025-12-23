@@ -11,7 +11,8 @@ import {
 } from 'react';
 import Link from 'next/link';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Alert from '@mui/material/Alert';
+import { CircleAlert } from 'lucide-react';
+import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
@@ -65,8 +66,9 @@ function DeleteConfirmDialogContent({ onClose, project, ref }: DeleteConfirmDial
             undone.
           </DialogContentText>
           {error && (
-            <Alert severity="error" variant="filled">
-              {error}
+            <Alert variant="destructive">
+              <CircleAlert />
+              <AlertTitle>{error}</AlertTitle>
             </Alert>
           )}
         </Stack>

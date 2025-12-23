@@ -14,7 +14,8 @@ import {
 } from 'react';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { useUser } from '@clerk/clerk-react';
-import Alert from '@mui/material/Alert';
+import { CircleAlert, CircleCheck } from 'lucide-react';
+import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import MuiButton from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
@@ -102,8 +103,9 @@ function ConnectionTestSection({ formRef }: ConnectionTestSectionProps) {
         ))}
       </Stack>
       {connectionTestState && (
-        <Alert severity={connectionTestState.success ? 'success' : 'error'}>
-          {connectionTestState.message}
+        <Alert variant={connectionTestState.success ? 'success' : 'destructive'}>
+          {connectionTestState.success ? <CircleCheck /> : <CircleAlert />}
+          <AlertTitle>{connectionTestState.message}</AlertTitle>
         </Alert>
       )}
     </>
@@ -214,8 +216,9 @@ function ApiKeysDialogContent({
             stored securely on your device.
           </DialogContentText>
           {state?.errors.formErrors.map((error) => (
-            <Alert key={error} severity="error" variant="filled">
-              {error}
+            <Alert key={error} variant="destructive">
+              <CircleAlert />
+              <AlertTitle>{error}</AlertTitle>
             </Alert>
           ))}
           <form
@@ -323,8 +326,9 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
     <>
       <DialogContent>
-        <Alert severity="error" variant="filled">
-          {Error.isError(error) ? `${error}` : 'An unknown error occurred'}
+        <Alert variant="destructive">
+          <CircleAlert />
+          <AlertTitle>{Error.isError(error) ? `${error}` : 'An unknown error occurred'}</AlertTitle>
         </Alert>
       </DialogContent>
       <DialogActions>
@@ -414,8 +418,9 @@ function ApiKeysDialog({
               protect your keys.
             </DialogContentText>
             {addPasskeyError && (
-              <Alert severity="error" variant="filled">
-                {addPasskeyError}
+              <Alert variant="destructive">
+                <CircleAlert />
+                <AlertTitle>{addPasskeyError}</AlertTitle>
               </Alert>
             )}
           </Stack>
