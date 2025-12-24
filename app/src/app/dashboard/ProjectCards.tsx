@@ -10,10 +10,16 @@ import {
   type SyntheticEvent,
 } from 'react';
 import Link from 'next/link';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { CircleAlert } from 'lucide-react';
+import { CircleAlert, Ellipsis } from 'lucide-react';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
-import Button from '@mui/material/Button';
+import { Button } from '#app/components/ui/button.tsx';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '#app/components/ui/dropdown-menu.tsx';
+import MuiButton from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
@@ -23,9 +29,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import { updateProject, type Project } from '../actions/project';
 import { db } from '../database';
@@ -74,10 +77,10 @@ function DeleteConfirmDialogContent({ onClose, project, ref }: DeleteConfirmDial
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button disabled={isPending} onClick={onClose}>
+        <MuiButton disabled={isPending} onClick={onClose}>
           Cancel
-        </Button>
-        <Button
+        </MuiButton>
+        <MuiButton
           color="error"
           variant="contained"
           loading={isPending}
@@ -86,7 +89,7 @@ function DeleteConfirmDialogContent({ onClose, project, ref }: DeleteConfirmDial
           }}
         >
           Delete
-        </Button>
+        </MuiButton>
       </DialogActions>
     </>
   );
@@ -123,14 +126,8 @@ type ProjectCardProps = {
 function ProjectCard({ project }: ProjectCardProps) {
   const { title, createdAt } = project;
 
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
   function preventRipple(event: SyntheticEvent) {
     event.stopPropagation();
-  }
-
-  function handleCloseMenu() {
-    setAnchorEl(null);
   }
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -144,54 +141,62 @@ function ProjectCard({ project }: ProjectCardProps) {
   }
 
   return (
+    // TODO: Consider removing `modal={false}` after migrating to shadcn.
+    // Currently needed to avoid scroll lock conflict between Base UI and
+    // MUI's separate scroll managers.
     <>
-      <Card sx={{ height: '100%' }}>
-        <CardActionArea
-          component={Link}
-          href={`/dashboard/project/${project.id}`}
-          sx={{ height: '100%' }}
-        >
-          <Stack sx={{ height: '100%' }}>
-            <CardHeader
-              action={
-                <IconButton
-                  aria-label="Project menu"
-                  onMouseDown={preventRipple}
-                  onTouchStart={preventRipple}
-                  onClick={(event) => {
-                    // Prevent navigation
-                    event.preventDefault();
-                    setAnchorEl(event.currentTarget);
-                  }}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-              }
-              title={title}
-              subheader={`Created ${dateFormatter.format(new Date(createdAt))}`}
-            />
-            <CardContent sx={{ flex: 1 }}>{/* TODO */}</CardContent>
-          </Stack>
-        </CardActionArea>
-      </Card>
-      <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleCloseMenu}>
-        <MenuItem
-          onClick={() => {
-            handleCloseMenu();
-            setEditDialogOpen(true);
-          }}
-        >
-          Edit
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleCloseMenu();
-            setDeleteDialogOpen(true);
-          }}
-        >
-          Delete
-        </MenuItem>
-      </Menu>
+      <DropdownMenu modal={false}>
+        <Card sx={{ height: '100%' }}>
+          <CardActionArea
+            component={Link}
+            href={`/dashboard/project/${project.id}`}
+            sx={{ height: '100%' }}
+          >
+            <Stack sx={{ height: '100%' }}>
+              <CardHeader
+                action={
+                  <DropdownMenuTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="icon-lg"
+                        aria-label="Project menu"
+                        onMouseDown={preventRipple}
+                        onTouchStart={preventRipple}
+                        onClick={(event) => {
+                          // Prevent navigation
+                          event.preventDefault();
+                        }}
+                      >
+                        <Ellipsis />
+                      </Button>
+                    }
+                  />
+                }
+                title={title}
+                subheader={`Created ${dateFormatter.format(new Date(createdAt))}`}
+              />
+              <CardContent sx={{ flex: 1 }}>{/* TODO */}</CardContent>
+            </Stack>
+          </CardActionArea>
+        </Card>
+        <DropdownMenuContent>
+          <DropdownMenuItem
+            onClick={() => {
+              setEditDialogOpen(true);
+            }}
+          >
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              setDeleteDialogOpen(true);
+            }}
+          >
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <ProjectDialog
         action={(estimatedDataVolume, collectionPeriod, subreddits, aiMlModelPlan, formData) =>
           updateProject(
