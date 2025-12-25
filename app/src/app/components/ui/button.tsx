@@ -57,7 +57,7 @@ function Button({
     <ButtonPrimitive
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
-      disabled={loading === true || disabled}
+      disabled={disabled === true || loading}
       {...props}
     >
       {loading && <Spinner className="absolute left-1/2 -translate-x-1/2" />}
