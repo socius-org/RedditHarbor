@@ -1,4 +1,3 @@
-import { useId } from 'react';
 import { Button as ButtonPrimitive } from '@base-ui/react/button';
 import { cva, type VariantProps } from 'class-variance-authority';
 
@@ -52,15 +51,10 @@ function Button({
   loading,
   children,
   disabled,
-  id: idProp,
   ...props
 }: ButtonProps) {
-  const id = useId();
-  const buttonId = idProp ?? id;
-
   return (
     <ButtonPrimitive
-      id={buttonId}
       data-slot="button"
       className={cn(
         buttonVariants({ variant, size, className }),
@@ -69,12 +63,7 @@ function Button({
       disabled={disabled || loading}
       {...props}
     >
-      {loading && (
-        <Spinner
-          aria-labelledby={buttonId}
-          className="absolute left-1/2 -translate-x-1/2"
-        />
-      )}
+      {loading && <Spinner className="absolute left-1/2 -translate-x-1/2" />}
       {children}
     </ButtonPrimitive>
   );
