@@ -62,17 +62,20 @@ function Button({
     <ButtonPrimitive
       id={buttonId}
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        loading && '[&>:not([role=status])]:text-transparent',
+      )}
       disabled={disabled || loading}
       {...props}
     >
-      <span className={cn(loading && 'text-transparent')}>{children}</span>
       {loading && (
         <Spinner
           aria-labelledby={buttonId}
           className="absolute left-1/2 -translate-x-1/2"
         />
       )}
+      {children}
     </ButtonPrimitive>
   );
 }
