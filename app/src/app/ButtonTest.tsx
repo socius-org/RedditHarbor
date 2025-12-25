@@ -10,7 +10,11 @@ export function ButtonTest() {
   return (
     <div className="p-8 space-y-8">
       <div className="flex items-center gap-4">
-        <Button onClick={() => setLoading(!loading)}>
+        <Button
+          onClick={() => {
+            setLoading(!loading);
+          }}
+        >
           Toggle Loading: {loading ? 'ON' : 'OFF'}
         </Button>
       </div>

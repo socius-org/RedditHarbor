@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
@@ -20,11 +19,7 @@ export const metadata: Metadata = {
   title: 'RedditHarbor',
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: ReactNode;
-}>) {
+export default function RootLayout() {
   return (
     <html lang="en" className={roboto.variable} suppressHydrationWarning>
       <body className="antialiased">

@@ -56,15 +56,12 @@ function Button({
   return (
     <ButtonPrimitive
       data-slot="button"
-      className={cn(
-        buttonVariants({ variant, size, className }),
-        loading && '[&>:not([role=status])]:text-transparent',
-      )}
-      disabled={disabled || loading}
+      className={cn(buttonVariants({ variant, size, className }))}
+      disabled={loading === true || disabled}
       {...props}
     >
       {loading && <Spinner className="absolute left-1/2 -translate-x-1/2" />}
-      {children}
+      <span className={cn(loading && 'text-transparent')}>{children}</span>
     </ButtonPrimitive>
   );
 }
