@@ -60,7 +60,7 @@ function Button({
       disabled={disabled === true || loading}
       {...props}
     >
-      {loading && <Spinner />}
+      {loading && <Spinner className="left-1/2 -translate-x-1/2" />}
       <span className={cn(loading && 'text-transparent')}>{children}</span>
     </ButtonPrimitive>
   );
