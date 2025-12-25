@@ -63,7 +63,7 @@ function Button({
       {typeof loading === 'boolean' && (
         <Spinner className={cn('left-1/2 -translate-x-1/2', !loading && 'hidden')} />
       )}
-      <span className={cn(loading && 'text-transparent')}>{children}</span>
+      <span className={cn('contents', loading && 'text-transparent')}>{children}</span>
     </ButtonPrimitive>
   );
 }
