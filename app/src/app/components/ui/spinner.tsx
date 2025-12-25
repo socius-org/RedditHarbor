@@ -2,16 +2,12 @@ import { Loader2Icon } from 'lucide-react';
 
 import { cn } from '#app/utils/cn.ts';
 
-type SpinnerProps = React.ComponentProps<'svg'> & {
-  unsized?: boolean;
-};
-
-function Spinner({ className, unsized, ...props }: SpinnerProps) {
+function Spinner({ className, ...props }: React.ComponentProps<'svg'>) {
   return (
     <Loader2Icon
       role="status"
       aria-label="Loading"
-      className={cn('animate-spin', !unsized && 'size-4', className)}
+      className={cn('size-4 animate-spin', className)}
       {...props}
     />
   );
