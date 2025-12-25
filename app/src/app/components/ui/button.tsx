@@ -61,7 +61,7 @@ function Button({
       {...props}
     >
       {typeof loading === 'boolean' && (
-        <Spinner className={cn('absolute left-1/2 -translate-x-1/2', !loading && 'hidden')} />
+        <Spinner className={cn(!loading && 'hidden')} />
       )}
       <span className={cn('contents', loading && 'text-transparent')}>{children}</span>
     </ButtonPrimitive>
