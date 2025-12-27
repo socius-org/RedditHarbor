@@ -15,7 +15,6 @@ import {
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { useUser } from '@clerk/clerk-react';
 import { CircleAlert, CircleCheck } from 'lucide-react';
-import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import MuiButton from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -31,6 +30,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import useForkRef from '@mui/utils/useForkRef';
 import { KeyRound } from 'lucide-react';
+import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '#app/components/ui/empty.tsx';
 import { Separator } from '#app/components/ui/separator.tsx';
@@ -90,9 +90,9 @@ function ConnectionTestSection({ formRef }: ConnectionTestSectionProps) {
       </Typography>
       <Stack direction="row" spacing={1} flexWrap="wrap">
         {connectionTestServices.map(({ id, label }) => (
-          <MuiButton
+          <Button
             key={id}
-            variant="outlined"
+            variant="outline"
             disabled={isConnectionTestPending}
             loading={isConnectionTestPending && connectionTestService === id}
             onClick={() => {
@@ -100,7 +100,7 @@ function ConnectionTestSection({ formRef }: ConnectionTestSectionProps) {
             }}
           >
             {label}
-          </MuiButton>
+          </Button>
         ))}
       </Stack>
       {connectionTestState && (
