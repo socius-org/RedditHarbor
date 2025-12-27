@@ -16,11 +16,11 @@ import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { useUser } from '@clerk/clerk-react';
 import { CircleAlert, CircleCheck } from 'lucide-react';
 import MuiButton from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import MuiDialog from '@mui/material/Dialog';
+import MuiDialogActions from '@mui/material/DialogActions';
+import MuiDialogContent from '@mui/material/DialogContent';
+import MuiDialogContentText from '@mui/material/DialogContentText';
+import MuiDialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
@@ -32,6 +32,14 @@ import useForkRef from '@mui/utils/useForkRef';
 import { KeyRound } from 'lucide-react';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '#app/components/ui/dialog.tsx';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '#app/components/ui/empty.tsx';
 import { Separator } from '#app/components/ui/separator.tsx';
 import { Spinner } from '#app/components/ui/spinner.tsx';
@@ -210,12 +218,12 @@ function ApiKeysDialogContent({
 
   return (
     <>
-      <DialogContent>
+      <MuiDialogContent>
         <Stack spacing={1}>
-          <DialogContentText>
+          <MuiDialogContentText>
             Configure API keys for document generation. Keys are encrypted with your passkey and
             stored securely on your device.
-          </DialogContentText>
+          </MuiDialogContentText>
           {state?.errors.formErrors.map((error) => (
             <Alert key={error} variant="destructive">
               <CircleAlert />
@@ -310,15 +318,15 @@ function ApiKeysDialogContent({
           <Separator />
           <ConnectionTestSection formRef={formRef} />
         </Stack>
-      </DialogContent>
-      <DialogActions>
+      </MuiDialogContent>
+      <MuiDialogActions>
         <MuiButton disabled={isPending} onClick={onClose}>
           Cancel
         </MuiButton>
         <MuiButton type="submit" form={formId} variant="contained" loading={isPending}>
           Save
         </MuiButton>
-      </DialogActions>
+      </MuiDialogActions>
     </>
   );
 }
@@ -326,13 +334,13 @@ function ApiKeysDialogContent({
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
     <>
-      <DialogContent>
+      <MuiDialogContent>
         <Alert variant="destructive">
           <CircleAlert />
           <AlertTitle>{Error.isError(error) ? `${error}` : 'An unknown error occurred'}</AlertTitle>
         </Alert>
-      </DialogContent>
-      <DialogActions>
+      </MuiDialogContent>
+      <MuiDialogActions>
         <MuiButton
           autoFocus
           variant="contained"
@@ -342,7 +350,7 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
         >
           Try again
         </MuiButton>
-      </DialogActions>
+      </MuiDialogActions>
     </>
   );
 }
@@ -409,40 +417,44 @@ function ApiKeysDialog({
 
   if (!passkey) {
     return (
-      <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Add a passkey</DialogTitle>
+      <Dialog
+        open={open}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) onClose();
+        }}
+      >
         <DialogContent>
-          <Stack spacing={2}>
-            <DialogContentText>
+          <DialogHeader>
+            <DialogTitle>Add a passkey</DialogTitle>
+            <DialogDescription>
               To securely store your API keys, you need to add a passkey. This will use your
               device&apos;s biometric authentication (like fingerprint or face recognition) to
               protect your keys.
-            </DialogContentText>
-            {addPasskeyError && (
-              <Alert variant="destructive">
-                <CircleAlert />
-                <AlertTitle>{addPasskeyError}</AlertTitle>
-              </Alert>
-            )}
-          </Stack>
+            </DialogDescription>
+          </DialogHeader>
+          {addPasskeyError && (
+            <Alert variant="destructive">
+              <CircleAlert />
+              <AlertTitle>{addPasskeyError}</AlertTitle>
+            </Alert>
+          )}
+          <DialogFooter>
+            <Button
+              autoFocus
+              onClick={() => {
+                void handleAddPasskey();
+              }}
+            >
+              Add passkey
+            </Button>
+          </DialogFooter>
         </DialogContent>
-        <DialogActions>
-          <MuiButton
-            autoFocus
-            variant="contained"
-            onClick={() => {
-              void handleAddPasskey();
-            }}
-          >
-            Add passkey
-          </MuiButton>
-        </DialogActions>
       </Dialog>
     );
   }
 
   return (
-    <Dialog
+    <MuiDialog
       fullWidth
       open={open}
       onClose={() => {
@@ -452,7 +464,7 @@ function ApiKeysDialog({
         onClose();
       }}
     >
-      <DialogTitle>API keys</DialogTitle>
+      <MuiDialogTitle>API keys</MuiDialogTitle>
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
         onReset={() => {
@@ -461,7 +473,7 @@ function ApiKeysDialog({
       >
         <Suspense
           fallback={
-            <DialogContent>
+            <MuiDialogContent>
               <Empty>
                 <EmptyHeader>
                   <EmptyMedia>
@@ -470,7 +482,7 @@ function ApiKeysDialog({
                   <EmptyTitle>Decrypting API keys...</EmptyTitle>
                 </EmptyHeader>
               </Empty>
-            </DialogContent>
+            </MuiDialogContent>
           }
         >
           {encryptionKeyPromise && apiKeysState ? (
@@ -486,7 +498,7 @@ function ApiKeysDialog({
           ) : null}
         </Suspense>
       </ErrorBoundary>
-    </Dialog>
+    </MuiDialog>
   );
 }
 
