@@ -10,7 +10,7 @@ import { ProjectsErrorBoundary } from './ProjectsErrorBoundary';
 function Header() {
   return (
     <div className="flex flex-col gap-2">
-      <h1 className="text-2xl">Welcome back</h1>
+      <h1 className="text-xl">Welcome back</h1>
       <p>Continue your GDPR-compliant Reddit research or start a new project</p>
     </div>
   );
