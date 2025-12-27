@@ -19,22 +19,26 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '#app/components/ui/dropdown-menu.tsx';
-import MuiButton from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import { updateProject, type Project } from '../actions/project';
 import { db } from '../database';
 import { GridItem } from './GridItem';
 import { ProjectDialog } from './ProjectDialog';
 import { useProjects } from './useProjects';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '#app/components/ui/alert-dialog.tsx';
 
 const dateFormatter = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
 
@@ -62,35 +66,31 @@ function DeleteConfirmDialogContent({ onClose, project, ref }: DeleteConfirmDial
 
   return (
     <>
-      <DialogContent>
-        <Stack spacing={1}>
-          <DialogContentText>
-            Are you sure you want to delete &ldquo;{project.title}&rdquo;? This action cannot be
-            undone.
-          </DialogContentText>
-          {error && (
-            <Alert variant="destructive">
-              <CircleAlert />
-              <AlertTitle>{error}</AlertTitle>
-            </Alert>
-          )}
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <MuiButton disabled={isPending} onClick={onClose}>
-          Cancel
-        </MuiButton>
-        <MuiButton
-          color="error"
-          variant="contained"
+      <AlertDialogHeader>
+        <AlertDialogTitle>Delete project</AlertDialogTitle>
+        <AlertDialogDescription>
+          Are you sure you want to delete &ldquo;{project.title}&rdquo;? This action cannot be
+          undone.
+        </AlertDialogDescription>
+        {error && (
+          <Alert variant="destructive">
+            <CircleAlert />
+            <AlertTitle>{error}</AlertTitle>
+          </Alert>
+        )}
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+        <AlertDialogAction
           loading={isPending}
+          variant="destructive"
           onClick={() => {
             startTransition(action);
           }}
         >
           Delete
-        </MuiButton>
-      </DialogActions>
+        </AlertDialogAction>
+      </AlertDialogFooter>
     </>
   );
 }
@@ -103,19 +103,23 @@ function DeleteConfirmDialog({ open, onClose, project }: DeleteConfirmDialogProp
   const dialogContentRef = useRef<DeleteConfirmDialogContentHandle>(null);
 
   return (
-    <Dialog
-      maxWidth="xs"
-      open={open}
-      onClose={() => {
-        if (dialogContentRef.current?.getIsPending()) {
-          return;
-        }
-        onClose();
-      }}
-    >
-      <DialogTitle>Delete project</DialogTitle>
-      <DeleteConfirmDialogContent ref={dialogContentRef} onClose={onClose} project={project} />
-    </Dialog>
+    <>
+      <AlertDialog
+        open={open}
+        onOpenChange={(newOpen) => {
+          if (!newOpen) {
+            if (dialogContentRef.current?.getIsPending()) {
+              return;
+            }
+            onClose();
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <DeleteConfirmDialogContent ref={dialogContentRef} onClose={onClose} project={project} />
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
 
