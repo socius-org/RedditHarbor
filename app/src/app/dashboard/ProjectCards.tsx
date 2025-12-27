@@ -11,24 +11,12 @@ import {
 } from 'react';
 import Link from 'next/link';
 import { CircleAlert, Ellipsis } from 'lucide-react';
-import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
-import { Button } from '#app/components/ui/button.tsx';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '#app/components/ui/dropdown-menu.tsx';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Stack from '@mui/material/Stack';
-import { updateProject, type Project } from '../actions/project';
-import { db } from '../database';
-import { GridItem } from './GridItem';
-import { ProjectDialog } from './ProjectDialog';
-import { useProjects } from './useProjects';
+import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,6 +27,18 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '#app/components/ui/alert-dialog.tsx';
+import { Button } from '#app/components/ui/button.tsx';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '#app/components/ui/dropdown-menu.tsx';
+import { updateProject, type Project } from '../actions/project';
+import { db } from '../database';
+import { GridItem } from './GridItem';
+import { ProjectDialog } from './ProjectDialog';
+import { useProjects } from './useProjects';
 
 const dateFormatter = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
 
