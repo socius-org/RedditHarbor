@@ -9,7 +9,6 @@ import {
 } from 'react';
 import isEqual from 'react-fast-compare';
 import { CircleAlert, Info } from 'lucide-react';
-import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -24,6 +23,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import {
   AI_ML_MODEL_PLAN_OPTIONS,
   collectionPeriodSchema,
