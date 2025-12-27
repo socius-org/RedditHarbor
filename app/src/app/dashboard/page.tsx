@@ -1,7 +1,6 @@
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { AiProviderBanner } from './AiProviderBanner';
 import { GridItem } from './GridItem';
 import { NewProjectCard } from './NewProjectCard';
@@ -10,13 +9,9 @@ import { ProjectsErrorBoundary } from './ProjectsErrorBoundary';
 
 function Header() {
   return (
-    <div>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Welcome back
-      </Typography>
-      <Typography variant="body1">
-        Continue your GDPR-compliant Reddit research or start a new project
-      </Typography>
+    <div className="flex flex-col gap-2">
+      <h1 className="text-2xl">Welcome back</h1>
+      <p>Continue your GDPR-compliant Reddit research or start a new project</p>
     </div>
   );
 }
