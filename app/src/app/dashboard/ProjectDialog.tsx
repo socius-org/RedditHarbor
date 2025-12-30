@@ -10,12 +10,7 @@ import {
 import isEqual from 'react-fast-compare';
 import { CircleAlert, Info } from 'lucide-react';
 import Autocomplete from '@mui/material/Autocomplete';
-import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import InputLabel from '@mui/material/InputLabel';
@@ -24,6 +19,16 @@ import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
+import { Button } from '#app/components/ui/button.tsx';
+import {
+  Dialog,
+  DialogBody,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '#app/components/ui/dialog.tsx';
 import {
   AI_ML_MODEL_PLAN_OPTIONS,
   collectionPeriodSchema,
@@ -173,7 +178,7 @@ function ProjectDialogContent({
 
   return (
     <>
-      <DialogContent>
+      <DialogBody>
         <Stack spacing={1}>
           {infoMessage && (
             <Alert>
@@ -406,15 +411,15 @@ function ProjectDialogContent({
             </Stack>
           </form>
         </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button disabled={isPending} onClick={onClose}>
+      </DialogBody>
+      <DialogFooter>
+        <DialogClose disabled={isPending} render={<Button variant="outline" />}>
           Cancel
-        </Button>
-        <Button type="submit" form={formId} variant="contained" loading={isPending}>
+        </DialogClose>
+        <Button type="submit" form={formId} loading={isPending}>
           {submitLabel}
         </Button>
-      </DialogActions>
+      </DialogFooter>
     </>
   );
 }
@@ -437,24 +442,29 @@ export function ProjectDialog({
 
   return (
     <Dialog
-      fullWidth
       open={open}
-      onClose={() => {
-        if (dialogContentRef.current?.getIsPending()) {
-          return;
+      onOpenChange={(newOpen) => {
+        if (!newOpen) {
+          if (dialogContentRef.current?.getIsPending()) {
+            return;
+          }
+          onClose();
         }
-        onClose();
       }}
     >
-      <DialogTitle>{title}</DialogTitle>
-      <ProjectDialogContent
-        ref={dialogContentRef}
-        action={action}
-        initialProject={initialProject}
-        infoMessage={infoMessage}
-        onClose={onClose}
-        submitLabel={submitLabel}
-      />
+      <DialogContent showCloseButton={false}>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+        </DialogHeader>
+        <ProjectDialogContent
+          ref={dialogContentRef}
+          action={action}
+          initialProject={initialProject}
+          infoMessage={infoMessage}
+          onClose={onClose}
+          submitLabel={submitLabel}
+        />
+      </DialogContent>
     </Dialog>
   );
 }
