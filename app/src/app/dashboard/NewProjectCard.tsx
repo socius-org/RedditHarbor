@@ -6,7 +6,6 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import { ProjectDialog } from './ProjectDialog';
 import { createProject } from '#app/actions/project.ts';
 
@@ -56,7 +55,7 @@ export function NewProjectCard() {
             >
               <AddIcon fontSize="large" />
             </Box>
-            <Typography variant="h6">New project</Typography>
+            <span className="text-xl font-medium">New project</span>
           </CardContent>
         </CardActionArea>
       </Card>
