@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 
 function AppHeader() {
   return (
-    <header className="sticky top-0 z-(--z-index-app-header) border-b bg-background">
+    <header className="sticky top-0 z-50 border-b bg-background">
       <div className="flex h-12 px-4">
         <div className="flex flex-1 items-center gap-4">
           <span className="text-xl font-medium">RedditHarbor</span>
