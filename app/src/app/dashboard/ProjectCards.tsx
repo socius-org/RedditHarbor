@@ -7,15 +7,9 @@ import {
   useRef,
   useState,
   type Ref,
-  type SyntheticEvent,
 } from 'react';
 import Link from 'next/link';
 import { CircleAlert, Ellipsis } from 'lucide-react';
-import Card from '@mui/material/Card';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
-import Stack from '@mui/material/Stack';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import {
   AlertDialog,
@@ -28,6 +22,14 @@ import {
   AlertDialogTitle,
 } from '#app/components/ui/alert-dialog.tsx';
 import { Button } from '#app/components/ui/button.tsx';
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '#app/components/ui/card.tsx';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -130,10 +132,6 @@ type ProjectCardProps = {
 function ProjectCard({ project }: ProjectCardProps) {
   const { title, createdAt } = project;
 
-  function preventRipple(event: SyntheticEvent) {
-    event.stopPropagation();
-  }
-
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   function handleCloseEditDialog() {
     setEditDialogOpen(false);
@@ -147,39 +145,32 @@ function ProjectCard({ project }: ProjectCardProps) {
   return (
     <>
       <DropdownMenu>
-        <Card sx={{ height: '100%' }}>
-          <CardActionArea
-            component={Link}
-            href={`/dashboard/project/${project.id}`}
-            sx={{ height: '100%' }}
-          >
-            <Stack sx={{ height: '100%' }}>
-              <CardHeader
-                action={
-                  <DropdownMenuTrigger
-                    render={
-                      <Button
-                        variant="ghost"
-                        size="icon-lg"
-                        aria-label="Project menu"
-                        onMouseDown={preventRipple}
-                        onTouchStart={preventRipple}
-                        onClick={(event) => {
-                          // Prevent navigation
-                          event.preventDefault();
-                        }}
-                      >
-                        <Ellipsis />
-                      </Button>
-                    }
-                  />
+        <Card
+          render={<Link href={`/dashboard/project/${project.id}`} />}
+          className="h-full hover:outline hover:outline-offset-1 hover:outline-auto focus-visible:outline focus-visible:outline-offset-1 focus-visible:outline-auto"
+        >
+          <CardHeader>
+            <CardTitle>{title}</CardTitle>
+            <CardDescription>Created {dateFormatter.format(new Date(createdAt))}</CardDescription>
+            <CardAction>
+              <DropdownMenuTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="icon-lg"
+                    aria-label="Project menu"
+                    onClick={(event) => {
+                      // Prevent navigation
+                      event.preventDefault();
+                    }}
+                  >
+                    <Ellipsis />
+                  </Button>
                 }
-                title={title}
-                subheader={`Created ${dateFormatter.format(new Date(createdAt))}`}
               />
-              <CardContent sx={{ flex: 1 }}>{/* TODO */}</CardContent>
-            </Stack>
-          </CardActionArea>
+            </CardAction>
+          </CardHeader>
+          <CardContent>{/* TODO */}</CardContent>
         </Card>
         <DropdownMenuContent>
           <DropdownMenuItem
