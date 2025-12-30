@@ -19,7 +19,6 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import TextField, { type TextFieldProps } from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import useForkRef from '@mui/utils/useForkRef';
@@ -89,9 +88,7 @@ function ConnectionTestSection({ formRef }: ConnectionTestSectionProps) {
 
   return (
     <>
-      <Typography variant="h6" gutterBottom>
-        Test connections
-      </Typography>
+      <h3 className="text-sm font-semibold pb-1">Test connections</h3>
       <Stack direction="row" spacing={1} flexWrap="wrap">
         {connectionTestServices.map(({ id, label }) => (
           <Button
