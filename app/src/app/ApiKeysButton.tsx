@@ -472,16 +472,14 @@ function ApiKeysDialog({
             fallback={
               <DialogHeader>
                 <DialogTitle>API keys</DialogTitle>
-                <DialogDescription>
-                  <Empty>
-                    <EmptyHeader>
-                      <EmptyMedia>
-                        <Spinner />
-                      </EmptyMedia>
-                      <EmptyTitle>Decrypting API keys...</EmptyTitle>
-                    </EmptyHeader>
-                  </Empty>
-                </DialogDescription>
+                <Empty className="text-muted-foreground">
+                  <EmptyHeader>
+                    <EmptyMedia>
+                      <Spinner />
+                    </EmptyMedia>
+                    <EmptyTitle>Decrypting API keys...</EmptyTitle>
+                  </EmptyHeader>
+                </Empty>
               </DialogHeader>
             }
           >
