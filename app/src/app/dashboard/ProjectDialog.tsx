@@ -203,7 +203,6 @@ function ProjectDialogContent({
             }}
           >
             <TextField
-              autoFocus
               required
               name={'title' satisfies keyof ProjectInput}
               defaultValue={initialProject.title}
