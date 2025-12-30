@@ -145,11 +145,8 @@ function ProjectCard({ project }: ProjectCardProps) {
   }
 
   return (
-    // TODO: Consider removing `modal={false}` after migrating to shadcn.
-    // Currently needed to avoid scroll lock conflict between Base UI and
-    // MUI's separate scroll managers.
     <>
-      <DropdownMenu modal={false}>
+      <DropdownMenu>
         <Card sx={{ height: '100%' }}>
           <CardActionArea
             component={Link}
