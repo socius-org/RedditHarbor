@@ -2,8 +2,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import { AiProviderBanner } from './AiProviderBanner';
-import { GridItem } from './GridItem';
-import { NewProjectCard } from './NewProjectCard';
+import { NewProjectButton } from './NewProjectButton';
 import { ProjectCards } from './ProjectCards';
 import { ProjectsErrorBoundary } from './ProjectsErrorBoundary';
 
@@ -22,12 +21,12 @@ export default function Dashboard() {
       <Stack spacing={3}>
         <Header />
         <AiProviderBanner />
+        <div>
+          <NewProjectButton />
+        </div>
         <ProjectsErrorBoundary>
           <Grid container spacing={3}>
             <ProjectCards />
-            <GridItem>
-              <NewProjectCard />
-            </GridItem>
           </Grid>
         </ProjectsErrorBoundary>
       </Stack>
