@@ -128,4 +128,11 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Restore `cursor: pointer` for buttons (removed in Tailwind v4 preflight):
+     https://tailwindcss.com/docs/upgrade-guide#buttons-use-the-default-cursor */
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
 }
