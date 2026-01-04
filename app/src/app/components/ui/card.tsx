@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import { useRender } from '@base-ui/react/use-render';
 
 import { cn } from '#app/utils/cn.ts';
