@@ -136,7 +136,3 @@
     cursor: pointer;
   }
 }
-
-@utility outline-auto {
-  outline-style: auto;
-}
