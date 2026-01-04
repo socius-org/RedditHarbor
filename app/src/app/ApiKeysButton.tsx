@@ -36,6 +36,8 @@ import {
   DialogTitle,
 } from '#app/components/ui/dialog.tsx';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '#app/components/ui/empty.tsx';
+import { Field, FieldDescription, FieldGroup, FieldLabel } from '#app/components/ui/field.tsx';
+import { Input } from '#app/components/ui/input.tsx';
 import { Separator } from '#app/components/ui/separator.tsx';
 import { Spinner } from '#app/components/ui/spinner.tsx';
 import {
@@ -237,79 +239,80 @@ function ApiKeysDialogContent({
               });
             }}
           >
-            <TextField
-              autoFocus
-              name={'claudeKey' satisfies keyof ApiKeys}
-              label="Claude API key"
-              helperText="Used for DPIA and compliance document generation"
-              placeholder="sk-ant-api03-..."
-              margin="dense"
-              size="small"
-              fullWidth
-              defaultValue={apiKeys.claudeKey}
-              {...getPasswordToggleProps('claudeKey')}
-            />
-            <TextField
-              name={'openaiKey' satisfies keyof ApiKeys}
-              label="OpenAI API key"
-              helperText="Alternative to Claude for document generation"
-              placeholder="sk-..."
-              margin="dense"
-              size="small"
-              fullWidth
-              defaultValue={apiKeys.openaiKey}
-              {...getPasswordToggleProps('openaiKey')}
-            />
-            <TextField
-              name={'redditClientId' satisfies keyof ApiKeys}
-              label="Reddit client ID"
-              helperText="Required for data extraction in Phase 2"
-              type="text"
-              margin="dense"
-              size="small"
-              fullWidth
-              defaultValue={apiKeys.redditClientId}
-            />
-            <TextField
-              name={'redditClientSecret' satisfies keyof ApiKeys}
-              label="Reddit client secret"
-              margin="dense"
-              size="small"
-              fullWidth
-              defaultValue={apiKeys.redditClientSecret}
-              {...getPasswordToggleProps('redditClientSecret')}
-            />
-            <TextField
-              name={'supabaseProjectUrl' satisfies keyof ApiKeys}
-              label="Supabase project URL"
-              placeholder="https://your-project.supabase.co"
-              error={!!state?.errors.fieldErrors.supabaseProjectUrl?.length}
-              helperText={state?.errors.fieldErrors.supabaseProjectUrl?.[0]}
-              type="url"
-              margin="dense"
-              size="small"
-              fullWidth
-              defaultValue={apiKeys.supabaseProjectUrl}
-            />
-            <TextField
-              name={'supabaseApiKey' satisfies keyof ApiKeys}
-              label="Supabase API key"
-              margin="dense"
-              size="small"
-              fullWidth
-              defaultValue={apiKeys.supabaseApiKey}
-              {...getPasswordToggleProps('supabaseApiKey')}
-            />
-            <TextField
-              name={'osfApiKey' satisfies keyof ApiKeys}
-              label="OSF API key"
-              helperText="Open Science Framework API key"
-              margin="dense"
-              size="small"
-              fullWidth
-              defaultValue={apiKeys.osfApiKey}
-              {...getPasswordToggleProps('osfApiKey')}
-            />
+            <FieldGroup>
+              <TextField
+                autoFocus
+                name={'claudeKey' satisfies keyof ApiKeys}
+                label="Claude API key"
+                helperText="Used for DPIA and compliance document generation"
+                placeholder="sk-ant-api03-..."
+                margin="dense"
+                size="small"
+                fullWidth
+                defaultValue={apiKeys.claudeKey}
+                {...getPasswordToggleProps('claudeKey')}
+              />
+              <TextField
+                name={'openaiKey' satisfies keyof ApiKeys}
+                label="OpenAI API key"
+                helperText="Alternative to Claude for document generation"
+                placeholder="sk-..."
+                margin="dense"
+                size="small"
+                fullWidth
+                defaultValue={apiKeys.openaiKey}
+                {...getPasswordToggleProps('openaiKey')}
+              />
+              <Field>
+                <FieldLabel>Reddit client ID</FieldLabel>
+                <Input
+                  key={apiKeys.redditClientId}
+                  name={'redditClientId' satisfies keyof ApiKeys}
+                  defaultValue={apiKeys.redditClientId}
+                />
+                <FieldDescription>Required for data extraction in Phase 2</FieldDescription>
+              </Field>
+              <TextField
+                name={'redditClientSecret' satisfies keyof ApiKeys}
+                label="Reddit client secret"
+                margin="dense"
+                size="small"
+                fullWidth
+                defaultValue={apiKeys.redditClientSecret}
+                {...getPasswordToggleProps('redditClientSecret')}
+              />
+              <TextField
+                name={'supabaseProjectUrl' satisfies keyof ApiKeys}
+                label="Supabase project URL"
+                placeholder="https://your-project.supabase.co"
+                error={!!state?.errors.fieldErrors.supabaseProjectUrl?.length}
+                helperText={state?.errors.fieldErrors.supabaseProjectUrl?.[0]}
+                type="url"
+                margin="dense"
+                size="small"
+                fullWidth
+                defaultValue={apiKeys.supabaseProjectUrl}
+              />
+              <TextField
+                name={'supabaseApiKey' satisfies keyof ApiKeys}
+                label="Supabase API key"
+                margin="dense"
+                size="small"
+                fullWidth
+                defaultValue={apiKeys.supabaseApiKey}
+                {...getPasswordToggleProps('supabaseApiKey')}
+              />
+              <TextField
+                name={'osfApiKey' satisfies keyof ApiKeys}
+                label="OSF API key"
+                helperText="Open Science Framework API key"
+                margin="dense"
+                size="small"
+                fullWidth
+                defaultValue={apiKeys.osfApiKey}
+                {...getPasswordToggleProps('osfApiKey')}
+              />
+            </FieldGroup>
           </form>
           <Separator />
           <ConnectionTestSection formRef={formRef} />
