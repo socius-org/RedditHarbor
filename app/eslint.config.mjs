@@ -43,6 +43,7 @@ const eslintConfig = defineConfig([
       'no-shadow': 'off',
       '@typescript-eslint/no-shadow': 'error',
       '@typescript-eslint/no-unsafe-type-assertion': 'error',
+      eqeqeq: 'error',
     },
   },
   {
