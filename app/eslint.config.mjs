@@ -13,7 +13,15 @@ const eslintConfig = defineConfig([
   ...nextTs,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  { languageOptions: { parserOptions: { projectService: true } } },
+  {
+    languageOptions: {
+      parserOptions: {
+        // https://github.com/typescript-eslint/typescript-eslint/issues/8324#issuecomment-1921322232
+        jsxPragma: null,
+        projectService: true,
+      },
+    },
+  },
   ...pluginQuery.configs['flat/recommended'],
   // Override default ignores of eslint-config-next.
   globalIgnores([
@@ -26,6 +34,12 @@ const eslintConfig = defineConfig([
   {
     rules: {
       '@typescript-eslint/consistent-type-definitions': 'off',
+      '@typescript-eslint/consistent-type-exports': [
+        'error',
+        { fixMixedExportsWithInlineTypeSpecifier: true },
+      ],
+      '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
+      '@typescript-eslint/no-import-type-side-effects': 'error',
       'no-shadow': 'off',
       '@typescript-eslint/no-shadow': 'error',
       '@typescript-eslint/no-unsafe-type-assertion': 'error',
