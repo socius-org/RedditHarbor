@@ -1,10 +1,17 @@
 'use client';
 
+import { createContext, use, useId } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '#app/utils/cn.ts';
 import { Label } from '#app/components/ui/label.tsx';
 import { Separator } from '#app/components/ui/separator.tsx';
+
+const FieldIdContext = createContext<string | undefined>(undefined);
+
+export function useFieldId() {
+  return use(FieldIdContext);
+}
 
 function FieldSet({ className, ...props }: React.ComponentProps<'fieldset'>) {
   return (
@@ -70,14 +77,18 @@ function Field({
   orientation = 'vertical',
   ...props
 }: React.ComponentProps<'div'> & VariantProps<typeof fieldVariants>) {
+  const id = useId();
+
   return (
-    <div
-      role="group"
-      data-slot="field"
-      data-orientation={orientation}
-      className={cn(fieldVariants({ orientation }), className)}
-      {...props}
-    />
+    <FieldIdContext value={id}>
+      <div
+        role="group"
+        data-slot="field"
+        data-orientation={orientation}
+        className={cn(fieldVariants({ orientation }), className)}
+        {...props}
+      />
+    </FieldIdContext>
   );
 }
 
@@ -91,10 +102,13 @@ function FieldContent({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function FieldLabel({ className, ...props }: React.ComponentProps<typeof Label>) {
+function FieldLabel({ className, htmlFor, ...props }: React.ComponentProps<typeof Label>) {
+  const fieldId = useFieldId();
+
   return (
     <Label
       data-slot="field-label"
+      htmlFor={htmlFor ?? fieldId}
       className={cn(
         'has-data-checked:bg-primary/5 has-data-checked:border-primary dark:has-data-checked:bg-primary/10 gap-2 group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border [&>*]:data-[slot=field]:p-2.5 group/field-label peer/field-label flex w-fit leading-snug',
         'has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col',
