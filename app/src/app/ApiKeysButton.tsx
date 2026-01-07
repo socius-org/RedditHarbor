@@ -15,12 +15,7 @@ import {
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { useUser } from '@clerk/clerk-react';
 import { CircleAlert, CircleCheck } from 'lucide-react';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
-import TextField, { type TextFieldProps } from '@mui/material/TextField';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import useForkRef from '@mui/utils/useForkRef';
 import { KeyRound } from 'lucide-react';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
@@ -36,8 +31,15 @@ import {
   DialogTitle,
 } from '#app/components/ui/dialog.tsx';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '#app/components/ui/empty.tsx';
-import { Field, FieldDescription, FieldGroup, FieldLabel } from '#app/components/ui/field.tsx';
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from '#app/components/ui/field.tsx';
 import { Input } from '#app/components/ui/input.tsx';
+import { PasswordInput } from '#app/components/ui/PasswordInput.tsx';
 import { Separator } from '#app/components/ui/separator.tsx';
 import { Spinner } from '#app/components/ui/spinner.tsx';
 import {
@@ -116,56 +118,6 @@ function ConnectionTestSection({ formRef }: ConnectionTestSectionProps) {
   );
 }
 
-function usePasswordToggle() {
-  const [showKeys, setShowKeys] = useState<Record<keyof ApiKeys, boolean>>({
-    claudeKey: false,
-    openaiKey: false,
-    redditClientId: false,
-    redditClientSecret: false,
-    supabaseProjectUrl: false,
-    supabaseApiKey: false,
-    osfApiKey: false,
-  });
-
-  function toggleShowKey(key: keyof ApiKeys) {
-    setShowKeys((prev) => ({ ...prev, [key]: !prev[key] }));
-  }
-
-  return function getPasswordToggleProps(
-    fieldName: keyof ApiKeys,
-  ): Pick<TextFieldProps, 'type' | 'slotProps'> {
-    const isVisible = showKeys[fieldName];
-    return {
-      type: isVisible ? 'text' : 'password',
-      slotProps: {
-        input: {
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                edge="end"
-                size="small"
-                title={isVisible ? 'Hide' : 'Show'}
-                onClick={() => {
-                  toggleShowKey(fieldName);
-                }}
-                // https://github.com/mui/material-ui/blob/6da6eb2/docs/data/material/components/text-fields/InputAdornments.tsx#L20-L26
-                onMouseDown={(event) => {
-                  event.preventDefault();
-                }}
-                onMouseUp={(event) => {
-                  event.preventDefault();
-                }}
-              >
-                {isVisible ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          ),
-        },
-      },
-    };
-  };
-}
-
 type ApiKeysDialogContentHandle = { getIsPending: () => boolean };
 
 type ApiKeysDialogContentProps = {
@@ -209,8 +161,6 @@ function ApiKeysDialogContent({
 
   useImperativeHandle(ref, () => ({ getIsPending: () => isPending }), [isPending]);
 
-  const getPasswordToggleProps = usePasswordToggle();
-
   return (
     <>
       <DialogHeader>
@@ -240,29 +190,27 @@ function ApiKeysDialogContent({
             }}
           >
             <FieldGroup>
-              <TextField
-                autoFocus
-                name={'claudeKey' satisfies keyof ApiKeys}
-                label="Claude API key"
-                helperText="Used for DPIA and compliance document generation"
-                placeholder="sk-ant-api03-..."
-                margin="dense"
-                size="small"
-                fullWidth
-                defaultValue={apiKeys.claudeKey}
-                {...getPasswordToggleProps('claudeKey')}
-              />
-              <TextField
-                name={'openaiKey' satisfies keyof ApiKeys}
-                label="OpenAI API key"
-                helperText="Alternative to Claude for document generation"
-                placeholder="sk-..."
-                margin="dense"
-                size="small"
-                fullWidth
-                defaultValue={apiKeys.openaiKey}
-                {...getPasswordToggleProps('openaiKey')}
-              />
+              <Field>
+                <FieldLabel>Claude API key</FieldLabel>
+                <PasswordInput
+                  autoFocus
+                  name={'claudeKey' satisfies keyof ApiKeys}
+                  placeholder="sk-ant-api03-..."
+                  defaultValue={apiKeys.claudeKey}
+                />
+                <FieldDescription>
+                  Used for DPIA and compliance document generation
+                </FieldDescription>
+              </Field>
+              <Field>
+                <FieldLabel>OpenAI API key</FieldLabel>
+                <PasswordInput
+                  name={'openaiKey' satisfies keyof ApiKeys}
+                  placeholder="sk-..."
+                  defaultValue={apiKeys.openaiKey}
+                />
+                <FieldDescription>Alternative to Claude for document generation</FieldDescription>
+              </Field>
               <Field>
                 <FieldLabel>Reddit client ID</FieldLabel>
                 <Input
@@ -272,46 +220,44 @@ function ApiKeysDialogContent({
                 />
                 <FieldDescription>Required for data extraction in Phase 2</FieldDescription>
               </Field>
-              <TextField
-                name={'redditClientSecret' satisfies keyof ApiKeys}
-                label="Reddit client secret"
-                margin="dense"
-                size="small"
-                fullWidth
-                defaultValue={apiKeys.redditClientSecret}
-                {...getPasswordToggleProps('redditClientSecret')}
-              />
-              <TextField
-                name={'supabaseProjectUrl' satisfies keyof ApiKeys}
-                label="Supabase project URL"
-                placeholder="https://your-project.supabase.co"
-                error={!!state?.errors.fieldErrors.supabaseProjectUrl?.length}
-                helperText={state?.errors.fieldErrors.supabaseProjectUrl?.[0]}
-                type="url"
-                margin="dense"
-                size="small"
-                fullWidth
-                defaultValue={apiKeys.supabaseProjectUrl}
-              />
-              <TextField
-                name={'supabaseApiKey' satisfies keyof ApiKeys}
-                label="Supabase API key"
-                margin="dense"
-                size="small"
-                fullWidth
-                defaultValue={apiKeys.supabaseApiKey}
-                {...getPasswordToggleProps('supabaseApiKey')}
-              />
-              <TextField
-                name={'osfApiKey' satisfies keyof ApiKeys}
-                label="OSF API key"
-                helperText="Open Science Framework API key"
-                margin="dense"
-                size="small"
-                fullWidth
-                defaultValue={apiKeys.osfApiKey}
-                {...getPasswordToggleProps('osfApiKey')}
-              />
+              <Field>
+                <FieldLabel>Reddit client secret</FieldLabel>
+                <PasswordInput
+                  name={'redditClientSecret' satisfies keyof ApiKeys}
+                  defaultValue={apiKeys.redditClientSecret}
+                />
+              </Field>
+              <Field data-invalid={!!state?.errors.fieldErrors.supabaseProjectUrl?.length}>
+                <FieldLabel>Supabase project URL</FieldLabel>
+                <Input
+                  key={apiKeys.supabaseProjectUrl}
+                  name={'supabaseProjectUrl' satisfies keyof ApiKeys}
+                  placeholder="https://your-project.supabase.co"
+                  type="url"
+                  defaultValue={apiKeys.supabaseProjectUrl}
+                  aria-invalid={!!state?.errors.fieldErrors.supabaseProjectUrl?.length}
+                />
+                <FieldError
+                  errors={state?.errors.fieldErrors.supabaseProjectUrl?.map((message) => ({
+                    message,
+                  }))}
+                />
+              </Field>
+              <Field>
+                <FieldLabel>Supabase API key</FieldLabel>
+                <PasswordInput
+                  name={'supabaseApiKey' satisfies keyof ApiKeys}
+                  defaultValue={apiKeys.supabaseApiKey}
+                />
+              </Field>
+              <Field>
+                <FieldLabel>OSF API key</FieldLabel>
+                <PasswordInput
+                  name={'osfApiKey' satisfies keyof ApiKeys}
+                  defaultValue={apiKeys.osfApiKey}
+                />
+                <FieldDescription>Open Science Framework API key</FieldDescription>
+              </Field>
             </FieldGroup>
           </form>
           <Separator />
