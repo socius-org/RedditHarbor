@@ -147,7 +147,7 @@ function ProjectCard({ project }: ProjectCardProps) {
       <DropdownMenu>
         <Card
           render={<Link href={`/dashboard/project/${project.id}`} />}
-          className="h-full outline-none focus-visible:ring-3 focus-visible:ring-ring/50 hover:ring-3 hover:ring-ring/50"
+          className="focus-visible:ring-ring/50 hover:ring-ring/50 h-full outline-none hover:ring-3 focus-visible:ring-3"
         >
           <CardHeader>
             <CardTitle>{title}</CardTitle>

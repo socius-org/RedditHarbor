@@ -91,7 +91,7 @@ function ConnectionTestSection({ formRef }: ConnectionTestSectionProps) {
 
   return (
     <>
-      <h3 className="text-sm font-semibold pb-1">Test connections</h3>
+      <h3 className="pb-1 text-sm font-semibold">Test connections</h3>
       <div className="flex flex-wrap gap-2">
         {connectionTestServices.map(({ id, label }) => (
           <Button
