@@ -15,7 +15,6 @@ import {
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { useUser } from '@clerk/clerk-react';
 import { CircleAlert, CircleCheck } from 'lucide-react';
-import Stack from '@mui/material/Stack';
 import useForkRef from '@mui/utils/useForkRef';
 import { KeyRound } from 'lucide-react';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
@@ -93,7 +92,7 @@ function ConnectionTestSection({ formRef }: ConnectionTestSectionProps) {
   return (
     <>
       <h3 className="text-sm font-semibold pb-1">Test connections</h3>
-      <Stack direction="row" spacing={1} flexWrap="wrap">
+      <div className="flex flex-wrap gap-2">
         {connectionTestServices.map(({ id, label }) => (
           <Button
             key={id}
@@ -107,7 +106,7 @@ function ConnectionTestSection({ formRef }: ConnectionTestSectionProps) {
             {label}
           </Button>
         ))}
-      </Stack>
+      </div>
       {connectionTestState && (
         <Alert variant={connectionTestState.success ? 'success' : 'destructive'}>
           {connectionTestState.success ? <CircleCheck /> : <CircleAlert />}
@@ -167,7 +166,7 @@ function ApiKeysDialogContent({
         <DialogTitle>API keys</DialogTitle>
       </DialogHeader>
       <DialogBody>
-        <Stack spacing={1}>
+        <div className="flex flex-col gap-2">
           <DialogDescription>
             Configure API keys for document generation. Keys are encrypted with your passkey and
             stored securely on your device.
@@ -262,7 +261,7 @@ function ApiKeysDialogContent({
           </form>
           <Separator />
           <ConnectionTestSection formRef={formRef} />
-        </Stack>
+        </div>
       </DialogBody>
       <DialogFooter>
         <DialogClose disabled={isPending} render={<Button variant="outline" />}>
