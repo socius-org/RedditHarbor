@@ -19,6 +19,8 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
+import { Field, FieldDescription, FieldError, FieldLabel } from '#app/components/ui/field.tsx';
+import { Input } from '#app/components/ui/input.tsx';
 import {
   Dialog,
   DialogBody,
@@ -201,21 +203,27 @@ function ProjectDialogContent({
               });
             }}
           >
-            <TextField
-              required
-              name={'title' satisfies keyof ProjectInput}
-              defaultValue={initialProject.title}
-              label="Project title"
-              placeholder="Political Discourse Analysis 2024"
-              error={!!state?.errors.fieldErrors.title?.length}
-              helperText={
-                state?.errors.fieldErrors.title?.[0] ??
-                'Choose a descriptive title for your Reddit research project'
-              }
-              margin="dense"
-              size="small"
-              fullWidth
-            />
+            <Field required data-invalid={!!state?.errors.fieldErrors.title?.length}>
+              <FieldLabel>Project title</FieldLabel>
+              <Input
+                key={initialProject.title}
+                name={'title' satisfies keyof ProjectInput}
+                defaultValue={initialProject.title}
+                placeholder="Political Discourse Analysis 2024"
+                aria-invalid={!!state?.errors.fieldErrors.title?.length}
+              />
+              {state?.errors.fieldErrors.title?.length ? (
+                <FieldError
+                  errors={state.errors.fieldErrors.title.map((message) => ({
+                    message,
+                  }))}
+                />
+              ) : (
+                <FieldDescription>
+                  Choose a descriptive title for your Reddit research project
+                </FieldDescription>
+              )}
+            </Field>
             <TextField
               required
               multiline
@@ -382,30 +390,39 @@ function ProjectDialogContent({
               </FormHelperText>
             </FormControl>
             <div className="flex gap-4">
-              <TextField
+              <Field
                 required
-                name={'principalInvestigator' satisfies keyof ProjectInput}
-                defaultValue={initialProject.principalInvestigator}
-                label="Principal investigator"
-                placeholder="Full name"
-                error={!!state?.errors.fieldErrors.principalInvestigator?.length}
-                helperText={state?.errors.fieldErrors.principalInvestigator?.[0]}
-                margin="dense"
-                size="small"
-                fullWidth
-              />
-              <TextField
-                required
-                name={'institution' satisfies keyof ProjectInput}
-                defaultValue={initialProject.institution}
-                label="Institution"
-                placeholder="University or organisation"
-                error={!!state?.errors.fieldErrors.institution?.length}
-                helperText={state?.errors.fieldErrors.institution?.[0]}
-                margin="dense"
-                size="small"
-                fullWidth
-              />
+                data-invalid={!!state?.errors.fieldErrors.principalInvestigator?.length}
+              >
+                <FieldLabel>Principal investigator</FieldLabel>
+                <Input
+                  key={initialProject.principalInvestigator}
+                  name={'principalInvestigator' satisfies keyof ProjectInput}
+                  defaultValue={initialProject.principalInvestigator}
+                  placeholder="Full name"
+                  aria-invalid={!!state?.errors.fieldErrors.principalInvestigator?.length}
+                />
+                <FieldError
+                  errors={state?.errors.fieldErrors.principalInvestigator?.map((message) => ({
+                    message,
+                  }))}
+                />
+              </Field>
+              <Field required data-invalid={!!state?.errors.fieldErrors.institution?.length}>
+                <FieldLabel>Institution</FieldLabel>
+                <Input
+                  key={initialProject.institution}
+                  name={'institution' satisfies keyof ProjectInput}
+                  defaultValue={initialProject.institution}
+                  placeholder="University or organisation"
+                  aria-invalid={!!state?.errors.fieldErrors.institution?.length}
+                />
+                <FieldError
+                  errors={state?.errors.fieldErrors.institution?.map((message) => ({
+                    message,
+                  }))}
+                />
+              </Field>
             </div>
           </form>
         </div>
