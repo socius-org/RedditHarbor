@@ -7,10 +7,14 @@ import { cn } from '#app/utils/cn.ts';
 import { Label } from '#app/components/ui/label.tsx';
 import { Separator } from '#app/components/ui/separator.tsx';
 
-const FieldIdContext = createContext<string | undefined>(undefined);
+type FieldContextValue = {
+  id: string;
+};
 
-export function useFieldId() {
-  return use(FieldIdContext);
+const FieldContext = createContext<FieldContextValue | undefined>(undefined);
+
+export function useFieldContext() {
+  return use(FieldContext);
 }
 
 function FieldSet({ className, ...props }: React.ComponentProps<'fieldset'>) {
@@ -80,7 +84,7 @@ function Field({
   const id = useId();
 
   return (
-    <FieldIdContext value={id}>
+    <FieldContext value={{ id }}>
       <div
         role="group"
         data-slot="field"
@@ -88,7 +92,7 @@ function Field({
         className={cn(fieldVariants({ orientation }), className)}
         {...props}
       />
-    </FieldIdContext>
+    </FieldContext>
   );
 }
 
@@ -103,12 +107,12 @@ function FieldContent({ className, ...props }: React.ComponentProps<'div'>) {
 }
 
 function FieldLabel({ className, htmlFor, ...props }: React.ComponentProps<typeof Label>) {
-  const fieldId = useFieldId();
+  const fieldContext = useFieldContext();
 
   return (
     <Label
       data-slot="field-label"
-      htmlFor={htmlFor ?? fieldId}
+      htmlFor={htmlFor ?? fieldContext?.id}
       className={cn(
         'has-data-checked:bg-primary/5 has-data-checked:border-primary dark:has-data-checked:bg-primary/10 gap-2 group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border [&>*]:data-[slot=field]:p-2.5 group/field-label peer/field-label flex w-fit leading-snug',
         'has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col',
