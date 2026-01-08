@@ -9,6 +9,7 @@ import { Separator } from '#app/components/ui/separator.tsx';
 
 type FieldContextValue = {
   id: string;
+  required: boolean;
 };
 
 const FieldContext = createContext<FieldContextValue | undefined>(undefined);
@@ -79,12 +80,13 @@ const fieldVariants = cva('data-[invalid=true]:text-destructive gap-2 group/fiel
 function Field({
   className,
   orientation = 'vertical',
+  required = false,
   ...props
-}: React.ComponentProps<'div'> & VariantProps<typeof fieldVariants>) {
+}: React.ComponentProps<'div'> & VariantProps<typeof fieldVariants> & { required?: boolean }) {
   const id = useId();
 
   return (
-    <FieldContext value={{ id }}>
+    <FieldContext value={{ id, required }}>
       <div
         role="group"
         data-slot="field"
@@ -106,7 +108,12 @@ function FieldContent({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function FieldLabel({ className, htmlFor, ...props }: React.ComponentProps<typeof Label>) {
+function FieldLabel({
+  children,
+  className,
+  htmlFor,
+  ...props
+}: React.ComponentProps<typeof Label>) {
   const fieldContext = useFieldContext();
 
   return (
@@ -119,7 +126,18 @@ function FieldLabel({ className, htmlFor, ...props }: React.ComponentProps<typeo
         className,
       )}
       {...props}
-    />
+    >
+      {fieldContext?.required ? (
+        <>
+          {children}
+          <span className="text-destructive" aria-hidden>
+            *
+          </span>
+        </>
+      ) : (
+        children
+      )}
+    </Label>
   );
 }
 
