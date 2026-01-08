@@ -16,7 +16,6 @@ import FormHelperText from '@mui/material/FormHelperText';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
@@ -179,7 +178,7 @@ function ProjectDialogContent({
   return (
     <>
       <DialogBody>
-        <Stack spacing={1}>
+        <div className="flex flex-col gap-2">
           {infoMessage && (
             <Alert>
               <Info />
@@ -248,7 +247,7 @@ function ProjectDialogContent({
               size="small"
               fullWidth
             />
-            <Stack direction="row" spacing={2}>
+            <div className="flex gap-4">
               <FormControl
                 required
                 error={!!state?.errors.fieldErrors.estimatedDataVolume?.length}
@@ -314,7 +313,7 @@ function ProjectDialogContent({
                   <FormHelperText>{state.errors.fieldErrors.collectionPeriod[0]}</FormHelperText>
                 ) : null}
               </FormControl>
-            </Stack>
+            </div>
             <Autocomplete
               multiple
               freeSolo
@@ -382,7 +381,7 @@ function ProjectDialogContent({
                   'This helps determine privacy safeguards needed'}
               </FormHelperText>
             </FormControl>
-            <Stack direction="row" spacing={2}>
+            <div className="flex gap-4">
               <TextField
                 required
                 name={'principalInvestigator' satisfies keyof ProjectInput}
@@ -407,9 +406,9 @@ function ProjectDialogContent({
                 size="small"
                 fullWidth
               />
-            </Stack>
+            </div>
           </form>
-        </Stack>
+        </div>
       </DialogBody>
       <DialogFooter>
         <DialogClose disabled={isPending} render={<Button variant="outline" />}>
