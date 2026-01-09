@@ -246,9 +246,18 @@ function ProjectDialogContent({
                 />
                 {state?.errors.fieldErrors.researchObjective?.length ? (
                   <FieldError
+                    className="flex justify-between"
                     errors={state.errors.fieldErrors.researchObjective.map((message) => ({
                       message,
                     }))}
+                    render={(props) => (
+                      <div {...props}>
+                        {props.children}
+                        <span>
+                          {researchObjectiveLength} / {RESEARCH_OBJECTIVE_MAX_LENGTH}
+                        </span>
+                      </div>
+                    )}
                   />
                 ) : (
                   <FieldDescription className="flex justify-between">
