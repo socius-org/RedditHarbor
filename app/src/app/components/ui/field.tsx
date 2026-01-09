@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, use, useId } from 'react';
+import { useRender } from '@base-ui/react/use-render';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '#app/utils/cn.ts';
@@ -203,8 +204,9 @@ function FieldError({
   className,
   children,
   errors,
+  render,
   ...props
-}: React.ComponentProps<'div'> & {
+}: useRender.ComponentProps<'div'> & {
   errors?: ({ message?: string } | undefined)[];
 }) {
   const content = (() => {
@@ -229,20 +231,23 @@ function FieldError({
     );
   })();
 
+  const element = useRender({
+    defaultTagName: 'div',
+    render,
+    props: {
+      ...props,
+      role: 'alert',
+      'data-slot': 'field-error',
+      className: cn('text-destructive text-sm font-normal', className),
+      children: content,
+    },
+  });
+
   if (!content) {
     return null;
   }
 
-  return (
-    <div
-      role="alert"
-      data-slot="field-error"
-      className={cn('text-destructive text-sm font-normal', className)}
-      {...props}
-    >
-      {content}
-    </div>
-  );
+  return element;
 }
 
 export {
