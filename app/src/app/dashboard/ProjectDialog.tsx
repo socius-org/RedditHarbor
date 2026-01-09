@@ -245,7 +245,7 @@ function ProjectDialogContent({
                 />
               ) : (
                 <FieldDescription className="flex justify-between">
-                  <span>What do you aim to discover or understand through this research?</span>
+                  What do you aim to discover or understand through this research?
                   <span>
                     {researchObjectiveLength} / {RESEARCH_OBJECTIVE_MAX_LENGTH}
                   </span>
