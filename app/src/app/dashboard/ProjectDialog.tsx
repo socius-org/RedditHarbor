@@ -28,7 +28,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '#app/components/ui/dialog.tsx';
-import { Field, FieldDescription, FieldError, FieldLabel } from '#app/components/ui/field.tsx';
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from '#app/components/ui/field.tsx';
 import { Input } from '#app/components/ui/input.tsx';
 import { Textarea } from '#app/components/ui/textarea.tsx';
 import {
@@ -204,221 +210,226 @@ function ProjectDialogContent({
               });
             }}
           >
-            <Field required data-invalid={!!state?.errors.fieldErrors.title?.length}>
-              <FieldLabel>Project title</FieldLabel>
-              <Input
-                name={'title' satisfies keyof ProjectInput}
-                defaultValue={initialProject.title}
-                placeholder="Political Discourse Analysis 2024"
-                aria-invalid={!!state?.errors.fieldErrors.title?.length}
-              />
-              {state?.errors.fieldErrors.title?.length ? (
-                <FieldError
-                  errors={state.errors.fieldErrors.title.map((message) => ({
-                    message,
-                  }))}
+            <FieldGroup>
+              <Field required data-invalid={!!state?.errors.fieldErrors.title?.length}>
+                <FieldLabel>Project title</FieldLabel>
+                <Input
+                  name={'title' satisfies keyof ProjectInput}
+                  defaultValue={initialProject.title}
+                  placeholder="Political Discourse Analysis 2024"
+                  aria-invalid={!!state?.errors.fieldErrors.title?.length}
                 />
-              ) : (
-                <FieldDescription>
-                  Choose a descriptive title for your Reddit research project
-                </FieldDescription>
-              )}
-            </Field>
-            <Field required data-invalid={!!state?.errors.fieldErrors.researchObjective?.length}>
-              <FieldLabel>Research objective</FieldLabel>
-              <Textarea
-                name={'researchObjective' satisfies keyof ProjectInput}
-                defaultValue={initialProject.researchObjective}
-                placeholder="Describe the main research question or hypothesis you want to investigate..."
-                maxLength={RESEARCH_OBJECTIVE_MAX_LENGTH}
-                rows={3}
-                aria-invalid={!!state?.errors.fieldErrors.researchObjective?.length}
-                onChange={(event) => {
-                  setResearchObjectiveLength(event.currentTarget.value.length);
-                }}
-              />
-              {state?.errors.fieldErrors.researchObjective?.length ? (
-                <FieldError
-                  errors={state.errors.fieldErrors.researchObjective.map((message) => ({
-                    message,
-                  }))}
+                {state?.errors.fieldErrors.title?.length ? (
+                  <FieldError
+                    errors={state.errors.fieldErrors.title.map((message) => ({
+                      message,
+                    }))}
+                  />
+                ) : (
+                  <FieldDescription>
+                    Choose a descriptive title for your Reddit research project
+                  </FieldDescription>
+                )}
+              </Field>
+              <Field required data-invalid={!!state?.errors.fieldErrors.researchObjective?.length}>
+                <FieldLabel>Research objective</FieldLabel>
+                <Textarea
+                  name={'researchObjective' satisfies keyof ProjectInput}
+                  defaultValue={initialProject.researchObjective}
+                  placeholder="Describe the main research question or hypothesis you want to investigate..."
+                  maxLength={RESEARCH_OBJECTIVE_MAX_LENGTH}
+                  rows={3}
+                  aria-invalid={!!state?.errors.fieldErrors.researchObjective?.length}
+                  onChange={(event) => {
+                    setResearchObjectiveLength(event.currentTarget.value.length);
+                  }}
                 />
-              ) : (
-                <FieldDescription className="flex justify-between">
-                  What do you aim to discover or understand through this research?
-                  <span>
-                    {researchObjectiveLength} / {RESEARCH_OBJECTIVE_MAX_LENGTH}
-                  </span>
-                </FieldDescription>
-              )}
-            </Field>
-            <div className="flex gap-4">
-              <FormControl
-                required
-                error={!!state?.errors.fieldErrors.estimatedDataVolume?.length}
-                margin="dense"
-                size="small"
-                fullWidth
-              >
-                <InputLabel id={dataVolumeLabelId}>Estimated data volume</InputLabel>
-                <Select
-                  labelId={dataVolumeLabelId}
-                  label="Estimated data volume"
-                  value={
-                    matchingEstimatedDataVolume ? JSON.stringify(matchingEstimatedDataVolume) : ''
-                  }
-                  onChange={(event) => {
-                    setEstimatedDataVolume(
-                      estimatedDataVolumeSchema.safeParse(JSON.parse(event.target.value)).data ??
-                        null,
-                    );
-                  }}
-                >
-                  {ESTIMATED_DATA_VOLUME_OPTIONS.map((option) => {
-                    const stringified = JSON.stringify(option);
-                    return (
-                      <MenuItem key={stringified} value={stringified}>
-                        {formatDataVolume(option)} posts
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                {state?.errors.fieldErrors.estimatedDataVolume?.[0] ? (
-                  <FormHelperText>{state.errors.fieldErrors.estimatedDataVolume[0]}</FormHelperText>
-                ) : null}
-              </FormControl>
-              <FormControl
-                required
-                error={!!state?.errors.fieldErrors.collectionPeriod?.length}
-                margin="dense"
-                size="small"
-                fullWidth
-              >
-                <InputLabel id={collectionPeriodLabelId}>Collection period</InputLabel>
-                <Select
-                  labelId={collectionPeriodLabelId}
-                  label="Collection period"
-                  value={matchingCollectionPeriod ? JSON.stringify(matchingCollectionPeriod) : ''}
-                  onChange={(event) => {
-                    setCollectionPeriod(
-                      collectionPeriodSchema.safeParse(JSON.parse(event.target.value)).data ?? null,
-                    );
-                  }}
-                >
-                  {COLLECTION_PERIOD_OPTIONS.map((option) => {
-                    const stringified = JSON.stringify(option);
-                    return (
-                      <MenuItem key={stringified} value={stringified}>
-                        {formatCollectionPeriod(option)}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                {state?.errors.fieldErrors.collectionPeriod?.[0] ? (
-                  <FormHelperText>{state.errors.fieldErrors.collectionPeriod[0]}</FormHelperText>
-                ) : null}
-              </FormControl>
-            </div>
-            <Autocomplete
-              multiple
-              freeSolo
-              options={[]}
-              value={subreddits}
-              isOptionEqualToValue={(option, value) => normaliseSubreddit(option) === value}
-              onChange={(_, values) => {
-                const next = values.map(normaliseSubreddit).filter(Boolean);
-                setSubreddits((prev) => (isEqual(prev, next) ? prev : next));
-              }}
-              renderValue={(value, getItemProps) =>
-                value.map((option, index) => {
-                  const { key, ...itemProps } = getItemProps({ index });
-                  return <Chip key={key} {...itemProps} label={`r/${option}`} size="small" />;
-                })
-              }
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  // https://github.com/mui/material-ui/issues/21663#issuecomment-732298594
+                {state?.errors.fieldErrors.researchObjective?.length ? (
+                  <FieldError
+                    errors={state.errors.fieldErrors.researchObjective.map((message) => ({
+                      message,
+                    }))}
+                  />
+                ) : (
+                  <FieldDescription className="flex justify-between">
+                    What do you aim to discover or understand through this research?
+                    <span>
+                      {researchObjectiveLength} / {RESEARCH_OBJECTIVE_MAX_LENGTH}
+                    </span>
+                  </FieldDescription>
+                )}
+              </Field>
+              <div className="flex gap-4">
+                <FormControl
                   required
-                  label="Target subreddits"
-                  placeholder="politics"
-                  error={!!state?.errors.fieldErrors.subreddits?.length}
-                  helperText={
-                    state?.errors.fieldErrors.subreddits?.[0] ?? (
-                      <>
-                        Add at least one (press <kbd>Enter</kbd> to add). You can refine this list
-                        during the Extract phase.
-                      </>
-                    )
-                  }
-                  slotProps={{
-                    htmlInput: { ...params.inputProps, required: subreddits.length === 0 },
-                  }}
+                  error={!!state?.errors.fieldErrors.estimatedDataVolume?.length}
                   margin="dense"
                   size="small"
-                />
-              )}
-            />
-            <FormControl
-              required
-              error={!!state?.errors.fieldErrors.aiMlModelPlan?.length}
-              margin="dense"
-              size="small"
-              fullWidth
-            >
-              <InputLabel id={aiMlModelPlanLabelId}>AI/ML model plans</InputLabel>
-              <Select
-                labelId={aiMlModelPlanLabelId}
-                label="AI/ML model plans"
-                value={aiMlModelPlan ?? ''}
-                onChange={(event) => {
-                  setAiMlModelPlan(event.target.value);
+                  fullWidth
+                >
+                  <InputLabel id={dataVolumeLabelId}>Estimated data volume</InputLabel>
+                  <Select
+                    labelId={dataVolumeLabelId}
+                    label="Estimated data volume"
+                    value={
+                      matchingEstimatedDataVolume ? JSON.stringify(matchingEstimatedDataVolume) : ''
+                    }
+                    onChange={(event) => {
+                      setEstimatedDataVolume(
+                        estimatedDataVolumeSchema.safeParse(JSON.parse(event.target.value)).data ??
+                          null,
+                      );
+                    }}
+                  >
+                    {ESTIMATED_DATA_VOLUME_OPTIONS.map((option) => {
+                      const stringified = JSON.stringify(option);
+                      return (
+                        <MenuItem key={stringified} value={stringified}>
+                          {formatDataVolume(option)} posts
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                  {state?.errors.fieldErrors.estimatedDataVolume?.[0] ? (
+                    <FormHelperText>
+                      {state.errors.fieldErrors.estimatedDataVolume[0]}
+                    </FormHelperText>
+                  ) : null}
+                </FormControl>
+                <FormControl
+                  required
+                  error={!!state?.errors.fieldErrors.collectionPeriod?.length}
+                  margin="dense"
+                  size="small"
+                  fullWidth
+                >
+                  <InputLabel id={collectionPeriodLabelId}>Collection period</InputLabel>
+                  <Select
+                    labelId={collectionPeriodLabelId}
+                    label="Collection period"
+                    value={matchingCollectionPeriod ? JSON.stringify(matchingCollectionPeriod) : ''}
+                    onChange={(event) => {
+                      setCollectionPeriod(
+                        collectionPeriodSchema.safeParse(JSON.parse(event.target.value)).data ??
+                          null,
+                      );
+                    }}
+                  >
+                    {COLLECTION_PERIOD_OPTIONS.map((option) => {
+                      const stringified = JSON.stringify(option);
+                      return (
+                        <MenuItem key={stringified} value={stringified}>
+                          {formatCollectionPeriod(option)}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                  {state?.errors.fieldErrors.collectionPeriod?.[0] ? (
+                    <FormHelperText>{state.errors.fieldErrors.collectionPeriod[0]}</FormHelperText>
+                  ) : null}
+                </FormControl>
+              </div>
+              <Autocomplete
+                multiple
+                freeSolo
+                options={[]}
+                value={subreddits}
+                isOptionEqualToValue={(option, value) => normaliseSubreddit(option) === value}
+                onChange={(_, values) => {
+                  const next = values.map(normaliseSubreddit).filter(Boolean);
+                  setSubreddits((prev) => (isEqual(prev, next) ? prev : next));
                 }}
-              >
-                {AI_ML_MODEL_PLAN_OPTIONS.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {AI_ML_MODEL_PLAN_LABELS[option]}
-                  </MenuItem>
-                ))}
-              </Select>
-              <FormHelperText>
-                {state?.errors.fieldErrors.aiMlModelPlan?.[0] ??
-                  'This helps determine privacy safeguards needed'}
-              </FormHelperText>
-            </FormControl>
-            <div className="flex gap-4">
-              <Field
+                renderValue={(value, getItemProps) =>
+                  value.map((option, index) => {
+                    const { key, ...itemProps } = getItemProps({ index });
+                    return <Chip key={key} {...itemProps} label={`r/${option}`} size="small" />;
+                  })
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    // https://github.com/mui/material-ui/issues/21663#issuecomment-732298594
+                    required
+                    label="Target subreddits"
+                    placeholder="politics"
+                    error={!!state?.errors.fieldErrors.subreddits?.length}
+                    helperText={
+                      state?.errors.fieldErrors.subreddits?.[0] ?? (
+                        <>
+                          Add at least one (press <kbd>Enter</kbd> to add). You can refine this list
+                          during the Extract phase.
+                        </>
+                      )
+                    }
+                    slotProps={{
+                      htmlInput: { ...params.inputProps, required: subreddits.length === 0 },
+                    }}
+                    margin="dense"
+                    size="small"
+                  />
+                )}
+              />
+              <FormControl
                 required
-                data-invalid={!!state?.errors.fieldErrors.principalInvestigator?.length}
+                error={!!state?.errors.fieldErrors.aiMlModelPlan?.length}
+                margin="dense"
+                size="small"
+                fullWidth
               >
-                <FieldLabel>Principal investigator</FieldLabel>
-                <Input
-                  name={'principalInvestigator' satisfies keyof ProjectInput}
-                  defaultValue={initialProject.principalInvestigator}
-                  placeholder="Full name"
-                  aria-invalid={!!state?.errors.fieldErrors.principalInvestigator?.length}
-                />
-                <FieldError
-                  errors={state?.errors.fieldErrors.principalInvestigator?.map((message) => ({
-                    message,
-                  }))}
-                />
-              </Field>
-              <Field required data-invalid={!!state?.errors.fieldErrors.institution?.length}>
-                <FieldLabel>Institution</FieldLabel>
-                <Input
-                  name={'institution' satisfies keyof ProjectInput}
-                  defaultValue={initialProject.institution}
-                  placeholder="University or organisation"
-                  aria-invalid={!!state?.errors.fieldErrors.institution?.length}
-                />
-                <FieldError
-                  errors={state?.errors.fieldErrors.institution?.map((message) => ({
-                    message,
-                  }))}
-                />
-              </Field>
-            </div>
+                <InputLabel id={aiMlModelPlanLabelId}>AI/ML model plans</InputLabel>
+                <Select
+                  labelId={aiMlModelPlanLabelId}
+                  label="AI/ML model plans"
+                  value={aiMlModelPlan ?? ''}
+                  onChange={(event) => {
+                    setAiMlModelPlan(event.target.value);
+                  }}
+                >
+                  {AI_ML_MODEL_PLAN_OPTIONS.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {AI_ML_MODEL_PLAN_LABELS[option]}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>
+                  {state?.errors.fieldErrors.aiMlModelPlan?.[0] ??
+                    'This helps determine privacy safeguards needed'}
+                </FormHelperText>
+              </FormControl>
+              <div className="flex gap-4">
+                <Field
+                  required
+                  data-invalid={!!state?.errors.fieldErrors.principalInvestigator?.length}
+                >
+                  <FieldLabel>Principal investigator</FieldLabel>
+                  <Input
+                    name={'principalInvestigator' satisfies keyof ProjectInput}
+                    defaultValue={initialProject.principalInvestigator}
+                    placeholder="Full name"
+                    aria-invalid={!!state?.errors.fieldErrors.principalInvestigator?.length}
+                  />
+                  <FieldError
+                    errors={state?.errors.fieldErrors.principalInvestigator?.map((message) => ({
+                      message,
+                    }))}
+                  />
+                </Field>
+                <Field required data-invalid={!!state?.errors.fieldErrors.institution?.length}>
+                  <FieldLabel>Institution</FieldLabel>
+                  <Input
+                    name={'institution' satisfies keyof ProjectInput}
+                    defaultValue={initialProject.institution}
+                    placeholder="University or organisation"
+                    aria-invalid={!!state?.errors.fieldErrors.institution?.length}
+                  />
+                  <FieldError
+                    errors={state?.errors.fieldErrors.institution?.map((message) => ({
+                      message,
+                    }))}
+                  />
+                </Field>
+              </div>
+            </FieldGroup>
           </form>
         </div>
       </DialogBody>
