@@ -19,8 +19,6 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
-import { Field, FieldDescription, FieldError, FieldLabel } from '#app/components/ui/field.tsx';
-import { Input } from '#app/components/ui/input.tsx';
 import {
   Dialog,
   DialogBody,
@@ -30,6 +28,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '#app/components/ui/dialog.tsx';
+import { Field, FieldDescription, FieldError, FieldLabel } from '#app/components/ui/field.tsx';
+import { Input } from '#app/components/ui/input.tsx';
+import { Textarea } from '#app/components/ui/textarea.tsx';
 import {
   AI_ML_MODEL_PLAN_OPTIONS,
   collectionPeriodSchema,
@@ -223,37 +224,34 @@ function ProjectDialogContent({
                 </FieldDescription>
               )}
             </Field>
-            <TextField
-              required
-              multiline
-              rows={3}
-              name={'researchObjective' satisfies keyof ProjectInput}
-              defaultValue={initialProject.researchObjective}
-              label="Research objective"
-              placeholder="Describe the main research question or hypothesis you want to investigate..."
-              error={!!state?.errors.fieldErrors.researchObjective?.length}
-              helperText={
-                <>
-                  <span>
-                    {state?.errors.fieldErrors.researchObjective?.[0] ??
-                      'What do you aim to discover or understand through this research?'}
-                  </span>
+            <Field required data-invalid={!!state?.errors.fieldErrors.researchObjective?.length}>
+              <FieldLabel>Research objective</FieldLabel>
+              <Textarea
+                name={'researchObjective' satisfies keyof ProjectInput}
+                defaultValue={initialProject.researchObjective}
+                placeholder="Describe the main research question or hypothesis you want to investigate..."
+                maxLength={RESEARCH_OBJECTIVE_MAX_LENGTH}
+                rows={3}
+                aria-invalid={!!state?.errors.fieldErrors.researchObjective?.length}
+                onChange={(event) => {
+                  setResearchObjectiveLength(event.currentTarget.value.length);
+                }}
+              />
+              {state?.errors.fieldErrors.researchObjective?.length ? (
+                <FieldError
+                  errors={state.errors.fieldErrors.researchObjective.map((message) => ({
+                    message,
+                  }))}
+                />
+              ) : (
+                <FieldDescription className="flex justify-between">
+                  <span>What do you aim to discover or understand through this research?</span>
                   <span>
                     {researchObjectiveLength} / {RESEARCH_OBJECTIVE_MAX_LENGTH}
                   </span>
-                </>
-              }
-              slotProps={{
-                formHelperText: { sx: { display: 'flex', justifyContent: 'space-between' } },
-                htmlInput: { maxLength: RESEARCH_OBJECTIVE_MAX_LENGTH },
-              }}
-              onChange={(event) => {
-                setResearchObjectiveLength(event.currentTarget.value.length);
-              }}
-              margin="dense"
-              size="small"
-              fullWidth
-            />
+                </FieldDescription>
+              )}
+            </Field>
             <div className="flex gap-4">
               <FormControl
                 required
