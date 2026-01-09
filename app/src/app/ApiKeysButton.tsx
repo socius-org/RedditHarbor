@@ -213,7 +213,6 @@ function ApiKeysDialogContent({
               <Field>
                 <FieldLabel>Reddit client ID</FieldLabel>
                 <Input
-                  key={apiKeys.redditClientId}
                   name={'redditClientId' satisfies keyof ApiKeys}
                   defaultValue={apiKeys.redditClientId}
                 />
@@ -229,7 +228,6 @@ function ApiKeysDialogContent({
               <Field data-invalid={!!state?.errors.fieldErrors.supabaseProjectUrl?.length}>
                 <FieldLabel>Supabase project URL</FieldLabel>
                 <Input
-                  key={apiKeys.supabaseProjectUrl}
                   name={'supabaseProjectUrl' satisfies keyof ApiKeys}
                   placeholder="https://your-project.supabase.co"
                   type="url"

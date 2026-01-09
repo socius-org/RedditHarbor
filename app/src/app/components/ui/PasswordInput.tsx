@@ -8,21 +8,11 @@ import {
   InputGroupInput,
 } from '#app/components/ui/input-group.tsx';
 
-export function PasswordInput({
-  defaultValue,
-  ...rest
-}: Omit<ComponentProps<'input'>, 'type'> & {
-  defaultValue?: string;
-}) {
+export function PasswordInput(props: Omit<ComponentProps<'input'>, 'type'>) {
   const [isVisible, setIsVisible] = useState(false);
   return (
     <InputGroup>
-      <InputGroupInput
-        key={defaultValue}
-        defaultValue={defaultValue}
-        type={isVisible ? 'text' : 'password'}
-        {...rest}
-      />
+      <InputGroupInput {...props} type={isVisible ? 'text' : 'password'} />
       <InputGroupAddon align="inline-end">
         <InputGroupButton
           size="icon-xs"

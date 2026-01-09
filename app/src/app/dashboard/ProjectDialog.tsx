@@ -206,7 +206,6 @@ function ProjectDialogContent({
             <Field required data-invalid={!!state?.errors.fieldErrors.title?.length}>
               <FieldLabel>Project title</FieldLabel>
               <Input
-                key={initialProject.title}
                 name={'title' satisfies keyof ProjectInput}
                 defaultValue={initialProject.title}
                 placeholder="Political Discourse Analysis 2024"
@@ -396,7 +395,6 @@ function ProjectDialogContent({
               >
                 <FieldLabel>Principal investigator</FieldLabel>
                 <Input
-                  key={initialProject.principalInvestigator}
                   name={'principalInvestigator' satisfies keyof ProjectInput}
                   defaultValue={initialProject.principalInvestigator}
                   placeholder="Full name"
@@ -411,7 +409,6 @@ function ProjectDialogContent({
               <Field required data-invalid={!!state?.errors.fieldErrors.institution?.length}>
                 <FieldLabel>Institution</FieldLabel>
                 <Input
-                  key={initialProject.institution}
                   name={'institution' satisfies keyof ProjectInput}
                   defaultValue={initialProject.institution}
                   placeholder="University or organisation"
