@@ -15,7 +15,7 @@ import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+import MuiSelect from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
@@ -277,7 +277,7 @@ function ProjectDialogContent({
                   fullWidth
                 >
                   <InputLabel id={dataVolumeLabelId}>Estimated data volume</InputLabel>
-                  <Select
+                  <MuiSelect
                     labelId={dataVolumeLabelId}
                     label="Estimated data volume"
                     value={
@@ -298,7 +298,7 @@ function ProjectDialogContent({
                         </MenuItem>
                       );
                     })}
-                  </Select>
+                  </MuiSelect>
                   {state?.errors.fieldErrors.estimatedDataVolume?.[0] ? (
                     <FormHelperText>
                       {state.errors.fieldErrors.estimatedDataVolume[0]}
@@ -313,7 +313,7 @@ function ProjectDialogContent({
                   fullWidth
                 >
                   <InputLabel id={collectionPeriodLabelId}>Collection period</InputLabel>
-                  <Select
+                  <MuiSelect
                     labelId={collectionPeriodLabelId}
                     label="Collection period"
                     value={matchingCollectionPeriod ? JSON.stringify(matchingCollectionPeriod) : ''}
@@ -332,7 +332,7 @@ function ProjectDialogContent({
                         </MenuItem>
                       );
                     })}
-                  </Select>
+                  </MuiSelect>
                   {state?.errors.fieldErrors.collectionPeriod?.[0] ? (
                     <FormHelperText>{state.errors.fieldErrors.collectionPeriod[0]}</FormHelperText>
                   ) : null}
@@ -386,7 +386,7 @@ function ProjectDialogContent({
                 fullWidth
               >
                 <InputLabel id={aiMlModelPlanLabelId}>AI/ML model plans</InputLabel>
-                <Select
+                <MuiSelect
                   labelId={aiMlModelPlanLabelId}
                   label="AI/ML model plans"
                   value={aiMlModelPlan ?? ''}
@@ -399,7 +399,7 @@ function ProjectDialogContent({
                       {AI_ML_MODEL_PLAN_LABELS[option]}
                     </MenuItem>
                   ))}
-                </Select>
+                </MuiSelect>
                 <FormHelperText>
                   {state?.errors.fieldErrors.aiMlModelPlan?.[0] ??
                     'This helps determine privacy safeguards needed'}
