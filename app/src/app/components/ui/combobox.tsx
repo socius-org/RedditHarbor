@@ -12,9 +12,14 @@ const ComboboxValue = ComboboxPrimitive.Value;
 
 const ComboboxList = ComboboxPrimitive.List;
 
-function ComboboxChips({ className, ...props }: ComboboxPrimitive.Chips.Props) {
+function ComboboxChips({
+  className,
+  ref,
+  ...props
+}: ComboboxPrimitive.Chips.Props & React.RefAttributes<HTMLDivElement>) {
   return (
     <ComboboxPrimitive.Chips
+      ref={ref}
       data-slot="combobox-chips"
       className={cn(
         'border-input focus-within:border-ring focus-within:ring-ring/50 flex min-w-0 flex-wrap items-center gap-0.5 rounded-md border bg-transparent px-1.5 py-1 focus-within:ring-[3px]',
@@ -133,19 +138,6 @@ function ComboboxItemIndicator({
   );
 }
 
-function ComboboxItemText({
-  className,
-  ...props
-}: React.ComponentProps<typeof ComboboxPrimitive.ItemText>) {
-  return (
-    <ComboboxPrimitive.ItemText
-      data-slot="combobox-item-text"
-      className={cn('col-start-2', className)}
-      {...props}
-    />
-  );
-}
-
 export {
   Combobox,
   ComboboxChip,
@@ -156,7 +148,6 @@ export {
   ComboboxInput,
   ComboboxItem,
   ComboboxItemIndicator,
-  ComboboxItemText,
   ComboboxList,
   ComboboxValue,
 };

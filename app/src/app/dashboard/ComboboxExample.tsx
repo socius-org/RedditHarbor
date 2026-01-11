@@ -13,7 +13,6 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxItemIndicator,
-  ComboboxItemText,
   ComboboxList,
   ComboboxValue,
 } from '#app/components/ui/combobox.tsx';
@@ -172,7 +171,7 @@ export function ComboboxExample() {
             ) : (
               <ComboboxItem key={item.id} value={item}>
                 <ComboboxItemIndicator />
-                <ComboboxItemText>{item.value}</ComboboxItemText>
+                <span className="col-start-2">{item.value}</span>
               </ComboboxItem>
             )
           }
