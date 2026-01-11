@@ -12,6 +12,13 @@ import { CircleAlert, Info } from 'lucide-react';
 import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
+import {
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxInput,
+  ComboboxValue,
+} from '#app/components/ui/combobox.tsx';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
 import {
@@ -361,6 +368,27 @@ function ProjectDialogContent({
                   />
                 )}
               />
+              {/* Base UI Combobox example */}
+              <Field>
+                <FieldLabel>Test combobox</FieldLabel>
+                <Combobox multiple defaultValue={['react', 'vue']}>
+                  <ComboboxChips>
+                    <ComboboxValue>
+                      {(values: string[]) => (
+                        <>
+                          {values.map((value) => (
+                            <ComboboxChip key={value}>{value}</ComboboxChip>
+                          ))}
+                          <ComboboxInput placeholder={values.length > 0 ? '' : 'Add tag...'} />
+                        </>
+                      )}
+                    </ComboboxValue>
+                  </ComboboxChips>
+                </Combobox>
+                <FieldDescription>
+                  Test of Base UI Combobox with multiple selection
+                </FieldDescription>
+              </Field>
               <Field required data-invalid={!!state?.errors.fieldErrors.aiMlModelPlan?.length}>
                 <FieldLabel>AI/ML model plans</FieldLabel>
                 <Select
