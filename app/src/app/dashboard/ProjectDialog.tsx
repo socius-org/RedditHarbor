@@ -11,11 +11,6 @@ import isEqual from 'react-fast-compare';
 import { CircleAlert, Info } from 'lucide-react';
 import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import MuiSelect from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
@@ -47,7 +42,6 @@ import {
 import { Textarea } from '#app/components/ui/textarea.tsx';
 import {
   AI_ML_MODEL_PLAN_OPTIONS,
-  collectionPeriodSchema,
   RESEARCH_OBJECTIVE_MAX_LENGTH,
   type AiMlModelPlan,
   type CollectionPeriod,
@@ -138,11 +132,7 @@ const EMPTY_PROJECT: InitialProject = {
 type ProjectDialogContentHandle = { getIsPending: () => boolean };
 
 type ProjectDialogContentProps = {
-  action: (
-    collectionPeriod: CollectionPeriod | null,
-    subreddits: string[],
-    formData: FormData,
-  ) => Promise<ProjectFormState | undefined>;
+  action: (subreddits: string[], formData: FormData) => Promise<ProjectFormState | undefined>;
   initialProject?: InitialProject;
   infoMessage?: string;
   onClose: () => void;
@@ -159,15 +149,13 @@ function ProjectDialogContent({
   submitLabel,
 }: ProjectDialogContentProps) {
   const formId = useId();
-  const collectionPeriodLabelId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(
     initialProject.researchObjective.length,
   );
   const [subreddits, setSubreddits] = useState(initialProject.subreddits);
-  const [collectionPeriod, setCollectionPeriod] = useState(initialProject.collectionPeriod);
 
   async function submitAction(_prevState: ProjectFormState | undefined, formData: FormData) {
-    const result = await actionProp(collectionPeriod, subreddits, formData);
+    const result = await actionProp(subreddits, formData);
     if (!result?.errors) {
       onClose();
     }
@@ -177,10 +165,6 @@ function ProjectDialogContent({
   const [state, action, isPending] = useActionState(submitAction, undefined);
 
   useImperativeHandle(ref, () => ({ getIsPending: () => isPending }), [isPending]);
-
-  const matchingCollectionPeriod = COLLECTION_PERIOD_OPTIONS.find((option) =>
-    isEqual(option, collectionPeriod),
-  );
 
   return (
     <>
@@ -303,38 +287,39 @@ function ProjectDialogContent({
                     }))}
                   />
                 </Field>
-                <FormControl
-                  required
-                  error={!!state?.errors.fieldErrors.collectionPeriod?.length}
-                  margin="dense"
-                  size="small"
-                  fullWidth
-                >
-                  <InputLabel id={collectionPeriodLabelId}>Collection period</InputLabel>
-                  <MuiSelect
-                    labelId={collectionPeriodLabelId}
-                    label="Collection period"
-                    value={matchingCollectionPeriod ? JSON.stringify(matchingCollectionPeriod) : ''}
-                    onChange={(event) => {
-                      setCollectionPeriod(
-                        collectionPeriodSchema.safeParse(JSON.parse(event.target.value)).data ??
-                          null,
-                      );
-                    }}
+                <Field required data-invalid={!!state?.errors.fieldErrors.collectionPeriod?.length}>
+                  <FieldLabel>Collection period</FieldLabel>
+                  <Select
+                    key={JSON.stringify(initialProject.collectionPeriod)}
+                    name={'collectionPeriod' satisfies keyof ProjectInput}
+                    defaultValue={initialProject.collectionPeriod}
+                    required
                   >
-                    {COLLECTION_PERIOD_OPTIONS.map((option) => {
-                      const stringified = JSON.stringify(option);
-                      return (
-                        <MenuItem key={stringified} value={stringified}>
-                          {formatCollectionPeriod(option)}
-                        </MenuItem>
-                      );
-                    })}
-                  </MuiSelect>
-                  {state?.errors.fieldErrors.collectionPeriod?.[0] ? (
-                    <FormHelperText>{state.errors.fieldErrors.collectionPeriod[0]}</FormHelperText>
-                  ) : null}
-                </FormControl>
+                    <SelectTrigger
+                      aria-invalid={!!state?.errors.fieldErrors.collectionPeriod?.length}
+                    >
+                      <SelectValue>
+                        {(value: CollectionPeriod | null) =>
+                          value === null ? 'Select duration' : formatCollectionPeriod(value)
+                        }
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {COLLECTION_PERIOD_OPTIONS.map((option) => (
+                          <SelectItem key={JSON.stringify(option)} value={option}>
+                            {formatCollectionPeriod(option)}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <FieldError
+                    errors={state?.errors.fieldErrors.collectionPeriod?.map((message) => ({
+                      message,
+                    }))}
+                  />
+                </Field>
               </div>
               <Autocomplete
                 multiple

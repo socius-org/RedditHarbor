@@ -9,7 +9,7 @@ const estimatedDataVolumeSchema = z.union([
   z.tuple([z.number(), z.null()]),
 ]);
 
-export const collectionPeriodSchema = z.object({
+const collectionPeriodSchema = z.object({
   months: z.number().int().positive().nullable(),
 });
 
@@ -27,11 +27,8 @@ export type EstimatedDataVolume = z.infer<typeof estimatedDataVolumeSchema>;
 export type CollectionPeriod = z.infer<typeof collectionPeriodSchema>;
 export type AiMlModelPlan = z.infer<typeof aiMlModelPlanSchema>;
 
-const projectSchema = z.object({
-  id: z.uuidv4(),
-  title: z.string().trim().min(1),
-  researchObjective: z.string().trim().min(1).max(RESEARCH_OBJECTIVE_MAX_LENGTH),
-  estimatedDataVolume: z
+function createJsonParsingSchema<T extends z.core.$ZodType>(schema: T) {
+  return z
     .string()
     .min(1, 'Required')
     .pipe(
@@ -42,9 +39,16 @@ const projectSchema = z.object({
           context.issues.push({ code: 'custom', message: 'Invalid JSON', input });
           return z.NEVER;
         }
-      }, estimatedDataVolumeSchema),
-    ),
-  collectionPeriod: collectionPeriodSchema,
+      }, schema),
+    );
+}
+
+const projectSchema = z.object({
+  id: z.uuidv4(),
+  title: z.string().trim().min(1),
+  researchObjective: z.string().trim().min(1).max(RESEARCH_OBJECTIVE_MAX_LENGTH),
+  estimatedDataVolume: createJsonParsingSchema(estimatedDataVolumeSchema),
+  collectionPeriod: createJsonParsingSchema(collectionPeriodSchema),
   subreddits: z.array(z.string().trim().min(1)).min(1),
   aiMlModelPlan: aiMlModelPlanSchema,
   principalInvestigator: z.string().trim().min(1),
@@ -64,13 +68,11 @@ export type ProjectFormState = {
 };
 
 export async function createProject(
-  collectionPeriod: CollectionPeriod | null,
   subreddits: string[],
   formData: FormData,
 ): Promise<ProjectFormState | undefined> {
   const rawFormData = {
     ...Object.fromEntries(formData),
-    collectionPeriod,
     subreddits,
   };
   const parsedResult = projectInputSchema.safeParse(rawFormData);
@@ -103,13 +105,11 @@ export async function createProject(
 
 export async function updateProject(
   existingProject: Project,
-  collectionPeriod: CollectionPeriod | null,
   subreddits: string[],
   formData: FormData,
 ): Promise<ProjectFormState | undefined> {
   const rawFormData = {
     ...Object.fromEntries(formData),
-    collectionPeriod,
     subreddits,
   };
   const parsedResult = projectInputSchema.safeParse(rawFormData);
