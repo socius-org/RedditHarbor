@@ -1,8 +1,22 @@
 'use client';
 
 import * as React from 'react';
-import { Check, Plus, X } from 'lucide-react';
-import { Combobox } from '@base-ui/react/combobox';
+import { Plus } from 'lucide-react';
+
+import {
+  Combobox,
+  ComboboxChip,
+  ComboboxChipRemove,
+  ComboboxChips,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxItemIndicator,
+  ComboboxItemText,
+  ComboboxList,
+  ComboboxValue,
+} from '#app/components/ui/combobox.tsx';
 
 interface LabelItem {
   creatable?: string;
@@ -84,7 +98,7 @@ export function ComboboxExample() {
       : labels;
 
   return (
-    <Combobox.Root
+    <Combobox
       items={itemsForView}
       multiple
       onValueChange={(next) => {
@@ -125,74 +139,45 @@ export function ComboboxExample() {
         <label className="text-sm font-medium leading-5" htmlFor={id}>
           Labels
         </label>
-        <Combobox.Chips
-          className="border-input focus-within:border-ring focus-within:ring-ring/50 flex min-w-0 flex-wrap items-center gap-0.5 rounded-md border bg-transparent px-1.5 py-1 focus-within:ring-[3px]"
-          ref={containerRef}
-        >
-          <Combobox.Value>
+        <ComboboxChips ref={containerRef}>
+          <ComboboxValue>
             {(value: LabelItem[]) => (
               <React.Fragment>
                 {value.map((label) => (
-                  <Combobox.Chip
-                    key={label.id}
-                    className="bg-secondary text-secondary-foreground data-highlighted:bg-primary data-highlighted:text-primary-foreground focus-within:bg-primary focus-within:text-primary-foreground flex cursor-default items-center gap-1 rounded-md px-1.5 py-0.5 text-sm outline-none"
-                    aria-label={label.value}
-                  >
+                  <ComboboxChip key={label.id} aria-label={label.value}>
                     {label.value}
-                    <Combobox.ChipRemove
-                      className="hover:bg-secondary-foreground/20 rounded p-0.5 text-inherit"
-                      aria-label="Remove"
-                    >
-                      <X className="size-3" />
-                    </Combobox.ChipRemove>
-                  </Combobox.Chip>
+                    <ComboboxChipRemove />
+                  </ComboboxChip>
                 ))}
-                <Combobox.Input
+                <ComboboxInput
                   id={id}
                   placeholder={value.length > 0 ? '' : 'e.g. bug'}
-                  className="placeholder:text-muted-foreground h-8 min-w-12 flex-1 bg-transparent pl-2 text-sm outline-none"
                   onKeyDown={handleInputKeyDown}
                 />
               </React.Fragment>
             )}
-          </Combobox.Value>
-        </Combobox.Chips>
+          </ComboboxValue>
+        </ComboboxChips>
       </div>
 
-      <Combobox.Portal>
-        <Combobox.Positioner className="z-50 outline-none" sideOffset={4} anchor={containerRef}>
-          <Combobox.Popup className="bg-popover text-popover-foreground w-[var(--anchor-width)] max-h-[min(var(--available-height),24rem)] max-w-[var(--available-width)] overflow-y-auto scroll-py-1 overscroll-contain rounded-lg border p-1 shadow-lg">
-            <Combobox.Empty className="text-muted-foreground px-2 py-1.5 text-center text-sm">
-              No labels found.
-            </Combobox.Empty>
-            <Combobox.List>
-              {(item: LabelItem) =>
-                item.creatable ? (
-                  <Combobox.Item
-                    key={item.id}
-                    className="data-highlighted:bg-accent data-highlighted:text-accent-foreground grid cursor-default grid-cols-[1rem_1fr] items-center gap-2 rounded-md py-1.5 pr-2 pl-2 text-sm outline-none select-none"
-                    value={item}
-                  >
-                    <Plus className="col-start-1 size-4" />
-                    <span className="col-start-2">Create "{item.creatable}"</span>
-                  </Combobox.Item>
-                ) : (
-                  <Combobox.Item
-                    key={item.id}
-                    className="data-highlighted:bg-accent data-highlighted:text-accent-foreground grid cursor-default grid-cols-[1rem_1fr] items-center gap-2 rounded-md py-1.5 pr-2 pl-2 text-sm outline-none select-none"
-                    value={item}
-                  >
-                    <Combobox.ItemIndicator className="col-start-1">
-                      <Check className="size-4" />
-                    </Combobox.ItemIndicator>
-                    <span className="col-start-2">{item.value}</span>
-                  </Combobox.Item>
-                )
-              }
-            </Combobox.List>
-          </Combobox.Popup>
-        </Combobox.Positioner>
-      </Combobox.Portal>
-    </Combobox.Root>
+      <ComboboxContent anchor={containerRef}>
+        <ComboboxEmpty>No labels found.</ComboboxEmpty>
+        <ComboboxList>
+          {(item: LabelItem) =>
+            item.creatable ? (
+              <ComboboxItem key={item.id} value={item}>
+                <Plus className="col-start-1 size-4" />
+                <span className="col-start-2">Create "{item.creatable}"</span>
+              </ComboboxItem>
+            ) : (
+              <ComboboxItem key={item.id} value={item}>
+                <ComboboxItemIndicator />
+                <ComboboxItemText>{item.value}</ComboboxItemText>
+              </ComboboxItem>
+            )
+          }
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
   );
 }
