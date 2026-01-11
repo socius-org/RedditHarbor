@@ -77,10 +77,10 @@ export function ComboboxExample() {
     let uniqueId = baseId;
     if (existingIds.has(uniqueId)) {
       let i = 2;
-      while (existingIds.has(`${baseId}-${i}`)) {
+      while (existingIds.has(`${baseId}-${String(i)}`)) {
         i += 1;
       }
-      uniqueId = `${baseId}-${i}`;
+      uniqueId = `${baseId}-${String(i)}`;
     }
     const newItem: LabelItem = { id: uniqueId, value: currentTrimmed };
     setLabels((prev) => [...prev, newItem]);
@@ -166,7 +166,7 @@ export function ComboboxExample() {
             item.creatable ? (
               <ComboboxItem key={item.id} value={item}>
                 <Plus className="col-start-1 size-4" />
-                <span className="col-start-2">Create "{item.creatable}"</span>
+                <span className="col-start-2">Create &quot;{item.creatable}&quot;</span>
               </ComboboxItem>
             ) : (
               <ComboboxItem key={item.id} value={item}>
