@@ -48,7 +48,6 @@ import { Textarea } from '#app/components/ui/textarea.tsx';
 import {
   AI_ML_MODEL_PLAN_OPTIONS,
   collectionPeriodSchema,
-  estimatedDataVolumeSchema,
   RESEARCH_OBJECTIVE_MAX_LENGTH,
   type AiMlModelPlan,
   type CollectionPeriod,
@@ -140,7 +139,6 @@ type ProjectDialogContentHandle = { getIsPending: () => boolean };
 
 type ProjectDialogContentProps = {
   action: (
-    estimatedDataVolume: EstimatedDataVolume | null,
     collectionPeriod: CollectionPeriod | null,
     subreddits: string[],
     formData: FormData,
@@ -161,19 +159,15 @@ function ProjectDialogContent({
   submitLabel,
 }: ProjectDialogContentProps) {
   const formId = useId();
-  const dataVolumeLabelId = useId();
   const collectionPeriodLabelId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(
     initialProject.researchObjective.length,
   );
   const [subreddits, setSubreddits] = useState(initialProject.subreddits);
-  const [estimatedDataVolume, setEstimatedDataVolume] = useState(
-    initialProject.estimatedDataVolume,
-  );
   const [collectionPeriod, setCollectionPeriod] = useState(initialProject.collectionPeriod);
 
   async function submitAction(_prevState: ProjectFormState | undefined, formData: FormData) {
-    const result = await actionProp(estimatedDataVolume, collectionPeriod, subreddits, formData);
+    const result = await actionProp(collectionPeriod, subreddits, formData);
     if (!result?.errors) {
       onClose();
     }
@@ -184,9 +178,6 @@ function ProjectDialogContent({
 
   useImperativeHandle(ref, () => ({ getIsPending: () => isPending }), [isPending]);
 
-  const matchingEstimatedDataVolume = ESTIMATED_DATA_VOLUME_OPTIONS.find((option) =>
-    isEqual(option, estimatedDataVolume),
-  );
   const matchingCollectionPeriod = COLLECTION_PERIOD_OPTIONS.find((option) =>
     isEqual(option, collectionPeriod),
   );
@@ -276,42 +267,42 @@ function ProjectDialogContent({
                 )}
               </Field>
               <div className="flex gap-4">
-                <FormControl
+                <Field
                   required
-                  error={!!state?.errors.fieldErrors.estimatedDataVolume?.length}
-                  margin="dense"
-                  size="small"
-                  fullWidth
+                  data-invalid={!!state?.errors.fieldErrors.estimatedDataVolume?.length}
                 >
-                  <InputLabel id={dataVolumeLabelId}>Estimated data volume</InputLabel>
-                  <MuiSelect
-                    labelId={dataVolumeLabelId}
-                    label="Estimated data volume"
-                    value={
-                      matchingEstimatedDataVolume ? JSON.stringify(matchingEstimatedDataVolume) : ''
-                    }
-                    onChange={(event) => {
-                      setEstimatedDataVolume(
-                        estimatedDataVolumeSchema.safeParse(JSON.parse(event.target.value)).data ??
-                          null,
-                      );
-                    }}
+                  <FieldLabel>Estimated data volume</FieldLabel>
+                  <Select<EstimatedDataVolume>
+                    key={JSON.stringify(initialProject.estimatedDataVolume)}
+                    name={'estimatedDataVolume' satisfies keyof ProjectInput}
+                    defaultValue={initialProject.estimatedDataVolume}
+                    required
                   >
-                    {ESTIMATED_DATA_VOLUME_OPTIONS.map((option) => {
-                      const stringified = JSON.stringify(option);
-                      return (
-                        <MenuItem key={stringified} value={stringified}>
-                          {formatDataVolume(option)} posts
-                        </MenuItem>
-                      );
-                    })}
-                  </MuiSelect>
-                  {state?.errors.fieldErrors.estimatedDataVolume?.[0] ? (
-                    <FormHelperText>
-                      {state.errors.fieldErrors.estimatedDataVolume[0]}
-                    </FormHelperText>
-                  ) : null}
-                </FormControl>
+                    <SelectTrigger
+                      aria-invalid={!!state?.errors.fieldErrors.estimatedDataVolume?.length}
+                    >
+                      <SelectValue>
+                        {(value: EstimatedDataVolume | null) =>
+                          value === null ? 'Select range' : `${formatDataVolume(value)} posts`
+                        }
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {ESTIMATED_DATA_VOLUME_OPTIONS.map((option) => (
+                          <SelectItem key={JSON.stringify(option)} value={option}>
+                            {formatDataVolume(option)} posts
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <FieldError
+                    errors={state?.errors.fieldErrors.estimatedDataVolume?.map((message) => ({
+                      message,
+                    }))}
+                  />
+                </Field>
                 <FormControl
                   required
                   error={!!state?.errors.fieldErrors.collectionPeriod?.length}

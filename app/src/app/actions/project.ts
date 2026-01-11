@@ -3,7 +3,7 @@ import { db } from '../database';
 
 export const RESEARCH_OBJECTIVE_MAX_LENGTH = 500;
 
-export const estimatedDataVolumeSchema = z.union([
+const estimatedDataVolumeSchema = z.union([
   z.tuple([z.null(), z.number()]),
   z.tuple([z.number(), z.number()]),
   z.tuple([z.number(), z.null()]),
@@ -27,11 +27,23 @@ export type EstimatedDataVolume = z.infer<typeof estimatedDataVolumeSchema>;
 export type CollectionPeriod = z.infer<typeof collectionPeriodSchema>;
 export type AiMlModelPlan = z.infer<typeof aiMlModelPlanSchema>;
 
-export const projectSchema = z.object({
+const projectSchema = z.object({
   id: z.uuidv4(),
   title: z.string().trim().min(1),
   researchObjective: z.string().trim().min(1).max(RESEARCH_OBJECTIVE_MAX_LENGTH),
-  estimatedDataVolume: estimatedDataVolumeSchema,
+  estimatedDataVolume: z
+    .string()
+    .min(1, 'Required')
+    .pipe(
+      z.preprocess((input, context): unknown => {
+        try {
+          return JSON.parse(input);
+        } catch {
+          context.issues.push({ code: 'custom', message: 'Invalid JSON', input });
+          return z.NEVER;
+        }
+      }, estimatedDataVolumeSchema),
+    ),
   collectionPeriod: collectionPeriodSchema,
   subreddits: z.array(z.string().trim().min(1)).min(1),
   aiMlModelPlan: aiMlModelPlanSchema,
@@ -52,14 +64,12 @@ export type ProjectFormState = {
 };
 
 export async function createProject(
-  estimatedDataVolume: EstimatedDataVolume | null,
   collectionPeriod: CollectionPeriod | null,
   subreddits: string[],
   formData: FormData,
 ): Promise<ProjectFormState | undefined> {
   const rawFormData = {
     ...Object.fromEntries(formData),
-    estimatedDataVolume,
     collectionPeriod,
     subreddits,
   };
@@ -93,14 +103,12 @@ export async function createProject(
 
 export async function updateProject(
   existingProject: Project,
-  estimatedDataVolume: EstimatedDataVolume | null,
   collectionPeriod: CollectionPeriod | null,
   subreddits: string[],
   formData: FormData,
 ): Promise<ProjectFormState | undefined> {
   const rawFormData = {
     ...Object.fromEntries(formData),
-    estimatedDataVolume,
     collectionPeriod,
     subreddits,
   };
