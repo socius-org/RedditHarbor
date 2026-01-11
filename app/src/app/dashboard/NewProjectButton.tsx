@@ -24,8 +24,8 @@ export function NewProjectButton() {
         New project
       </Button>
       <ProjectDialog
-        action={(estimatedDataVolume, collectionPeriod, subreddits, aiMlModelPlan, formData) =>
-          createProject(estimatedDataVolume, collectionPeriod, subreddits, aiMlModelPlan, formData)
+        action={(estimatedDataVolume, collectionPeriod, subreddits, formData) =>
+          createProject(estimatedDataVolume, collectionPeriod, subreddits, formData)
         }
         infoMessage="This information initialises your DPIA and will flow through all PETLP phases."
         open={open}

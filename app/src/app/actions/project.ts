@@ -55,7 +55,6 @@ export async function createProject(
   estimatedDataVolume: EstimatedDataVolume | null,
   collectionPeriod: CollectionPeriod | null,
   subreddits: string[],
-  aiMlModelPlan: AiMlModelPlan | null,
   formData: FormData,
 ): Promise<ProjectFormState | undefined> {
   const rawFormData = {
@@ -63,7 +62,6 @@ export async function createProject(
     estimatedDataVolume,
     collectionPeriod,
     subreddits,
-    aiMlModelPlan,
   };
   const parsedResult = projectInputSchema.safeParse(rawFormData);
 
@@ -98,7 +96,6 @@ export async function updateProject(
   estimatedDataVolume: EstimatedDataVolume | null,
   collectionPeriod: CollectionPeriod | null,
   subreddits: string[],
-  aiMlModelPlan: AiMlModelPlan | null,
   formData: FormData,
 ): Promise<ProjectFormState | undefined> {
   const rawFormData = {
@@ -106,7 +103,6 @@ export async function updateProject(
     estimatedDataVolume,
     collectionPeriod,
     subreddits,
-    aiMlModelPlan,
   };
   const parsedResult = projectInputSchema.safeParse(rawFormData);
 

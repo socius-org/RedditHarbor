@@ -36,6 +36,14 @@ import {
   FieldLabel,
 } from '#app/components/ui/field.tsx';
 import { Input } from '#app/components/ui/input.tsx';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '#app/components/ui/select.tsx';
 import { Textarea } from '#app/components/ui/textarea.tsx';
 import {
   AI_ML_MODEL_PLAN_OPTIONS,
@@ -95,6 +103,14 @@ const AI_ML_MODEL_PLAN_LABELS: Record<AiMlModelPlan, string> = {
   customDeepLearning: 'Custom deep learning',
 };
 
+const AI_ML_MODEL_PLAN_ITEMS: { label: string; value: AiMlModelPlan | null }[] = [
+  { label: 'Select AI/ML model plan', value: null },
+  ...AI_ML_MODEL_PLAN_OPTIONS.map((option) => ({
+    label: AI_ML_MODEL_PLAN_LABELS[option],
+    value: option,
+  })),
+];
+
 function normaliseSubreddit(value: string): string {
   // Remove `r/` prefix and trim whitespace.
   return value.replace(/^r\//, '').trim();
@@ -127,7 +143,6 @@ type ProjectDialogContentProps = {
     estimatedDataVolume: EstimatedDataVolume | null,
     collectionPeriod: CollectionPeriod | null,
     subreddits: string[],
-    aiMlModelPlan: AiMlModelPlan | null,
     formData: FormData,
   ) => Promise<ProjectFormState | undefined>;
   initialProject?: InitialProject;
@@ -148,7 +163,6 @@ function ProjectDialogContent({
   const formId = useId();
   const dataVolumeLabelId = useId();
   const collectionPeriodLabelId = useId();
-  const aiMlModelPlanLabelId = useId();
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(
     initialProject.researchObjective.length,
   );
@@ -157,16 +171,9 @@ function ProjectDialogContent({
     initialProject.estimatedDataVolume,
   );
   const [collectionPeriod, setCollectionPeriod] = useState(initialProject.collectionPeriod);
-  const [aiMlModelPlan, setAiMlModelPlan] = useState(initialProject.aiMlModelPlan);
 
   async function submitAction(_prevState: ProjectFormState | undefined, formData: FormData) {
-    const result = await actionProp(
-      estimatedDataVolume,
-      collectionPeriod,
-      subreddits,
-      aiMlModelPlan,
-      formData,
-    );
+    const result = await actionProp(estimatedDataVolume, collectionPeriod, subreddits, formData);
     if (!result?.errors) {
       onClose();
     }
@@ -378,33 +385,40 @@ function ProjectDialogContent({
                   />
                 )}
               />
-              <FormControl
-                required
-                error={!!state?.errors.fieldErrors.aiMlModelPlan?.length}
-                margin="dense"
-                size="small"
-                fullWidth
-              >
-                <InputLabel id={aiMlModelPlanLabelId}>AI/ML model plans</InputLabel>
-                <MuiSelect
-                  labelId={aiMlModelPlanLabelId}
-                  label="AI/ML model plans"
-                  value={aiMlModelPlan ?? ''}
-                  onChange={(event) => {
-                    setAiMlModelPlan(event.target.value);
-                  }}
+              <Field required data-invalid={!!state?.errors.fieldErrors.aiMlModelPlan?.length}>
+                <FieldLabel>AI/ML model plans</FieldLabel>
+                <Select
+                  key={initialProject.aiMlModelPlan}
+                  name={'aiMlModelPlan' satisfies keyof ProjectInput}
+                  defaultValue={initialProject.aiMlModelPlan}
+                  items={AI_ML_MODEL_PLAN_ITEMS}
+                  required
                 >
-                  {AI_ML_MODEL_PLAN_OPTIONS.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {AI_ML_MODEL_PLAN_LABELS[option]}
-                    </MenuItem>
-                  ))}
-                </MuiSelect>
-                <FormHelperText>
-                  {state?.errors.fieldErrors.aiMlModelPlan?.[0] ??
-                    'This helps determine privacy safeguards needed'}
-                </FormHelperText>
-              </FormControl>
+                  <SelectTrigger aria-invalid={!!state?.errors.fieldErrors.aiMlModelPlan?.length}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {AI_ML_MODEL_PLAN_OPTIONS.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {AI_ML_MODEL_PLAN_LABELS[option]}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {state?.errors.fieldErrors.aiMlModelPlan?.length ? (
+                  <FieldError
+                    errors={state.errors.fieldErrors.aiMlModelPlan.map((message) => ({
+                      message,
+                    }))}
+                  />
+                ) : (
+                  <FieldDescription>
+                    This helps determine privacy safeguards needed
+                  </FieldDescription>
+                )}
+              </Field>
               <div className="flex gap-4">
                 <Field
                   required
