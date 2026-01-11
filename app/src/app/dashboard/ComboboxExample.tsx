@@ -37,6 +37,9 @@ export function ComboboxExample() {
       return;
     }
 
+    // Prevent form submission when creating items
+    event.preventDefault();
+
     const normalized = currentTrimmed.toLocaleLowerCase();
     const existing = labels.find((label) => label.value.trim().toLocaleLowerCase() === normalized);
 
