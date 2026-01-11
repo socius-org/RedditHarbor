@@ -29,6 +29,12 @@ export function ComboboxExample() {
   const highlightedItemRef = React.useRef<LabelItem | undefined>(undefined);
 
   function handleInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    // Delete last chip on backspace when input is empty
+    if (event.key === 'Backspace' && query === '' && selected.length > 0) {
+      setSelected((prev) => prev.slice(0, -1));
+      return;
+    }
+
     if (event.key !== 'Enter' || highlightedItemRef.current) {
       return;
     }
