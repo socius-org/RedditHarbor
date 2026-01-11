@@ -12,6 +12,7 @@ import { CircleAlert, Info } from 'lucide-react';
 import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
+import { ComboboxExample } from './ComboboxExample';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
 import {
@@ -361,6 +362,8 @@ function ProjectDialogContent({
                   />
                 )}
               />
+              {/* Base UI Combobox example */}
+              <ComboboxExample />
               <Field required data-invalid={!!state?.errors.fieldErrors.aiMlModelPlan?.length}>
                 <FieldLabel>AI/ML model plans</FieldLabel>
                 <Select
