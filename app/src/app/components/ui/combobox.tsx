@@ -1,6 +1,6 @@
 'use client';
 
-import type { ComponentPropsWithRef } from 'react';
+import type { ComponentProps } from 'react';
 import { Combobox as ComboboxPrimitive } from '@base-ui/react/combobox';
 import { Check, X } from 'lucide-react';
 
@@ -8,10 +8,7 @@ import { cn } from '#app/utils/cn.ts';
 
 const Combobox = ComboboxPrimitive.Root;
 
-function ComboboxChips({
-  className,
-  ...props
-}: ComponentPropsWithRef<typeof ComboboxPrimitive.Chips>) {
+function ComboboxChips({ className, ...props }: ComponentProps<typeof ComboboxPrimitive.Chips>) {
   return (
     <ComboboxPrimitive.Chips
       data-slot="combobox-chips"
@@ -50,7 +47,7 @@ function ComboboxInput({ className, ...props }: ComboboxPrimitive.Input.Props) {
     <ComboboxPrimitive.Input
       data-slot="combobox-input"
       className={cn(
-        'placeholder:text-muted-foreground min-w-20 flex-1 bg-transparent text-sm outline-none',
+        'placeholder:text-muted-foreground h-7 min-w-20 flex-1 bg-transparent text-sm outline-none',
         className,
       )}
       {...props}
