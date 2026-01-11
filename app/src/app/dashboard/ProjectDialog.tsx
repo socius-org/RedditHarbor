@@ -124,6 +124,41 @@ const PROGRAMMING_LANGUAGES: ProgrammingLanguage[] = [
   { id: 'typescript', value: 'TypeScript' },
 ];
 
+function ProgrammingLanguagesCombobox() {
+  const chipsRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <Field>
+      <FieldLabel>Programming languages</FieldLabel>
+      <Combobox multiple items={PROGRAMMING_LANGUAGES} defaultValue={[PROGRAMMING_LANGUAGES[1]]}>
+        <ComboboxChips ref={chipsRef}>
+          <ComboboxValue>
+            {(values: ProgrammingLanguage[]) => (
+              <>
+                {values.map((language) => (
+                  <ComboboxChip key={language.id}>{language.value}</ComboboxChip>
+                ))}
+                <ComboboxInput placeholder={values.length > 0 ? '' : 'e.g. TypeScript'} />
+              </>
+            )}
+          </ComboboxValue>
+        </ComboboxChips>
+        <ComboboxPopup anchor={chipsRef}>
+          <ComboboxEmpty>No languages found.</ComboboxEmpty>
+          <ComboboxList>
+            {(language: ProgrammingLanguage) => (
+              <ComboboxItem key={language.id} value={language}>
+                {language.value}
+              </ComboboxItem>
+            )}
+          </ComboboxList>
+        </ComboboxPopup>
+      </Combobox>
+      <FieldDescription>Test of Base UI Combobox with multiple selection</FieldDescription>
+    </Field>
+  );
+}
+
 const AI_ML_MODEL_PLAN_ITEMS: { label: string; value: AiMlModelPlan | null }[] = [
   { label: 'Select AI/ML model plan', value: null },
   ...AI_ML_MODEL_PLAN_OPTIONS.map((option) => ({
@@ -390,40 +425,7 @@ function ProjectDialogContent({
                 )}
               />
               {/* Base UI Combobox example */}
-              <Field>
-                <FieldLabel>Programming languages</FieldLabel>
-                <Combobox
-                  multiple
-                  items={PROGRAMMING_LANGUAGES}
-                  defaultValue={[PROGRAMMING_LANGUAGES[1]]}
-                >
-                  <ComboboxChips>
-                    <ComboboxValue>
-                      {(values: ProgrammingLanguage[]) => (
-                        <>
-                          {values.map((language) => (
-                            <ComboboxChip key={language.id}>{language.value}</ComboboxChip>
-                          ))}
-                          <ComboboxInput placeholder={values.length > 0 ? '' : 'e.g. TypeScript'} />
-                        </>
-                      )}
-                    </ComboboxValue>
-                  </ComboboxChips>
-                  <ComboboxPopup>
-                    <ComboboxEmpty>No languages found.</ComboboxEmpty>
-                    <ComboboxList>
-                      {(language: ProgrammingLanguage) => (
-                        <ComboboxItem key={language.id} value={language}>
-                          {language.value}
-                        </ComboboxItem>
-                      )}
-                    </ComboboxList>
-                  </ComboboxPopup>
-                </Combobox>
-                <FieldDescription>
-                  Test of Base UI Combobox with multiple selection
-                </FieldDescription>
-              </Field>
+              <ProgrammingLanguagesCombobox />
               <Field required data-invalid={!!state?.errors.fieldErrors.aiMlModelPlan?.length}>
                 <FieldLabel>AI/ML model plans</FieldLabel>
                 <Select

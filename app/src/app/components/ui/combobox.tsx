@@ -1,13 +1,17 @@
 'use client';
 
+import type { ComponentPropsWithRef } from 'react';
 import { Combobox as ComboboxPrimitive } from '@base-ui/react/combobox';
-import { X } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 
 import { cn } from '#app/utils/cn.ts';
 
 const Combobox = ComboboxPrimitive.Root;
 
-function ComboboxChips({ className, ...props }: ComboboxPrimitive.Chips.Props) {
+function ComboboxChips({
+  className,
+  ...props
+}: ComponentPropsWithRef<typeof ComboboxPrimitive.Chips>) {
   return (
     <ComboboxPrimitive.Chips
       data-slot="combobox-chips"
@@ -61,9 +65,13 @@ function ComboboxPopup({
   sideOffset = 4,
   align = 'start',
   alignOffset = 0,
+  anchor,
   ...props
 }: ComboboxPrimitive.Popup.Props &
-  Pick<ComboboxPrimitive.Positioner.Props, 'align' | 'alignOffset' | 'side' | 'sideOffset'>) {
+  Pick<
+    ComboboxPrimitive.Positioner.Props,
+    'align' | 'alignOffset' | 'anchor' | 'side' | 'sideOffset'
+  >) {
   return (
     <ComboboxPrimitive.Portal>
       <ComboboxPrimitive.Positioner
@@ -71,12 +79,13 @@ function ComboboxPopup({
         sideOffset={sideOffset}
         align={align}
         alignOffset={alignOffset}
+        anchor={anchor}
         className="isolate z-50"
       >
         <ComboboxPrimitive.Popup
           data-slot="combobox-popup"
           className={cn(
-            'bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-36 rounded-lg shadow-md ring-1 duration-100 relative isolate z-50 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto p-1',
+            'bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-36 rounded-lg shadow-md ring-1 duration-100 relative isolate z-50 max-h-[min(var(--available-height),20rem)] w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto p-1',
             className,
           )}
           {...props}
@@ -93,13 +102,26 @@ function ComboboxItem({ className, children, ...props }: ComboboxPrimitive.Item.
     <ComboboxPrimitive.Item
       data-slot="combobox-item"
       className={cn(
-        'focus:bg-accent focus:text-accent-foreground rounded-md py-1.5 px-2 text-sm relative flex w-full cursor-default items-center outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'data-highlighted:bg-accent data-highlighted:text-accent-foreground grid cursor-default grid-cols-[1rem_1fr] items-center gap-2 rounded-md py-1.5 pr-2 pl-2 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className,
       )}
       {...props}
     >
-      {children}
+      <ComboboxItemIndicator />
+      <span>{children}</span>
     </ComboboxPrimitive.Item>
+  );
+}
+
+function ComboboxItemIndicator({ className, ...props }: ComboboxPrimitive.ItemIndicator.Props) {
+  return (
+    <ComboboxPrimitive.ItemIndicator
+      data-slot="combobox-item-indicator"
+      className={cn('col-start-1', className)}
+      {...props}
+    >
+      <Check className="size-4" />
+    </ComboboxPrimitive.ItemIndicator>
   );
 }
 
@@ -123,6 +145,7 @@ export {
   ComboboxEmpty,
   ComboboxInput,
   ComboboxItem,
+  ComboboxItemIndicator,
   ComboboxList,
   ComboboxPopup,
   ComboboxValue,
