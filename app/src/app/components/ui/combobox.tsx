@@ -1,6 +1,5 @@
 'use client';
 
-import type * as React from 'react';
 import { Combobox as ComboboxPrimitive } from '@base-ui/react/combobox';
 import { X } from 'lucide-react';
 
@@ -104,9 +103,9 @@ function ComboboxItem({ className, children, ...props }: ComboboxPrimitive.Item.
   );
 }
 
-function ComboboxEmpty({ className, ...props }: React.ComponentProps<'div'>) {
+function ComboboxEmpty({ className, ...props }: ComboboxPrimitive.Empty.Props) {
   return (
-    <div
+    <ComboboxPrimitive.Empty
       data-slot="combobox-empty"
       className={cn('text-muted-foreground py-2 px-2 text-center text-sm', className)}
       {...props}
@@ -114,6 +113,7 @@ function ComboboxEmpty({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
+const ComboboxList = ComboboxPrimitive.List;
 const ComboboxValue = ComboboxPrimitive.Value;
 
 export {
@@ -123,6 +123,7 @@ export {
   ComboboxEmpty,
   ComboboxInput,
   ComboboxItem,
+  ComboboxList,
   ComboboxPopup,
   ComboboxValue,
 };

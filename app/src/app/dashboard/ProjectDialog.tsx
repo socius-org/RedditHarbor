@@ -16,7 +16,11 @@ import {
   Combobox,
   ComboboxChip,
   ComboboxChips,
+  ComboboxEmpty,
   ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxPopup,
   ComboboxValue,
 } from '#app/components/ui/combobox.tsx';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
@@ -102,6 +106,23 @@ const AI_ML_MODEL_PLAN_LABELS: Record<AiMlModelPlan, string> = {
   llm: 'Large language models',
   customDeepLearning: 'Custom deep learning',
 };
+
+interface ProgrammingLanguage {
+  id: string;
+  value: string;
+}
+
+const PROGRAMMING_LANGUAGES: ProgrammingLanguage[] = [
+  { id: 'c', value: 'C' },
+  { id: 'cpp', value: 'C++' },
+  { id: 'go', value: 'Go' },
+  { id: 'java', value: 'Java' },
+  { id: 'javascript', value: 'JavaScript' },
+  { id: 'python', value: 'Python' },
+  { id: 'rust', value: 'Rust' },
+  { id: 'swift', value: 'Swift' },
+  { id: 'typescript', value: 'TypeScript' },
+];
 
 const AI_ML_MODEL_PLAN_ITEMS: { label: string; value: AiMlModelPlan | null }[] = [
   { label: 'Select AI/ML model plan', value: null },
@@ -370,20 +391,34 @@ function ProjectDialogContent({
               />
               {/* Base UI Combobox example */}
               <Field>
-                <FieldLabel>Test combobox</FieldLabel>
-                <Combobox multiple defaultValue={['react', 'vue']}>
+                <FieldLabel>Programming languages</FieldLabel>
+                <Combobox
+                  multiple
+                  items={PROGRAMMING_LANGUAGES}
+                  defaultValue={[PROGRAMMING_LANGUAGES[1]]}
+                >
                   <ComboboxChips>
                     <ComboboxValue>
-                      {(values: string[]) => (
+                      {(values: ProgrammingLanguage[]) => (
                         <>
-                          {values.map((value) => (
-                            <ComboboxChip key={value}>{value}</ComboboxChip>
+                          {values.map((language) => (
+                            <ComboboxChip key={language.id}>{language.value}</ComboboxChip>
                           ))}
-                          <ComboboxInput placeholder={values.length > 0 ? '' : 'Add tag...'} />
+                          <ComboboxInput placeholder={values.length > 0 ? '' : 'e.g. TypeScript'} />
                         </>
                       )}
                     </ComboboxValue>
                   </ComboboxChips>
+                  <ComboboxPopup>
+                    <ComboboxEmpty>No languages found.</ComboboxEmpty>
+                    <ComboboxList>
+                      {(language: ProgrammingLanguage) => (
+                        <ComboboxItem key={language.id} value={language}>
+                          {language.value}
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxPopup>
                 </Combobox>
                 <FieldDescription>
                   Test of Base UI Combobox with multiple selection
