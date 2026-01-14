@@ -43,7 +43,7 @@
     "@tailwindcss/postcss": "^4.1.18",
     "@tanstack/eslint-plugin-query": "^5.91.2",
     "@tanstack/react-query-devtools": "^5.91.2",
-    "@types/node": "^24.10.6",
+    "@types/node": "^24.10.7",
     "@types/react": "^19.2.8",
     "@types/react-dom": "^19.2.3",
     "babel-plugin-react-compiler": "1.0.0",
