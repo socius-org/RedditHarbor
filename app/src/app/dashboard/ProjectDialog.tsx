@@ -348,8 +348,7 @@ function ProjectDialogContent({
                     helperText={
                       state?.errors.fieldErrors.subreddits?.[0] ?? (
                         <>
-                          Add at least one (press <kbd>Enter</kbd> to add). You can refine this list
-                          during the Extract phase.
+                          Add at least one (press <kbd>Enter</kbd> to add)
                         </>
                       )
                     }
