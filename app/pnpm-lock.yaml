@@ -91,7 +91,7 @@ importers:
         specifier: ^5.91.2
         version: 5.91.2(@tanstack/react-query@5.90.18(react@19.2.3))(react@19.2.3)
       '@types/node':
-        specifier: ^24.10.8
+        specifier: ^24.10.9
         version: 24.10.9
       '@types/react':
         specifier: ^19.2.8
