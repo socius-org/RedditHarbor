@@ -199,7 +199,6 @@ function ProjectDialogContent({
                   name={'title' satisfies keyof ProjectInput}
                   defaultValue={initialProject.title}
                   placeholder="Political Discourse Analysis 2024"
-                  aria-invalid={!!state?.errors.fieldErrors.title?.length}
                 />
                 {state?.errors.fieldErrors.title?.length ? (
                   <FieldError
@@ -221,7 +220,6 @@ function ProjectDialogContent({
                   placeholder="Describe the main research question or hypothesis you want to investigate..."
                   maxLength={RESEARCH_OBJECTIVE_MAX_LENGTH}
                   rows={3}
-                  aria-invalid={!!state?.errors.fieldErrors.researchObjective?.length}
                   onChange={(event) => {
                     setResearchObjectiveLength(event.currentTarget.value.length);
                   }}
@@ -259,9 +257,7 @@ function ProjectDialogContent({
                     defaultValue={initialProject.estimatedDataVolume}
                     required
                   >
-                    <SelectTrigger
-                      aria-invalid={!!state?.errors.fieldErrors.estimatedDataVolume?.length}
-                    >
+                    <SelectTrigger>
                       <SelectValue>
                         {(value: EstimatedDataVolume | null) =>
                           value === null ? 'Select range' : `${formatDataVolume(value)} posts`
@@ -292,9 +288,7 @@ function ProjectDialogContent({
                     defaultValue={initialProject.collectionPeriod}
                     required
                   >
-                    <SelectTrigger
-                      aria-invalid={!!state?.errors.fieldErrors.collectionPeriod?.length}
-                    >
+                    <SelectTrigger>
                       <SelectValue>
                         {(value: CollectionPeriod | null) =>
                           value === null ? 'Select duration' : formatCollectionPeriod(value)
@@ -366,7 +360,7 @@ function ProjectDialogContent({
                   items={AI_ML_MODEL_PLAN_ITEMS}
                   required
                 >
-                  <SelectTrigger aria-invalid={!!state?.errors.fieldErrors.aiMlModelPlan?.length}>
+                  <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -398,7 +392,6 @@ function ProjectDialogContent({
                     name={'principalInvestigator' satisfies keyof ProjectInput}
                     defaultValue={initialProject.principalInvestigator}
                     placeholder="Full name"
-                    aria-invalid={!!state?.errors.fieldErrors.principalInvestigator?.length}
                   />
                   <FieldError
                     errors={state?.errors.fieldErrors.principalInvestigator?.map((message) => ({
@@ -412,7 +405,6 @@ function ProjectDialogContent({
                     name={'institution' satisfies keyof ProjectInput}
                     defaultValue={initialProject.institution}
                     placeholder="University or organisation"
-                    aria-invalid={!!state?.errors.fieldErrors.institution?.length}
                   />
                   <FieldError
                     errors={state?.errors.fieldErrors.institution?.map((message) => ({

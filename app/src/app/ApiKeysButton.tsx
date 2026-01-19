@@ -232,7 +232,6 @@ function ApiKeysDialogContent({
                   placeholder="https://your-project.supabase.co"
                   type="url"
                   defaultValue={apiKeys.supabaseProjectUrl}
-                  aria-invalid={!!state?.errors.fieldErrors.supabaseProjectUrl?.length}
                 />
                 <FieldError
                   errors={state?.errors.fieldErrors.supabaseProjectUrl?.map((message) => ({
