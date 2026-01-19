@@ -5,6 +5,7 @@ import { Select as SelectPrimitive } from '@base-ui/react/select';
 
 import { cn } from '#app/utils/cn.ts';
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from 'lucide-react';
+import { FieldLabel } from './field';
 
 const Select = SelectPrimitive.Root;
 
@@ -98,6 +99,11 @@ function SelectContent({
   );
 }
 
+function SelectFieldLabel(props: React.ComponentProps<typeof FieldLabel>) {
+  // https://base-ui.com/react/components/select#labeling-a-select
+  return <FieldLabel nativeLabel={false} render={<div />} {...props} />;
+}
+
 function SelectLabel({ className, ...props }: SelectPrimitive.GroupLabel.Props) {
   return (
     <SelectPrimitive.GroupLabel
@@ -181,6 +187,7 @@ function SelectScrollDownButton({
 export {
   Select,
   SelectContent,
+  SelectFieldLabel,
   SelectGroup,
   SelectItem,
   SelectLabel,

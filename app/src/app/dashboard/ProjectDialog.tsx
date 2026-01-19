@@ -34,6 +34,7 @@ import { Input } from '#app/components/ui/input.tsx';
 import {
   Select,
   SelectContent,
+  SelectFieldLabel,
   SelectGroup,
   SelectItem,
   SelectTrigger,
@@ -250,7 +251,7 @@ function ProjectDialogContent({
               </Field>
               <div className="flex gap-4">
                 <Field required invalid={!!state?.errors.fieldErrors.estimatedDataVolume?.length}>
-                  <FieldLabel>Estimated data volume</FieldLabel>
+                  <SelectFieldLabel>Estimated data volume</SelectFieldLabel>
                   <Select<EstimatedDataVolume>
                     key={JSON.stringify(initialProject.estimatedDataVolume)}
                     name={'estimatedDataVolume' satisfies keyof ProjectInput}
@@ -281,7 +282,7 @@ function ProjectDialogContent({
                   />
                 </Field>
                 <Field required invalid={!!state?.errors.fieldErrors.collectionPeriod?.length}>
-                  <FieldLabel>Collection period</FieldLabel>
+                  <SelectFieldLabel>Collection period</SelectFieldLabel>
                   <Select
                     key={JSON.stringify(initialProject.collectionPeriod)}
                     name={'collectionPeriod' satisfies keyof ProjectInput}
@@ -352,7 +353,7 @@ function ProjectDialogContent({
                 )}
               />
               <Field required invalid={!!state?.errors.fieldErrors.aiMlModelPlan?.length}>
-                <FieldLabel>AI/ML model plans</FieldLabel>
+                <SelectFieldLabel>AI/ML model plans</SelectFieldLabel>
                 <Select
                   key={initialProject.aiMlModelPlan}
                   name={'aiMlModelPlan' satisfies keyof ProjectInput}
