@@ -1,6 +1,7 @@
 'use client';
 
-import { createContext, use, useId } from 'react';
+import { createContext, use } from 'react';
+import { Field as FieldPrimitive } from '@base-ui/react/field';
 import { useRender } from '@base-ui/react/use-render';
 import { cva, type VariantProps } from 'class-variance-authority';
 
@@ -9,7 +10,6 @@ import { Label } from '#app/components/ui/label.tsx';
 import { Separator } from '#app/components/ui/separator.tsx';
 
 type FieldContextValue = {
-  id: string;
   required: boolean;
 };
 
@@ -66,7 +66,7 @@ function FieldGroup({ className, ...props }: React.ComponentProps<'div'>) {
 // `Select`'s hidden input uses absolute positioning (set by Base UI),
 // so `Field` needs to be a positioning context when it contains a `Select`.
 const fieldVariants = cva(
-  'data-[invalid=true]:text-destructive group/field flex w-full gap-2 has-[[data-slot=select-trigger]]:relative',
+  'data-invalid:text-destructive group/field flex w-full gap-2 has-[[data-slot=select-trigger]]:relative',
   {
     variants: {
       orientation: {
@@ -88,12 +88,10 @@ function Field({
   orientation = 'vertical',
   required = false,
   ...props
-}: React.ComponentProps<'div'> & VariantProps<typeof fieldVariants> & { required?: boolean }) {
-  const id = useId();
-
+}: FieldPrimitive.Root.Props & VariantProps<typeof fieldVariants> & { required?: boolean }) {
   return (
-    <FieldContext value={{ id, required }}>
-      <div
+    <FieldContext value={{ required }}>
+      <FieldPrimitive.Root
         role="group"
         data-slot="field"
         data-orientation={orientation}
@@ -114,18 +112,12 @@ function FieldContent({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function FieldLabel({
-  children,
-  className,
-  htmlFor,
-  ...props
-}: React.ComponentProps<typeof Label>) {
+function FieldLabel({ children, className, ...props }: React.ComponentProps<typeof Label>) {
   const fieldContext = useFieldContext();
 
   return (
     <Label
       data-slot="field-label"
-      htmlFor={htmlFor ?? fieldContext?.id}
       className={cn(
         'has-data-checked:bg-primary/5 has-data-checked:border-primary dark:has-data-checked:bg-primary/10 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border [&>*]:data-[slot=field]:p-2.5',
         'has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col',
@@ -160,9 +152,9 @@ function FieldTitle({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function FieldDescription({ className, ...props }: React.ComponentProps<'p'>) {
+function FieldDescription({ className, ...props }: FieldPrimitive.Description.Props) {
   return (
-    <p
+    <FieldPrimitive.Description
       data-slot="field-description"
       className={cn(
         'text-muted-foreground text-left text-sm leading-normal font-normal group-has-[[data-orientation=horizontal]]/field:text-balance [[data-variant=legend]+&]:-mt-1.5',
