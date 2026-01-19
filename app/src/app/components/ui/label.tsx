@@ -1,12 +1,13 @@
 'use client';
 
 import type * as React from 'react';
+import { Field as FieldPrimitive } from '@base-ui/react/field';
 
 import { cn } from '#app/utils/cn.ts';
 
-function Label({ className, ...props }: React.ComponentProps<'label'>) {
+function Label({ className, ...props }: FieldPrimitive.Label.Props) {
   return (
-    <label
+    <FieldPrimitive.Label
       data-slot="label"
       className={cn(
         'flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50',

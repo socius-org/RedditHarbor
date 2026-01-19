@@ -225,7 +225,7 @@ function ApiKeysDialogContent({
                   defaultValue={apiKeys.redditClientSecret}
                 />
               </Field>
-              <Field data-invalid={!!state?.errors.fieldErrors.supabaseProjectUrl?.length}>
+              <Field invalid={!!state?.errors.fieldErrors.supabaseProjectUrl?.length}>
                 <FieldLabel>Supabase project URL</FieldLabel>
                 <Input
                   name={'supabaseProjectUrl' satisfies keyof ApiKeys}

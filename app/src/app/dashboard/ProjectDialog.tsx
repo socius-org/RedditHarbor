@@ -193,7 +193,7 @@ function ProjectDialogContent({
             }}
           >
             <FieldGroup>
-              <Field required data-invalid={!!state?.errors.fieldErrors.title?.length}>
+              <Field required invalid={!!state?.errors.fieldErrors.title?.length}>
                 <FieldLabel>Project title</FieldLabel>
                 <Input
                   name={'title' satisfies keyof ProjectInput}
@@ -213,7 +213,7 @@ function ProjectDialogContent({
                   </FieldDescription>
                 )}
               </Field>
-              <Field required data-invalid={!!state?.errors.fieldErrors.researchObjective?.length}>
+              <Field required invalid={!!state?.errors.fieldErrors.researchObjective?.length}>
                 <FieldLabel>Research objective</FieldLabel>
                 <Textarea
                   name={'researchObjective' satisfies keyof ProjectInput}
@@ -251,10 +251,7 @@ function ProjectDialogContent({
                 )}
               </Field>
               <div className="flex gap-4">
-                <Field
-                  required
-                  data-invalid={!!state?.errors.fieldErrors.estimatedDataVolume?.length}
-                >
+                <Field required invalid={!!state?.errors.fieldErrors.estimatedDataVolume?.length}>
                   <FieldLabel>Estimated data volume</FieldLabel>
                   <Select<EstimatedDataVolume>
                     key={JSON.stringify(initialProject.estimatedDataVolume)}
@@ -287,7 +284,7 @@ function ProjectDialogContent({
                     }))}
                   />
                 </Field>
-                <Field required data-invalid={!!state?.errors.fieldErrors.collectionPeriod?.length}>
+                <Field required invalid={!!state?.errors.fieldErrors.collectionPeriod?.length}>
                   <FieldLabel>Collection period</FieldLabel>
                   <Select
                     key={JSON.stringify(initialProject.collectionPeriod)}
@@ -360,7 +357,7 @@ function ProjectDialogContent({
                   />
                 )}
               />
-              <Field required data-invalid={!!state?.errors.fieldErrors.aiMlModelPlan?.length}>
+              <Field required invalid={!!state?.errors.fieldErrors.aiMlModelPlan?.length}>
                 <FieldLabel>AI/ML model plans</FieldLabel>
                 <Select
                   key={initialProject.aiMlModelPlan}
@@ -395,10 +392,7 @@ function ProjectDialogContent({
                 )}
               </Field>
               <div className="flex gap-4">
-                <Field
-                  required
-                  data-invalid={!!state?.errors.fieldErrors.principalInvestigator?.length}
-                >
+                <Field required invalid={!!state?.errors.fieldErrors.principalInvestigator?.length}>
                   <FieldLabel>Principal investigator</FieldLabel>
                   <Input
                     name={'principalInvestigator' satisfies keyof ProjectInput}
@@ -412,7 +406,7 @@ function ProjectDialogContent({
                     }))}
                   />
                 </Field>
-                <Field required data-invalid={!!state?.errors.fieldErrors.institution?.length}>
+                <Field required invalid={!!state?.errors.fieldErrors.institution?.length}>
                   <FieldLabel>Institution</FieldLabel>
                   <Input
                     name={'institution' satisfies keyof ProjectInput}

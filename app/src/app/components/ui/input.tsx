@@ -6,7 +6,7 @@ import { Input as InputPrimitive } from '@base-ui/react/input';
 import { cn } from '#app/utils/cn.ts';
 import { useFieldContext } from '#app/components/ui/field.tsx';
 
-function Input({ className, defaultValue, id, required, type, ...props }: ComponentProps<'input'>) {
+function Input({ className, defaultValue, required, type, ...props }: ComponentProps<'input'>) {
   const fieldContext = useFieldContext();
 
   let key: Key | undefined;
@@ -20,7 +20,6 @@ function Input({ className, defaultValue, id, required, type, ...props }: Compon
     <InputPrimitive
       key={key}
       type={type}
-      id={id ?? fieldContext?.id}
       required={required ?? fieldContext?.required}
       defaultValue={defaultValue}
       data-slot="input"
