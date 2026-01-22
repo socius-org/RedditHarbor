@@ -4,6 +4,9 @@ import { AiProviderBanner } from './AiProviderBanner';
 import { NewProjectButton } from './NewProjectButton';
 import { ProjectCards } from './ProjectCards';
 import { ProjectsErrorBoundary } from './ProjectsErrorBoundary';
+import { ExampleCreatableCombobox } from './ExampleCreatableCombobox';
+import { ExampleCombobox } from './ExampleCombobox';
+import { ComboboxExample } from './ComboboxExample';
 
 function Header() {
   return (
@@ -14,6 +17,8 @@ function Header() {
   );
 }
 
+const disabled = Math.random() < 2;
+
 export default function Dashboard() {
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
@@ -23,11 +28,16 @@ export default function Dashboard() {
         <div>
           <NewProjectButton />
         </div>
-        <ProjectsErrorBoundary>
-          <Grid container spacing={3}>
-            <ProjectCards />
-          </Grid>
-        </ProjectsErrorBoundary>
+        {!disabled && (
+          <ProjectsErrorBoundary>
+            <Grid container spacing={3}>
+              <ProjectCards />
+            </Grid>
+          </ProjectsErrorBoundary>
+        )}
+        <ExampleCombobox />
+        <ExampleCreatableCombobox />
+        <ComboboxExample />
       </div>
     </Container>
   );
