@@ -6,7 +6,7 @@ import { ProjectCards } from './ProjectCards';
 import { ProjectsErrorBoundary } from './ProjectsErrorBoundary';
 import { ExampleCreatableCombobox } from './ExampleCreatableCombobox';
 import { ExampleCombobox } from './ExampleCombobox';
-import { ComboboxExample } from './ComboboxExample';
+import { ComboboxExample, ComboboxMultiple } from './ComboboxExample';
 
 function Header() {
   return (
@@ -35,9 +35,15 @@ export default function Dashboard() {
             </Grid>
           </ProjectsErrorBoundary>
         )}
-        <ExampleCombobox />
+        <div className="w-fit">
+          <ExampleCombobox />
+        </div>
+
         <ExampleCreatableCombobox />
-        <ComboboxExample />
+        <div className="w-fit">
+          <ComboboxExample />
+          <ComboboxMultiple />
+        </div>
       </div>
     </Container>
   );
