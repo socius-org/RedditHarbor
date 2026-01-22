@@ -15,7 +15,7 @@ import { ChevronDownIcon, XIcon, CheckIcon } from 'lucide-react';
 
 const Combobox = ComboboxPrimitive.Root;
 
-function ComboboxValue({ ...props }: ComboboxPrimitive.Value.Props) {
+function ComboboxValue(props: ComboboxPrimitive.Value.Props) {
   return <ComboboxPrimitive.Value data-slot="combobox-value" {...props} />;
 }
 
@@ -165,7 +165,7 @@ function ComboboxLabel({ className, ...props }: ComboboxPrimitive.GroupLabel.Pro
   );
 }
 
-function ComboboxCollection({ ...props }: ComboboxPrimitive.Collection.Props) {
+function ComboboxCollection(props: ComboboxPrimitive.Collection.Props) {
   return <ComboboxPrimitive.Collection data-slot="combobox-collection" {...props} />;
 }
 
