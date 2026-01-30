@@ -26,7 +26,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "core-js": "^3.48.0",
-    "dexie": "^4.2.1",
+    "dexie": "^4.3.0",
     "dexie-react-hooks": "^4.2.1-beta.1",
     "lucide-react": "^0.563.0",
     "next": "^16.1.4",
