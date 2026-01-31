@@ -44,7 +44,7 @@
     "@tanstack/eslint-plugin-query": "^5.91.3",
     "@tanstack/react-query-devtools": "^5.91.2",
     "@types/node": "^24.10.9",
-    "@types/react": "^19.2.9",
+    "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9.39.2",
