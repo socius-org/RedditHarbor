@@ -15,6 +15,16 @@ import TextField from '@mui/material/TextField';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
 import {
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxContent,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxValue,
+} from '#app/components/ui/combobox.tsx';
+import {
   Dialog,
   DialogBody,
   DialogClose,
@@ -129,6 +139,36 @@ const EMPTY_PROJECT: InitialProject = {
   principalInvestigator: '',
   institution: '',
 };
+
+function SubredditCombobox({ defaultValue }: { defaultValue: string[] }) {
+  const subredditsContainerRef = useRef<HTMLDivElement | null>(null);
+
+  return (
+    <Combobox key={defaultValue.join(',')} autoHighlight defaultValue={defaultValue} multiple>
+      <ComboboxChips ref={subredditsContainerRef}>
+        <ComboboxValue>
+          {(values: string[]) => (
+            <>
+              {values.map((value) => (
+                <ComboboxChip key={value}>{value}</ComboboxChip>
+              ))}
+              <ComboboxChipsInput placeholder={values.length > 0 ? '' : 'e.g. politics'} />
+            </>
+          )}
+        </ComboboxValue>
+      </ComboboxChips>
+      <ComboboxContent anchor={subredditsContainerRef}>
+        <ComboboxList>
+          {(item: string) => (
+            <ComboboxItem key={item} value={item}>
+              {item}
+            </ComboboxItem>
+          )}
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
+  );
+}
 
 type ProjectDialogContentHandle = { getIsPending: () => boolean };
 
@@ -313,6 +353,23 @@ function ProjectDialogContent({
                   />
                 </Field>
               </div>
+              <Field
+                invalid={!!state?.errors.fieldErrors.subreddits?.length}
+                name={'subreddits' satisfies keyof ProjectInput}
+                required
+              >
+                <SelectFieldLabel>Target subreddits</SelectFieldLabel>
+                <SubredditCombobox defaultValue={initialProject.subreddits} />
+                {state?.errors.fieldErrors.subreddits?.length ? (
+                  <FieldError
+                    errors={state.errors.fieldErrors.subreddits.map((message) => ({
+                      message,
+                    }))}
+                  />
+                ) : (
+                  <FieldDescription>Add at least one</FieldDescription>
+                )}
+              </Field>
               <Autocomplete
                 multiple
                 freeSolo
