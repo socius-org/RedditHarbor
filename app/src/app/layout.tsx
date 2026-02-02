@@ -14,7 +14,7 @@ if (!RAW_PUBLISHABLE_KEY) {
 }
 const PUBLISHABLE_KEY = RAW_PUBLISHABLE_KEY;
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   icons: { icon: '/favicon.png' },
