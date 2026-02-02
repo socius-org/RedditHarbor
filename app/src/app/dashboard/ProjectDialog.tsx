@@ -7,13 +7,19 @@ import {
   useState,
   type Ref,
 } from 'react';
-import isEqual from 'react-fast-compare';
 import { CircleAlert, Info } from 'lucide-react';
-import Autocomplete from '@mui/material/Autocomplete';
-import Chip from '@mui/material/Chip';
-import TextField from '@mui/material/TextField';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
+import {
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxContent,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxValue,
+} from '#app/components/ui/combobox.tsx';
 import {
   Dialog,
   DialogBody,
@@ -105,9 +111,9 @@ const AI_ML_MODEL_PLAN_ITEMS: { label: string; value: AiMlModelPlan | null }[] =
   })),
 ];
 
-function normaliseSubreddit(value: string): string {
-  // Remove `r/` prefix and trim whitespace.
-  return value.replace(/^r\//, '').trim();
+function stripSubredditPrefix(value: string): string {
+  // Remove `r/` prefix
+  return value.replace(/^r\//, '');
 }
 
 type InitialProject = Omit<
@@ -130,10 +136,136 @@ const EMPTY_PROJECT: InitialProject = {
   institution: '',
 };
 
+type SubredditItem = {
+  creatable?: string;
+  value: string;
+};
+
+// The implementation is based on https://base-ui.com/react/components/combobox#creatable
+function SubredditCombobox({ defaultValue }: { defaultValue: string[] }) {
+  const [items, setItems] = useState<SubredditItem[]>(() =>
+    defaultValue.map((value) => ({ value })),
+  );
+  const [selected, setSelected] = useState(items);
+  const [query, setQuery] = useState('');
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const highlightedItemRef = useRef<SubredditItem | undefined>(undefined);
+
+  function handleCreate(value: string) {
+    if (!value) {
+      return;
+    }
+
+    const normalized = value.toLocaleLowerCase();
+    const existing = items.find((item) => item.value.trim().toLocaleLowerCase() === normalized);
+
+    if (existing) {
+      setSelected((prev) =>
+        prev.some((item) => item.value === existing.value) ? prev : [...prev, existing],
+      );
+      setQuery('');
+      return;
+    }
+
+    const newItem: SubredditItem = { value };
+
+    if (!selected.find((item) => item.value === value)) {
+      setItems((prev) => [...prev, newItem]);
+      setSelected((prev) => [...prev, newItem]);
+    }
+
+    setQuery('');
+  }
+
+  function handleInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== 'Enter' || highlightedItemRef.current) {
+      return;
+    }
+
+    const currentTrimmed = query.trim();
+    if (!currentTrimmed) {
+      return;
+    }
+
+    // Prevent form submit
+    event.preventDefault();
+
+    handleCreate(currentTrimmed);
+  }
+
+  const trimmed = query.trim();
+  const lowered = trimmed.toLocaleLowerCase();
+  const exactExists = items.some((item) => item.value.trim().toLocaleLowerCase() === lowered);
+  // Show the creatable item alongside matches if there's no exact match
+  const itemsForView: SubredditItem[] =
+    trimmed !== '' && !exactExists
+      ? [...items, { creatable: trimmed, value: `Add "r/${trimmed}"` }]
+      : items;
+
+  return (
+    <Combobox
+      autoHighlight
+      inputValue={query}
+      items={itemsForView}
+      itemToStringValue={(item) => item.value}
+      multiple
+      onInputValueChange={(value) => {
+        // Strip `r/` prefix as the user types so filtering and deduplication
+        // work against normalised values.
+        setQuery(stripSubredditPrefix(value));
+      }}
+      onItemHighlighted={(item) => {
+        highlightedItemRef.current = item;
+      }}
+      onValueChange={(next) => {
+        const creatableSelection = next.find(
+          (item) => item.creatable && !selected.some((current) => current.value === item.value),
+        );
+
+        if (creatableSelection?.creatable) {
+          handleCreate(creatableSelection.creatable);
+          return;
+        }
+        const clean = next.filter((item) => !item.creatable);
+        setSelected(clean);
+        setQuery('');
+      }}
+      required
+      value={selected}
+    >
+      <ComboboxChips ref={containerRef}>
+        <ComboboxValue>
+          {(values: SubredditItem[]) => (
+            <>
+              {values.map((value) => (
+                <ComboboxChip key={value.value}>r/{value.value}</ComboboxChip>
+              ))}
+              <ComboboxChipsInput
+                onKeyDown={handleInputKeyDown}
+                placeholder={values.length > 0 ? '' : 'e.g. politics'}
+              />
+            </>
+          )}
+        </ComboboxValue>
+      </ComboboxChips>
+      <ComboboxContent anchor={containerRef}>
+        <ComboboxList>
+          {(item: SubredditItem) => (
+            <ComboboxItem key={item.value} value={item}>
+              {item.creatable ? item.value : `r/${item.value}`}
+            </ComboboxItem>
+          )}
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
+  );
+}
+
 type ProjectDialogContentHandle = { getIsPending: () => boolean };
 
 type ProjectDialogContentProps = {
-  action: (subreddits: string[], formData: FormData) => Promise<ProjectFormState | undefined>;
+  action: (formData: FormData) => Promise<ProjectFormState | undefined>;
   initialProject?: InitialProject;
   infoMessage?: string;
   onClose: () => void;
@@ -153,10 +285,9 @@ function ProjectDialogContent({
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(
     initialProject.researchObjective.length,
   );
-  const [subreddits, setSubreddits] = useState(initialProject.subreddits);
 
   async function submitAction(_prevState: ProjectFormState | undefined, formData: FormData) {
-    const result = await actionProp(subreddits, formData);
+    const result = await actionProp(formData);
     if (!result?.errors) {
       onClose();
     }
@@ -313,45 +444,23 @@ function ProjectDialogContent({
                   />
                 </Field>
               </div>
-              <Autocomplete
-                multiple
-                freeSolo
-                options={[]}
-                value={subreddits}
-                isOptionEqualToValue={(option, value) => normaliseSubreddit(option) === value}
-                onChange={(_, values) => {
-                  const next = values.map(normaliseSubreddit).filter(Boolean);
-                  setSubreddits((prev) => (isEqual(prev, next) ? prev : next));
-                }}
-                renderValue={(value, getItemProps) =>
-                  value.map((option, index) => {
-                    const { key, ...itemProps } = getItemProps({ index });
-                    return <Chip key={key} {...itemProps} label={`r/${option}`} size="small" />;
-                  })
-                }
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    // https://github.com/mui/material-ui/issues/21663#issuecomment-732298594
-                    required
-                    label="Target subreddits"
-                    placeholder="politics"
-                    error={!!state?.errors.fieldErrors.subreddits?.length}
-                    helperText={
-                      state?.errors.fieldErrors.subreddits?.[0] ?? (
-                        <>
-                          Add at least one (press <kbd>Enter</kbd> to add)
-                        </>
-                      )
-                    }
-                    slotProps={{
-                      htmlInput: { ...params.inputProps, required: subreddits.length === 0 },
-                    }}
-                    margin="dense"
-                    size="small"
+              <Field
+                invalid={!!state?.errors.fieldErrors.subreddits?.length}
+                name={'subreddits' satisfies keyof ProjectInput}
+                required
+              >
+                <SelectFieldLabel>Target subreddits</SelectFieldLabel>
+                <SubredditCombobox defaultValue={initialProject.subreddits} />
+                {state?.errors.fieldErrors.subreddits?.length ? (
+                  <FieldError
+                    errors={state.errors.fieldErrors.subreddits.map((message) => ({
+                      message,
+                    }))}
                   />
+                ) : (
+                  <FieldDescription>Add at least one</FieldDescription>
                 )}
-              />
+              </Field>
               <Field required invalid={!!state?.errors.fieldErrors.aiMlModelPlan?.length}>
                 <SelectFieldLabel>AI/ML model plans</SelectFieldLabel>
                 <Select

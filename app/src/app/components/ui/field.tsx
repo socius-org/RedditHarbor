@@ -63,10 +63,24 @@ function FieldGroup({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
-// `Select`'s hidden input uses absolute positioning (set by Base UI),
-// so `Field` needs to be a positioning context when it contains a `Select`.
+// See: https://github.com/mui/base-ui/issues/3718#issuecomment-3765820832
 const fieldVariants = cva(
-  'data-invalid:text-destructive group/field flex w-full gap-2 has-[[data-slot=select-trigger]]:relative',
+  cn(
+    'data-invalid:text-destructive group/field flex w-full gap-2',
+    // `Select`'s hidden input uses absolute positioning (set by Base UI),
+    // so `Field` needs to be a positioning context when it contains a `Select`.
+    'has-data-[slot=select-trigger]:relative',
+    // `Combobox`'s hidden input is repositioned flush below the chips to align native
+    // validation messages. `static` overrides Base UI's `position: absolute` to put it
+    // back in flow. `-mt-3` (0.75rem) offsets `gap-2` (0.5rem) + chips' `py-1` (0.25rem).
+    '[&_[data-slot=combobox-chips]+input[aria-hidden=true]]:static!',
+    '[&_[data-slot=combobox-chips]+input[aria-hidden=true]]:-mt-3!',
+    '[&_[data-slot=combobox-chips]+input[aria-hidden=true]]:w-full!',
+    // `mb-0.75` (3px) restores the original gap when a description or error follows,
+    // since being in flow adds an extra `gap-2`: 8 + (-12) + 1 + 3 + 8 = 8px.
+    'has-data-[slot=field-description]:[&_[data-slot=combobox-chips]+input[aria-hidden=true]]:mb-0.75!',
+    'has-data-[slot=field-error]:[&_[data-slot=combobox-chips]+input[aria-hidden=true]]:mb-0.75!',
+  ),
   {
     variants: {
       orientation: {

@@ -24,7 +24,7 @@ export function NewProjectButton() {
         New project
       </Button>
       <ProjectDialog
-        action={(subreddits, formData) => createProject(subreddits, formData)}
+        action={createProject}
         infoMessage="This information initialises your DPIA and will flow through all PETLP phases."
         open={open}
         onClose={handleClose}
