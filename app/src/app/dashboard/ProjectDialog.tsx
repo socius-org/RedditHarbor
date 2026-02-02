@@ -249,7 +249,8 @@ function SubredditCombobox({ defaultValue }: { defaultValue: string[] }) {
           )}
         </ComboboxValue>
       </ComboboxChips>
-      <ComboboxContent anchor={containerRef}>
+      {/* Hide the popup when empty since we don't render `ComboboxEmpty` */}
+      <ComboboxContent anchor={containerRef} className="data-empty:hidden">
         <ComboboxList>
           {(item: SubredditItem) => (
             <ComboboxItem key={item.value} value={item}>
