@@ -7,11 +7,7 @@ import {
   useState,
   type Ref,
 } from 'react';
-import isEqual from 'react-fast-compare';
 import { CircleAlert, Info } from 'lucide-react';
-import Autocomplete from '@mui/material/Autocomplete';
-import Chip from '@mui/material/Chip';
-import TextField from '@mui/material/TextField';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
 import {
@@ -118,10 +114,6 @@ const AI_ML_MODEL_PLAN_ITEMS: { label: string; value: AiMlModelPlan | null }[] =
 function stripSubredditPrefix(value: string): string {
   // Remove `r/` prefix
   return value.replace(/^r\//, '');
-}
-
-function normaliseSubreddit(value: string): string {
-  return stripSubredditPrefix(value).trim();
 }
 
 type InitialProject = Omit<
@@ -293,7 +285,6 @@ function ProjectDialogContent({
   const [researchObjectiveLength, setResearchObjectiveLength] = useState(
     initialProject.researchObjective.length,
   );
-  const [subreddits, setSubreddits] = useState(initialProject.subreddits);
 
   async function submitAction(_prevState: ProjectFormState | undefined, formData: FormData) {
     const result = await actionProp(formData);
@@ -470,45 +461,6 @@ function ProjectDialogContent({
                   <FieldDescription>Add at least one</FieldDescription>
                 )}
               </Field>
-              <Autocomplete
-                multiple
-                freeSolo
-                options={[]}
-                value={subreddits}
-                isOptionEqualToValue={(option, value) => normaliseSubreddit(option) === value}
-                onChange={(_, values) => {
-                  const next = values.map(normaliseSubreddit).filter(Boolean);
-                  setSubreddits((prev) => (isEqual(prev, next) ? prev : next));
-                }}
-                renderValue={(value, getItemProps) =>
-                  value.map((option, index) => {
-                    const { key, ...itemProps } = getItemProps({ index });
-                    return <Chip key={key} {...itemProps} label={`r/${option}`} size="small" />;
-                  })
-                }
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    // https://github.com/mui/material-ui/issues/21663#issuecomment-732298594
-                    required
-                    label="Target subreddits"
-                    placeholder="politics"
-                    error={!!state?.errors.fieldErrors.subreddits?.length}
-                    helperText={
-                      state?.errors.fieldErrors.subreddits?.[0] ?? (
-                        <>
-                          Add at least one (press <kbd>Enter</kbd> to add)
-                        </>
-                      )
-                    }
-                    slotProps={{
-                      htmlInput: { ...params.inputProps, required: subreddits.length === 0 },
-                    }}
-                    margin="dense"
-                    size="small"
-                  />
-                )}
-              />
               <Field required invalid={!!state?.errors.fieldErrors.aiMlModelPlan?.length}>
                 <SelectFieldLabel>AI/ML model plans</SelectFieldLabel>
                 <Select
