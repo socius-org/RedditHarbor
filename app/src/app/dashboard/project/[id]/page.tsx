@@ -37,12 +37,13 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   }
 
   return (
-    <PageContainer>
+    <PageContainer className="flex flex-col gap-2">
       <Button
         variant="link"
         size="sm"
         nativeButton={false}
-        className="text-muted-foreground mb-2 -ml-2.5"
+        // Negative margin offsets the button's px-2.5 padding to align text with content below
+        className="text-muted-foreground -ml-2.5 self-start"
         render={<Link href="/dashboard" />}
       >
         <ArrowLeft />
@@ -50,7 +51,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
       </Button>
       <h1 className="text-xl font-medium">{project.title}</h1>
       {project.researchObjective && (
-        <p className="text-muted-foreground mt-1">{project.researchObjective}</p>
+        <p className="text-muted-foreground">{project.researchObjective}</p>
       )}
     </PageContainer>
   );
