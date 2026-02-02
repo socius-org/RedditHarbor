@@ -67,14 +67,11 @@ export type ProjectFormState = {
   errors: z.core.$ZodFlattenedError<ProjectInput>;
 };
 
-export async function createProject(
-  subreddits: string[],
-  formData: FormData,
-): Promise<ProjectFormState | undefined> {
+export async function createProject(formData: FormData): Promise<ProjectFormState | undefined> {
   const rawFormData = {
     ...Object.fromEntries(formData),
-    subreddits,
-  };
+    subreddits: formData.getAll('subreddits' satisfies keyof ProjectInput),
+  } satisfies Partial<Record<keyof ProjectInput, unknown>>;
   const parsedResult = projectInputSchema.safeParse(rawFormData);
 
   if (!parsedResult.success) {
@@ -105,13 +102,12 @@ export async function createProject(
 
 export async function updateProject(
   existingProject: Project,
-  subreddits: string[],
   formData: FormData,
 ): Promise<ProjectFormState | undefined> {
   const rawFormData = {
     ...Object.fromEntries(formData),
-    subreddits,
-  };
+    subreddits: formData.getAll('subreddits' satisfies keyof ProjectInput),
+  } satisfies Partial<Record<keyof ProjectInput, unknown>>;
   const parsedResult = projectInputSchema.safeParse(rawFormData);
 
   if (!parsedResult.success) {

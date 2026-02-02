@@ -190,7 +190,7 @@ function ProjectCard({ project }: ProjectCardProps) {
         </DropdownMenuContent>
       </DropdownMenu>
       <ProjectDialog
-        action={(subreddits, formData) => updateProject(project, subreddits, formData)}
+        action={(formData) => updateProject(project, formData)}
         initialProject={project}
         open={editDialogOpen}
         onClose={handleCloseEditDialog}

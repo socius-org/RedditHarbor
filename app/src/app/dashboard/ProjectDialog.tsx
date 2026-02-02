@@ -265,7 +265,7 @@ function SubredditCombobox({ defaultValue }: { defaultValue: string[] }) {
 type ProjectDialogContentHandle = { getIsPending: () => boolean };
 
 type ProjectDialogContentProps = {
-  action: (subreddits: string[], formData: FormData) => Promise<ProjectFormState | undefined>;
+  action: (formData: FormData) => Promise<ProjectFormState | undefined>;
   initialProject?: InitialProject;
   infoMessage?: string;
   onClose: () => void;
@@ -288,7 +288,7 @@ function ProjectDialogContent({
   const [subreddits, setSubreddits] = useState(initialProject.subreddits);
 
   async function submitAction(_prevState: ProjectFormState | undefined, formData: FormData) {
-    const result = await actionProp(subreddits, formData);
+    const result = await actionProp(formData);
     if (!result?.errors) {
       onClose();
     }
