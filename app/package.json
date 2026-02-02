@@ -15,11 +15,11 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",
+    "@base-ui/utils": "^0.2.4",
     "@clerk/clerk-react": "^5.60.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.3.7",
-    "@mui/utils": "^7.3.7",
     "@tanstack/react-query": "^5.90.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
