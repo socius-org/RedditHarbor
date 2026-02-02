@@ -97,8 +97,8 @@ importers:
         specifier: ^0.27.0
         version: 0.27.0
       shadcn:
-        specifier: ^3.7.0
-        version: 3.7.0(@types/node@24.10.9)(babel-plugin-macros@3.1.0)(hono@4.11.1)(typescript@5.9.3)
+        specifier: ^3.8.0
+        version: 3.8.2(@types/node@24.10.9)(babel-plugin-macros@3.1.0)(hono@4.11.1)(typescript@5.9.3)
       tailwindcss:
         specifier: ^4.1.18
         version: 4.1.18
@@ -2797,8 +2797,8 @@ packages:
   setprototypeof@1.2.0:
     resolution: {integrity: sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==}
 
-  shadcn@3.7.0:
-    resolution: {integrity: sha512-zOXNAIFclguSYmmoibyXyKiYA6qjEJtXDSvloAMziSREW9Q0R/dLqBUYdb81lOejmZkDYuZApGabbMLH7G8qvQ==}
+  shadcn@3.8.2:
+    resolution: {integrity: sha512-4iqRkfmDmChg4lC7qBImi0KWrCKJbb0rNSs8QuocHmKAlX9U3s0ZcYUbth+2sv1ueferzfjD2hswCOm9Ng4ceA==}
     hasBin: true
 
   sharp@0.34.5:
@@ -5995,7 +5995,7 @@ snapshots:
 
   setprototypeof@1.2.0: {}
 
-  shadcn@3.7.0(@types/node@24.10.9)(babel-plugin-macros@3.1.0)(hono@4.11.1)(typescript@5.9.3):
+  shadcn@3.8.2(@types/node@24.10.9)(babel-plugin-macros@3.1.0)(hono@4.11.1)(typescript@5.9.3):
     dependencies:
       '@antfu/ni': 25.0.0
       '@babel/core': 7.28.5
