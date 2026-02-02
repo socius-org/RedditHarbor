@@ -115,9 +115,13 @@ const AI_ML_MODEL_PLAN_ITEMS: { label: string; value: AiMlModelPlan | null }[] =
   })),
 ];
 
+function stripSubredditPrefix(value: string): string {
+  // Remove `r/` prefix
+  return value.replace(/^r\//, '');
+}
+
 function normaliseSubreddit(value: string): string {
-  // Remove `r/` prefix and trim whitespace.
-  return value.replace(/^r\//, '').trim();
+  return stripSubredditPrefix(value).trim();
 }
 
 type InitialProject = Omit<
@@ -204,7 +208,7 @@ function SubredditCombobox({ defaultValue }: { defaultValue: string[] }) {
   // Show the creatable item alongside matches if there's no exact match
   const itemsForView: SubredditItem[] =
     trimmed !== '' && !exactExists
-      ? [...items, { creatable: trimmed, value: `Add ${JSON.stringify(trimmed)}` }]
+      ? [...items, { creatable: trimmed, value: `Add "r/${trimmed}"` }]
       : items;
 
   return (
@@ -214,7 +218,11 @@ function SubredditCombobox({ defaultValue }: { defaultValue: string[] }) {
       items={itemsForView}
       itemToStringValue={(item) => item.value}
       multiple
-      onInputValueChange={setQuery}
+      onInputValueChange={(value) => {
+        // Strip `r/` prefix as the user types so filtering and deduplication
+        // work against normalised values.
+        setQuery(stripSubredditPrefix(value));
+      }}
       onItemHighlighted={(item) => {
         highlightedItemRef.current = item;
       }}
@@ -239,7 +247,7 @@ function SubredditCombobox({ defaultValue }: { defaultValue: string[] }) {
           {(values: SubredditItem[]) => (
             <>
               {values.map((value) => (
-                <ComboboxChip key={value.value}>{value.value}</ComboboxChip>
+                <ComboboxChip key={value.value}>r/{value.value}</ComboboxChip>
               ))}
               <ComboboxChipsInput
                 onKeyDown={handleInputKeyDown}
@@ -253,7 +261,7 @@ function SubredditCombobox({ defaultValue }: { defaultValue: string[] }) {
         <ComboboxList>
           {(item: SubredditItem) => (
             <ComboboxItem key={item.value} value={item}>
-              {item.value}
+              {item.creatable ? item.value : `r/${item.value}`}
             </ComboboxItem>
           )}
         </ComboboxList>
