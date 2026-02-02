@@ -2,10 +2,7 @@ import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import './globals.css';
-import { theme } from './theme';
 import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut, SignOutButton } from './clerk';
 import { ApiKeysButton } from './ApiKeysButton';
 import { ApiKeysDialogProvider } from './ApiKeysDialogContext';
@@ -59,21 +56,17 @@ export default function RootLayout({
       <html lang="en" className={roboto.variable} suppressHydrationWarning>
         <body className="antialiased">
           <ThemeProvider attribute="class" disableTransitionOnChange>
-            <AppRouterCacheProvider>
-              <MuiThemeProvider theme={theme}>
-                <ReactQueryClientProvider>
-                  <SignedIn>
-                    <ApiKeysDialogProvider>
-                      <AppHeader />
-                      {children}
-                    </ApiKeysDialogProvider>
-                  </SignedIn>
-                  <SignedOut>
-                    <RedirectToSignIn />
-                  </SignedOut>
-                </ReactQueryClientProvider>
-              </MuiThemeProvider>
-            </AppRouterCacheProvider>
+            <ReactQueryClientProvider>
+              <SignedIn>
+                <ApiKeysDialogProvider>
+                  <AppHeader />
+                  {children}
+                </ApiKeysDialogProvider>
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </ReactQueryClientProvider>
           </ThemeProvider>
         </body>
       </html>
