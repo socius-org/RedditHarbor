@@ -27,7 +27,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
               This project doesn&apos;t exist or may have been deleted.
             </EmptyDescription>
           </EmptyHeader>
-          <Button variant="outline" render={<Link href="/dashboard" />}>
+          <Button variant="outline" nativeButton={false} render={<Link href="/dashboard" />}>
             <ArrowLeft />
             Back to dashboard
           </Button>
@@ -38,23 +38,20 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
 
   return (
     <PageContainer>
-      <div className="flex flex-col gap-6">
-        <div>
-          <Button
-            variant="link"
-            size="sm"
-            className="text-muted-foreground mb-2 -ml-2.5"
-            render={<Link href="/dashboard" />}
-          >
-            <ArrowLeft />
-            Back to dashboard
-          </Button>
-          <h1 className="text-xl font-medium">{project.title}</h1>
-          {project.researchObjective && (
-            <p className="text-muted-foreground mt-1">{project.researchObjective}</p>
-          )}
-        </div>
-      </div>
+      <Button
+        variant="link"
+        size="sm"
+        nativeButton={false}
+        className="text-muted-foreground mb-2 -ml-2.5"
+        render={<Link href="/dashboard" />}
+      >
+        <ArrowLeft />
+        Back to dashboard
+      </Button>
+      <h1 className="text-xl font-medium">{project.title}</h1>
+      {project.researchObjective && (
+        <p className="text-muted-foreground mt-1">{project.researchObjective}</p>
+      )}
     </PageContainer>
   );
 }

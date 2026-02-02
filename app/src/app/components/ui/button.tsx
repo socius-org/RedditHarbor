@@ -51,7 +51,6 @@ function Button({
   className,
   disabled,
   loading,
-  render,
   variant = 'default',
   size = 'default',
   ...props
@@ -61,8 +60,6 @@ function Button({
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
       disabled={disabled === true || loading}
-      render={render}
-      nativeButton={!render}
       {...props}
     >
       {loading && <Spinner className="absolute" />}
