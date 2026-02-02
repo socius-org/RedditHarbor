@@ -1,4 +1,3 @@
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import { AiProviderBanner } from './AiProviderBanner';
 import { NewProjectButton } from './NewProjectButton';
@@ -16,7 +15,7 @@ function Header() {
 
 export default function Dashboard() {
   return (
-    <Container maxWidth="lg" sx={{ py: 3 }}>
+    <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6">
       <div className="flex flex-col gap-6">
         <Header />
         <AiProviderBanner />
@@ -29,6 +28,6 @@ export default function Dashboard() {
           </Grid>
         </ProjectsErrorBoundary>
       </div>
-    </Container>
+    </div>
   );
 }
