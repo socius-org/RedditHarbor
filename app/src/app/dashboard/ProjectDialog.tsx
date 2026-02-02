@@ -140,28 +140,120 @@ const EMPTY_PROJECT: InitialProject = {
   institution: '',
 };
 
+type SubredditItem = {
+  creatable?: string;
+  value: string;
+};
+
+// The implementation is based on https://base-ui.com/react/components/combobox#creatable
 function SubredditCombobox({ defaultValue }: { defaultValue: string[] }) {
-  const subredditsContainerRef = useRef<HTMLDivElement | null>(null);
+  const [items, setItems] = useState<SubredditItem[]>(() =>
+    defaultValue.map((value) => ({ value })),
+  );
+  const [selected, setSelected] = useState(items);
+  const [query, setQuery] = useState('');
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const highlightedItemRef = useRef<SubredditItem | undefined>(undefined);
+
+  function handleCreate(value: string) {
+    if (!value) {
+      return;
+    }
+
+    const normalized = value.toLocaleLowerCase();
+    const existing = items.find((item) => item.value.trim().toLocaleLowerCase() === normalized);
+
+    if (existing) {
+      setSelected((prev) =>
+        prev.some((item) => item.value === existing.value) ? prev : [...prev, existing],
+      );
+      setQuery('');
+      return;
+    }
+
+    const newItem: SubredditItem = { value };
+
+    if (!selected.find((item) => item.value === value)) {
+      setItems((prev) => [...prev, newItem]);
+      setSelected((prev) => [...prev, newItem]);
+    }
+
+    setQuery('');
+  }
+
+  function handleInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== 'Enter' || highlightedItemRef.current) {
+      return;
+    }
+
+    const currentTrimmed = query.trim();
+    if (!currentTrimmed) {
+      return;
+    }
+
+    // Prevent form submit
+    event.preventDefault();
+
+    handleCreate(currentTrimmed);
+  }
+
+  const trimmed = query.trim();
+  const lowered = trimmed.toLocaleLowerCase();
+  const exactExists = items.some((item) => item.value.trim().toLocaleLowerCase() === lowered);
+  // Show the creatable item alongside matches if there's no exact match
+  const itemsForView: SubredditItem[] =
+    trimmed !== '' && !exactExists
+      ? [...items, { creatable: trimmed, value: `Add ${JSON.stringify(trimmed)}` }]
+      : items;
 
   return (
-    <Combobox key={defaultValue.join(',')} autoHighlight defaultValue={defaultValue} multiple>
-      <ComboboxChips ref={subredditsContainerRef}>
+    <Combobox
+      autoHighlight
+      inputValue={query}
+      items={itemsForView}
+      itemToStringValue={(item) => item.value}
+      multiple
+      onInputValueChange={setQuery}
+      onItemHighlighted={(item) => {
+        highlightedItemRef.current = item;
+      }}
+      onValueChange={(next) => {
+        const creatableSelection = next.find(
+          (item) => item.creatable && !selected.some((current) => current.value === item.value),
+        );
+
+        if (creatableSelection?.creatable) {
+          handleCreate(creatableSelection.creatable);
+          return;
+        }
+        const clean = next.filter((item) => !item.creatable);
+        setSelected(clean);
+        setQuery('');
+      }}
+      required
+      value={selected}
+    >
+      <ComboboxChips ref={containerRef}>
         <ComboboxValue>
-          {(values: string[]) => (
+          {(values: SubredditItem[]) => (
             <>
               {values.map((value) => (
-                <ComboboxChip key={value}>{value}</ComboboxChip>
+                <ComboboxChip key={value.value}>{value.value}</ComboboxChip>
               ))}
-              <ComboboxChipsInput placeholder={values.length > 0 ? '' : 'e.g. politics'} />
+              <ComboboxChipsInput
+                onKeyDown={handleInputKeyDown}
+                placeholder={values.length > 0 ? '' : 'e.g. politics'}
+              />
             </>
           )}
         </ComboboxValue>
       </ComboboxChips>
-      <ComboboxContent anchor={subredditsContainerRef}>
+      <ComboboxContent anchor={containerRef}>
         <ComboboxList>
-          {(item: string) => (
-            <ComboboxItem key={item} value={item}>
-              {item}
+          {(item: SubredditItem) => (
+            <ComboboxItem key={item.value} value={item}>
+              {item.value}
             </ComboboxItem>
           )}
         </ComboboxList>
