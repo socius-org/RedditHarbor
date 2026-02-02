@@ -6,6 +6,7 @@ import { useSuspendingLiveQuery } from 'dexie-react-hooks';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '#app/components/ui/button.tsx';
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '#app/components/ui/empty.tsx';
+import { PageContainer } from '#app/components/ui/PageContainer.tsx';
 import { db } from '#app/database.ts';
 
 type ProjectDetailPageProps = {
@@ -18,7 +19,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
 
   if (!project) {
     return (
-      <div className="mx-auto max-w-300 px-4 py-6 sm:px-6">
+      <PageContainer>
         <Empty className="py-20">
           <EmptyHeader>
             <EmptyTitle>Project not found</EmptyTitle>
@@ -31,12 +32,12 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
             Back to dashboard
           </Button>
         </Empty>
-      </div>
+      </PageContainer>
     );
   }
 
   return (
-    <div className="mx-auto max-w-300 px-4 py-6 sm:px-6">
+    <PageContainer>
       <div className="flex flex-col gap-6">
         <div>
           <Button
@@ -54,6 +55,6 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
           )}
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }

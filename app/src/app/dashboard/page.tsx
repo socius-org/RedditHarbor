@@ -1,3 +1,4 @@
+import { PageContainer } from '#app/components/ui/PageContainer.tsx';
 import { AiProviderBanner } from './AiProviderBanner';
 import { NewProjectButton } from './NewProjectButton';
 import { ProjectCards } from './ProjectCards';
@@ -14,7 +15,7 @@ function Header() {
 
 export default function Dashboard() {
   return (
-    <div className="mx-auto max-w-300 px-4 py-6 sm:px-6">
+    <PageContainer>
       <div className="flex flex-col gap-6">
         <Header />
         <AiProviderBanner />
@@ -27,6 +28,6 @@ export default function Dashboard() {
           </div>
         </ProjectsErrorBoundary>
       </div>
-    </div>
+    </PageContainer>
   );
 }
