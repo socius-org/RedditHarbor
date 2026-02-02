@@ -15,7 +15,7 @@ import {
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { useUser } from '@clerk/clerk-react';
 import { CircleAlert, CircleCheck } from 'lucide-react';
-import useForkRef from '@mui/utils/useForkRef';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { KeyRound } from 'lucide-react';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
@@ -146,7 +146,7 @@ function ApiKeysDialogContent({
 
   const formId = useId();
   const formRef = useRef<HTMLFormElement>(null);
-  const handleFormRef = useForkRef(formRef, formRefProp);
+  const handleFormRef = useMergedRefs(formRef, formRefProp);
 
   async function submitAction(_prevState: SaveApiKeysState | undefined, formData: FormData) {
     const result = await saveApiKeys(encryptionKey, onApiKeysChange, onInvalidateApiKeys, formData);
