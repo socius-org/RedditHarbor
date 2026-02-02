@@ -2,7 +2,7 @@
 
 import { use } from 'react';
 import Link from 'next/link';
-import { useLiveQuery } from 'dexie-react-hooks';
+import { useSuspendingLiveQuery } from 'dexie-react-hooks';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '#app/components/ui/button.tsx';
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '#app/components/ui/empty.tsx';
@@ -14,9 +14,9 @@ type ProjectDetailPageProps = {
 
 export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const { id } = use(params);
-  const project = useLiveQuery(() => db.projects.get(id), [id]);
+  const project = useSuspendingLiveQuery(() => db.projects.get(id), ['projects', id]);
 
-  if (project === undefined) {
+  if (!project) {
     return (
       <div className="mx-auto max-w-300 px-4 py-6 sm:px-6">
         <Empty className="py-20">
