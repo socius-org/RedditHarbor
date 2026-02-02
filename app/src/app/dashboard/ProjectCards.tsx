@@ -38,7 +38,6 @@ import {
 } from '#app/components/ui/dropdown-menu.tsx';
 import { updateProject, type Project } from '../actions/project';
 import { db } from '../database';
-import { GridItem } from './GridItem';
 import { ProjectDialog } from './ProjectDialog';
 import { useProjects } from './useProjects';
 
@@ -209,9 +208,5 @@ function ProjectCard({ project }: ProjectCardProps) {
 export function ProjectCards() {
   const projects = useProjects();
 
-  return projects.map((project) => (
-    <GridItem key={project.id}>
-      <ProjectCard project={project} />
-    </GridItem>
-  ));
+  return projects.map((project) => <ProjectCard key={project.id} project={project} />);
 }
