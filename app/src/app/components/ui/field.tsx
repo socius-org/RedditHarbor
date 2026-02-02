@@ -66,7 +66,7 @@ function FieldGroup({ className, ...props }: React.ComponentProps<'div'>) {
 // `Select`'s hidden input uses absolute positioning (set by Base UI),
 // so `Field` needs to be a positioning context when it contains a `Select`.
 const fieldVariants = cva(
-  'data-invalid:text-destructive group/field flex w-full gap-2 has-[[data-slot=select-trigger]]:relative',
+  'data-invalid:text-destructive group/field flex w-full gap-2 has-data-[slot=select-trigger]:relative',
   {
     variants: {
       orientation: {
