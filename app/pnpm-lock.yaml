@@ -97,7 +97,7 @@ importers:
         specifier: ^0.27.0
         version: 0.27.0
       shadcn:
-        specifier: ^3.8.0
+        specifier: ^3.8.1
         version: 3.8.2(@types/node@24.10.9)(babel-plugin-macros@3.1.0)(hono@4.11.1)(typescript@5.9.3)
       tailwindcss:
         specifier: ^4.1.18
