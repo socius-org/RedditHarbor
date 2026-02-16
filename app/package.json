@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",
-    "@base-ui/utils": "^0.2.4",
+    "@base-ui/utils": "^0.2.5",
     "@clerk/clerk-react": "^5.60.0",
     "@tanstack/react-query": "^5.90.20",
     "class-variance-authority": "^0.7.1",
