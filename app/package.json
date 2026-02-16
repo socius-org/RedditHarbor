@@ -17,7 +17,7 @@
     "@base-ui/react": "^1.1.0",
     "@base-ui/utils": "^0.2.5",
     "@clerk/clerk-react": "^5.60.0",
-    "@tanstack/react-query": "^5.90.20",
+    "@tanstack/react-query": "^5.90.21",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "core-js": "^3.48.0",
