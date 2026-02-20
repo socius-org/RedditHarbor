@@ -2,6 +2,7 @@
 
 import { Field as FieldPrimitive } from '@base-ui/react/field';
 import type * as React from 'react';
+
 import { cn } from '#app/utils/cn.ts';
 
 function Label({ className, ...props }: FieldPrimitive.Label.Props) {

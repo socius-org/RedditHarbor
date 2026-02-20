@@ -1,4 +1,5 @@
 import { useSuspendingLiveQuery } from 'dexie-react-hooks';
+
 import { db } from '../database';
 
 export function useProjects() {

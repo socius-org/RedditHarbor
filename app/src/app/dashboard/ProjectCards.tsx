@@ -10,6 +10,7 @@ import {
   useState,
   type Ref,
 } from 'react';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,6 +37,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '#app/components/ui/dropdown-menu.tsx';
+
 import { updateProject, type Project } from '../actions/project';
 import { db } from '../database';
 import { ProjectDialog } from './ProjectDialog';

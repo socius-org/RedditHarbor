@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
+
 import './globals.css';
 import { ApiKeysButton } from './ApiKeysButton';
 import { ApiKeysDialogProvider } from './ApiKeysDialogContext';
