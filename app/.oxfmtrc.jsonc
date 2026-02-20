@@ -1,6 +1,9 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "singleQuote": true,
+  "experimentalSortPackageJson": {
+    "sortScripts": true,
+  },
   "experimentalTailwindcss": {
     "functions": ["cn", "cva"],
   },
