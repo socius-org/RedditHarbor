@@ -1,4 +1,5 @@
 import * as z from 'zod';
+
 import { db } from '../database';
 
 export const RESEARCH_OBJECTIVE_MAX_LENGTH = 500;

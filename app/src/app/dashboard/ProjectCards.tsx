@@ -1,5 +1,7 @@
 'use client';
 
+import { CircleAlert, Ellipsis } from 'lucide-react';
+import Link from 'next/link';
 import {
   startTransition,
   useActionState,
@@ -8,9 +10,7 @@ import {
   useState,
   type Ref,
 } from 'react';
-import Link from 'next/link';
-import { CircleAlert, Ellipsis } from 'lucide-react';
-import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,6 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '#app/components/ui/alert-dialog.tsx';
+import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
 import {
   Card,
@@ -36,6 +37,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '#app/components/ui/dropdown-menu.tsx';
+
 import { updateProject, type Project } from '../actions/project';
 import { db } from '../database';
 import { ProjectDialog } from './ProjectDialog';

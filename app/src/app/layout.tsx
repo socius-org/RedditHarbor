@@ -1,11 +1,12 @@
-import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
+import { Inter } from 'next/font/google';
+import type { ReactNode } from 'react';
+
 import './globals.css';
-import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut, SignOutButton } from './clerk';
 import { ApiKeysButton } from './ApiKeysButton';
 import { ApiKeysDialogProvider } from './ApiKeysDialogContext';
+import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut, SignOutButton } from './clerk';
 import { ReactQueryClientProvider } from './ReactQueryClientProvider';
 
 const RAW_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;

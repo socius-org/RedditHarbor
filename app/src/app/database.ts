@@ -1,4 +1,5 @@
 import Dexie, { type EntityTable } from 'dexie';
+
 import type { Project } from './actions/project';
 
 // https://dexie.org/docs/Tutorial/React

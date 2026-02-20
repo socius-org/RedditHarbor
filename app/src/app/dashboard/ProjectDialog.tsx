@@ -1,3 +1,4 @@
+import { CircleAlert, Info } from 'lucide-react';
 import {
   startTransition,
   useActionState,
@@ -7,7 +8,7 @@ import {
   useState,
   type Ref,
 } from 'react';
-import { CircleAlert, Info } from 'lucide-react';
+
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
 import {
@@ -47,6 +48,7 @@ import {
   SelectValue,
 } from '#app/components/ui/select.tsx';
 import { Textarea } from '#app/components/ui/textarea.tsx';
+
 import {
   AI_ML_MODEL_PLAN_OPTIONS,
   RESEARCH_OBJECTIVE_MAX_LENGTH,

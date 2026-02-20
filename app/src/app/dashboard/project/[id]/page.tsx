@@ -1,9 +1,10 @@
 'use client';
 
-import { use } from 'react';
-import Link from 'next/link';
 import { useSuspendingLiveQuery } from 'dexie-react-hooks';
 import { ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
+import { use } from 'react';
+
 import { Button } from '#app/components/ui/button.tsx';
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '#app/components/ui/empty.tsx';
 import { PageContainer } from '#app/components/ui/PageContainer.tsx';

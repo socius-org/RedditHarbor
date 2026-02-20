@@ -1,4 +1,5 @@
 import * as z from 'zod';
+
 import { deriveKey } from './encryption';
 
 const RELYING_PARTY_NAME = 'RedditHarbor';

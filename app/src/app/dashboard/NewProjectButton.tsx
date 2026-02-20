@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import { Plus } from 'lucide-react';
-import { Button } from '#app/components/ui/button.tsx';
+import { useState } from 'react';
+
 import { createProject } from '#app/actions/project.ts';
+import { Button } from '#app/components/ui/button.tsx';
+
 import { ProjectDialog } from './ProjectDialog';
 
 export function NewProjectButton() {
