@@ -1,10 +1,9 @@
 'use client';
 
-import type * as React from 'react';
 import { Select as SelectPrimitive } from '@base-ui/react/select';
-
-import { cn } from '#app/utils/cn.ts';
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from 'lucide-react';
+import type * as React from 'react';
+import { cn } from '#app/utils/cn.ts';
 import { FieldLabel } from './field';
 
 const Select = SelectPrimitive.Root;

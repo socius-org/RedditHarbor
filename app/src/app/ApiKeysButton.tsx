@@ -1,5 +1,9 @@
 'use client';
 
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useUser } from '@clerk/clerk-react';
+import { CircleAlert, CircleCheck } from 'lucide-react';
+import { KeyRound } from 'lucide-react';
 import {
   startTransition,
   Suspense,
@@ -13,10 +17,6 @@ import {
   type RefObject,
 } from 'react';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
-import { useUser } from '@clerk/clerk-react';
-import { CircleAlert, CircleCheck } from 'lucide-react';
-import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { KeyRound } from 'lucide-react';
 import { Alert, AlertTitle } from '#app/components/ui/alert.tsx';
 import { Button } from '#app/components/ui/button.tsx';
 import {
@@ -48,8 +48,8 @@ import {
   type EncryptedApiKeys,
   type SaveApiKeysState,
 } from './actions/saveApiKeys';
-import { useApiKeysDialog } from './ApiKeysDialogContext';
 import { testConnection, type TestConnectionService } from './actions/testConnection';
+import { useApiKeysDialog } from './ApiKeysDialogContext';
 import { addPasskey, authenticateAndDeriveKey, type Passkey } from './utils/passkey';
 
 const connectionTestServices: { id: TestConnectionService; label: string }[] = [

@@ -1,10 +1,9 @@
 'use client';
 
-import type * as React from 'react';
 import { Field as FieldPrimitive } from '@base-ui/react/field';
-
-import { cn } from '#app/utils/cn.ts';
+import type * as React from 'react';
 import { useFieldContext } from '#app/components/ui/field.tsx';
+import { cn } from '#app/utils/cn.ts';
 
 function Textarea({ className, required, ...props }: React.ComponentProps<'textarea'>) {
   const fieldContext = useFieldContext();

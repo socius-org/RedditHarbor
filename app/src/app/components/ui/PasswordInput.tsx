@@ -1,6 +1,6 @@
 'use client';
-import { useState, type ComponentProps } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { useState, type ComponentProps } from 'react';
 import {
   InputGroup,
   InputGroupAddon,
