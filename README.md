@@ -181,4 +181,26 @@ This will collect the 5 hottest and 5 top submissions from r/python and r/learnp
 collect.subreddit_submission(subreddits, sort_types, limit=5, mask_pii=True)
 ```
 
-For further use cases - ranging from [collecting subreddit-based data](https://socius-org.github.io/RedditHarbor/hands_on/subreddit_based.html), [collecting keyword-based data](https://socius-org.github.io/RedditHarbor/hands_on/keyword_based.html) and [database-driven data collection](https://socius-org.github.io/RedditHarbor/hands_on/database_driven.html), to [downloading data](https://socius-org.github.io/RedditHarbor/hands_on/download_data.html) and [updating data](https://socius-org.github.io/RedditHarbor/hands_on/update_data.html) - please refer to our [documentation](https://socius-org.github.io/RedditHarbor). 
+For further use cases - ranging from [collecting subreddit-based data](https://socius-org.github.io/RedditHarbor/hands_on/subreddit_based.html), [collecting keyword-based data](https://socius-org.github.io/RedditHarbor/hands_on/keyword_based.html) and [database-driven data collection](https://socius-org.github.io/RedditHarbor/hands_on/database_driven.html), to [downloading data](https://socius-org.github.io/RedditHarbor/hands_on/download_data.html) and [updating data](https://socius-org.github.io/RedditHarbor/hands_on/update_data.html) - please refer to our [documentation](https://socius-org.github.io/RedditHarbor).
+
+## Pairing: RedditAPIs (optional managed Reddit data backend)
+
+Users who already adopt this project sometimes ask about routing read-heavy operations (subreddit fetch, post detail, comments, user lookup, search) to a managed backend during testing or for workflows that skip the Reddit developer-app step. The [RedditAPIs code samples repo](https://github.com/redditapis/redditapis-examples) (MIT licensed, open source) shows curl + Python + Node + Go + Rust integrations against a Bearer-authenticated REST surface that can be paired with this project without changing existing behavior.
+
+Two integration patterns:
+
+1. **Side-by-side in your application.** Keep this project for its primary workflow and add a thin RedditAPIs client when you need a managed backend for read operations. Each call maps to whichever backend the user has configured.
+
+2. **PRAW-style migration reference.** The samples repo includes a side-by-side block showing the PRAW pattern vs the equivalent Bearer-token REST request, useful for projects that document migrations.
+
+Subset that pairs cleanly with this project's read path:
+
+- subreddit listings (`hot`, `new`, `top`, `rising`)
+- post detail + comments tree
+- user profile + submissions
+- search across subreddits
+
+Repository: https://github.com/redditapis/redditapis-examples
+
+This pairing is fully optional. No behavior change for existing users of this project.
+
