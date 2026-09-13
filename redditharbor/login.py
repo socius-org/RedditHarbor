@@ -1,5 +1,6 @@
 import os
 import logging.config 
+import warnings
 from dotenv import load_dotenv
 from supabase import create_client, Client
 import praw
@@ -136,16 +137,63 @@ def reddit(
         return None
 
 
+SUPABASE_KEYS_DOCS = "https://supabase.com/docs/guides/getting-started/api-keys"
+
+
+def check_supabase_key(key: str) -> None:
+    """
+    Validate the format of a Supabase API key before connecting.
+
+    RedditHarbor writes to your database, so it needs a *secret* key (``sb_secret_...``).
+    Publishable keys (``sb_publishable_...``) are rejected. Legacy ``service_role`` JWT keys
+    still work but are deprecated by Supabase, so a warning is emitted.
+
+    Raises:
+        ValueError: If the key is missing or is a publishable key.
+    """
+    if not key:
+        raise ValueError(
+            "No Supabase key provided. Pass private_key=<your secret key> or save it to .env first."
+        )
+    if key.startswith("sb_publishable_"):
+        raise ValueError(
+            "This is a Supabase *publishable* key (sb_publishable_...), which cannot write to your "
+            "tables. RedditHarbor needs the *secret* key (sb_secret_...) from the Supabase dashboard "
+            f"under Settings > API Keys. See {SUPABASE_KEYS_DOCS}"
+        )
+    if key.startswith("sb_secret_"):
+        return
+    if key.startswith("eyJ"):  # JWT-style legacy anon / service_role key
+        message = (
+            "You are using a legacy Supabase service_role/anon key. Supabase is retiring these keys "
+            "by the end of 2026, after which RedditHarbor will no longer be able to connect. Create a "
+            "secret key (sb_secret_...) under Settings > API Keys in the Supabase dashboard and use "
+            f"it instead. See {SUPABASE_KEYS_DOCS}"
+        )
+        warnings.warn(message, FutureWarning, stacklevel=3)
+        console.log(f"[bold yellow]Deprecated Supabase key:[/] {message}")
+        return
+    console.log(
+        "[bold yellow]Unrecognised Supabase key format.[/] Expected a secret key starting with "
+        "'sb_secret_'. Continuing anyway."
+    )
+
+
 def supabase(url: str = None, private_key: str = None) -> Client:
     """
     Connect to the Supabase database using the provided credentials or those stored in the .env file.
 
     Parameters:
-        url (str, optional): The URL of your Supabase project.
-        private_key (str, optional): The private key of your Supabase project.
+        url (str, optional): The URL of your Supabase project (https://<project-id>.supabase.co).
+        private_key (str, optional): The *secret* key of your Supabase project (sb_secret_...),
+            found under Settings > API Keys. Legacy service_role keys are accepted with a
+            deprecation warning; publishable keys are rejected.
 
     Returns:
         Client: An instance of the Supabase client if the connection is successful, else None.
+
+    Raises:
+        ValueError: If no key is available or a publishable key is given.
     """
 
     create_empty_env_file()
@@ -156,6 +204,12 @@ def supabase(url: str = None, private_key: str = None) -> Client:
     # Use provided parameters if available, otherwise use existing credentials
     url = url or existing_credentials.get("URL")
     private_key = private_key or existing_credentials.get("KEY")
+
+    check_supabase_key(private_key)
+    if not url:
+        raise ValueError(
+            "No Supabase URL provided. Pass url='https://<project-id>.supabase.co' or save it to .env first."
+        )
 
     try:
         supabase_client: Client = create_client(url, private_key)

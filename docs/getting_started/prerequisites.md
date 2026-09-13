@@ -24,7 +24,7 @@
 
 1. **Sign Up for Supabase**: Visit [supabase.com](https://supabase.com/) and sign up for a new account. This will allow you to create a project and obtain the necessary credentials for storing the Reddit data.
 
-2. **Create a New Project**: After signing up, create a new project in Supabase. This will generate a database `URL` and a `SECRET_KEY` (`service_role`) for your project.
+2. **Create a New Project**: After signing up, create a new project in Supabase. Give it a name, choose a strong database password and the region closest to you. Under "Security", keep **Enable Data API** ticked: RedditHarbor talks to your database through the Data API. Once the project is ready, it has a project `URL` of the form `https://<project-id>.supabase.co` (shown under "Settings > Data API", or by clicking "Connect" at the top of the dashboard).
 <br>
 ```{image} ../images/supabase_createnewproject.png
 :width: 400px
@@ -32,13 +32,17 @@
 ```
 <br>
 
-3. **Access Credentials**: Access database `URL` and `SECRET_KEY` provided in the "Project Settings > Configuration > API" section. You will need these credentials to connect and store the Reddit data during the tutorial.
+3. **Access Credentials**: Open "Settings > API Keys". On the *Publishable and secret API keys* tab, reveal and copy the **Secret key** (it starts with `sb_secret_`). This is the `SECRET_KEY` you will use as `SUPABASE_KEY`; it allows RedditHarbor to write to your tables. Do **not** use the *Publishable key* (`sb_publishable_`): it has no write access, and RedditHarbor will refuse it.
 <br>
 ```{image} ../images/supabase_apikey.png
 :width: 400px
 :align: center
 ```
 <br>
+
+```{note}
+Supabase is retiring the legacy `anon` and `service_role` keys (shown on the *Legacy anon, service_role API keys* tab) by the end of 2026. They still work for now, and RedditHarbor prints a warning if you use one, but new projects should use the secret key described above. If you followed an older version of this guide, see [Upgrading from 0.3](migration.md).
+```
 
 ## 🖥️ Environment Setup
 

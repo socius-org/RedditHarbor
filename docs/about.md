@@ -3,6 +3,10 @@
 ## Navigating 🧭 the complexities of APIs and data collection can be a daunting task, especially for researchers 👨‍💻 with limited coding backgrounds. 
 ## **RedditHarbor simplifies collecting Reddit data and saving 📥 it to a database**. It **removes the complexity** of working with APIs 🏗️, letting you easily build a "harbor" of data for analysis.
 
+```{warning}
+**RedditHarbor 0.3 and earlier are deprecated.** They collect every column by default, which is incompatible with GDPR data minimisation, and depend on Supabase's legacy API keys, which Supabase is retiring by the end of 2026. Upgrade with `pip install --upgrade redditharbor` and see [Upgrading from 0.3](getting_started/migration.md).
+```
+
 ## Overview 
 
 ### Extract, Transform and Load (ETL) Data
@@ -22,6 +26,7 @@ RedditHarbor streamlines the ETL (Extract, Transform, Load) process, enabling re
 Here's how RedditHarbor empowers your research:
 
 * **✨ Comprehensive Data Collection**: Connect directly to the Reddit Data API and gather submissions, comments, and user profiles with ease.
+* **🧹 Data Minimisation**: In line with GDPR, you choose exactly which columns to collect. Anything you do not ask for is neither requested from Reddit nor stored.
 * **🔒 Privacy-Focused**: Anonymise any personally identifiable information (PII) to protect user privacy and comply with ethical research practices and IRB requirements.
 * **📦 Organised Data Storage**: Store your collected data in a secure database that you control, ensuring accessibility and organisation.
 * **📈 Scalable and Efficient**: Handle pagination seamlessly, even for large datasets with millions of rows. 

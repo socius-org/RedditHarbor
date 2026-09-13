@@ -1,36 +1,36 @@
 Metadata-Version: 2.4
 Name: redditharbor
-Version: 0.3
+Version: 0.4.0
 Summary: Effortlessly collect and store Reddit data in your database.
 Home-page: https://github.com/socius-org/RedditHarbor/
-Download-URL: https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.3.tar.gz
+Download-URL: https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.4.0.tar.gz
 Author: Nick Oh
 Author-email: nick.sh.oh@socius.org
 License: MIT
 Project-URL: Bug Reports, https://github.com/socius-org/RedditHarbor/issues
 Project-URL: Source, https://github.com/socius-org/RedditHarbor/
-Project-URL: Documentation, https://github.com/socius-org/RedditHarbor/blob/main/README.md
-Keywords: Reddit,Supabase,reddit-api,database,reddit-crawler,reddit-scraper
-Classifier: Development Status :: 3 - Alpha
+Project-URL: Documentation, https://socius-org.github.io/RedditHarbor/
+Project-URL: Changelog, https://github.com/socius-org/RedditHarbor/blob/main/CHANGELOG.md
+Keywords: Reddit,Supabase,reddit-api,database,reddit-crawler,reddit-scraper,gdpr
+Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: Science/Research
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
-Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
 Classifier: Topic :: Database
-Requires-Python: >=3.8
+Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: praw>=7.7.1
-Requires-Dist: supabase>=1.0.3
+Requires-Dist: praw<9.0,>=8.0
+Requires-Dist: supabase<3.0,>=2.0
 Requires-Dist: rich>=13.4.2
 Requires-Dist: python-dotenv>=1.0.0
 Requires-Dist: pillow<12.0.0,>=10.3.0
@@ -64,6 +64,8 @@ Dynamic: summary
 
 ![redditharbor_demo](https://github.com/socius-org/RedditHarbor/assets/130935698/7bb4f570-90f7-4e6c-a469-7e8debf9a260)
 
+> ⚠️ **Deprecation notice: RedditHarbor 0.3 and earlier are deprecated and no longer supported.** They collect every column by default, which is incompatible with GDPR data minimisation, and they depend on Supabase's legacy `service_role` keys, which Supabase is retiring by the end of 2026. Upgrade with `pip install --upgrade redditharbor` (Python 3.10+) and follow the [migration guide](https://socius-org.github.io/RedditHarbor/getting_started/migration.html). See the [changelog](CHANGELOG.md) for details.
+
 RedditHarbor simplifies collecting Reddit data and saving it to a database. It removes the complexity of working with APIs, letting you easily build a "harbor" of Reddit data for analysis.
 
 ## Introduction 
@@ -75,6 +77,8 @@ Social media data from platforms like Reddit contains rich insights into human b
 In plain language:
 
 - **✨ Comprehensive API Data Collection**: Gather Reddit submissions, comments, and user profiles directly from the official data API.
+
+- **🧹 Data Minimisation (GDPR)**: You choose exactly which columns to collect. Nothing else is requested from Reddit or stored in your database.
 
 - **🔒 Privacy-Preserving**: Anonymise PII to protect user privacy and meet ethical/IRB standards. 
 
@@ -98,7 +102,7 @@ For a more detailed step-by-step instructions, see our [documentation](https://s
 
 **Reddit API**: You need a Reddit account to access the Reddit API. Follow [Reddit's API guide](https://www.reddit.com/wiki/api/) to register as a developer and create a script app. This will provide the credentials (PUBLIC_KEY and SECRET_KEY) needed to authenticate with Reddit. 
 
-**Supabase API**: Sign up for a [Supabase](https://supabase.com/) account. Create a new project to get the database URL and SECRET_KEY. You will need these credentials to connect and store the Reddit data. 
+**Supabase API**: Sign up for a [Supabase](https://supabase.com/) account and create a new project. You will need its project URL and a **secret key** (`sb_secret_...`, found under Settings > API Keys) to connect and store the Reddit data. Legacy `service_role` keys still work but are being retired by Supabase. 
 
 ## Getting Started
 
@@ -107,30 +111,55 @@ For a more detailed step-by-step instructions, see our [documentation](https://s
 Install the RedditHarbor package using pip:
 
 ```python
-# requires Python 3.9 or higher
+# requires Python 3.10 or higher
 pip install redditharbor
 pip install redditharbor[pii]
 ```
 
 `pip install redditharbor[pii]` is required to enable anonymising any personally identifiable information (PII). 
 
+### Choosing What to Collect
+
+Under the GDPR principle of data minimisation, RedditHarbor only collects the columns you explicitly ask for. Before creating any tables, decide which columns your research actually needs from each of the three tables (user, submission and comment) and write them down as a `COLUMNS` dictionary:
+
+```python
+COLUMNS = {
+    "user": ["redditor_id", "created_at", "karma"],
+    "submission": ["submission_id", "redditor_id", "created_at", "title", "text", "subreddit", "score"],
+    "comment": ["comment_id", "link_id", "parent_id", "redditor_id", "created_at", "body"],
+}
+```
+
+Leave a table out (or set it to `None`) if you do not need it at all - for example, drop `"user"` if you do not need user profiles. The primary key of each table (`redditor_id`, `submission_id`, `comment_id`) is always included because rows cannot be stored without it. The full list of available columns, with guidance on which ones contain personal data, is in the [documentation](https://socius-org.github.io/RedditHarbor/data_schema/columns.html).
+
 ### Setting Up Supabase Tables 
 
-We need to create three different types of tables in Supabase to store the user, submission and comments data from Reddit. 
+Next, create one Supabase table for each entity in `COLUMNS`, containing exactly the columns you chose. For testing purposes, we will name them "test_redditor", "test_submission", and "test_comment":
 
-For testing purpose, we will name them "test_redditor", "test_submission", and "test_comment". Go to the [Supabase Dashboard](https://app.supabase.com) and open SQL Editor. Click "New Query" to start a new SQL query, and paste this table creation SQL:
+```python
+DB_CONFIG = {
+  "user": "test_redditor",
+  "submission": "test_submission", 
+  "comment": "test_comment"
+}
+```
+
+RedditHarbor generates the table creation SQL for your selection:
+
+```python
+from redditharbor import schema
+
+print(schema.create_table_sql(DB_CONFIG, COLUMNS))
+```
+
+Go to the [Supabase Dashboard](https://app.supabase.com), open SQL Editor, click "New Query" and paste the printed SQL. For the example `COLUMNS` above it prints:
 
 ```sql
 -- Create table test_redditor
 CREATE TABLE test_redditor (
     redditor_id varchar primary key,
-    name varchar,
     created_at timestamptz,
-    karma jsonb,
-    is_gold boolean,
-    is_mod jsonb,
-    trophy jsonb,
-    removed varchar
+    karma jsonb
 );
 
 -- Enable row-level security on test_redditor
@@ -144,43 +173,29 @@ CREATE TABLE test_submission (
     title varchar,
     text text,
     subreddit varchar,
-    permalink varchar,
-    attachment jsonb,
-    flair jsonb,
-    awards jsonb,
-    score jsonb,
-    upvote_ratio jsonb,
-    num_comments jsonb,
-    edited boolean,
-    archived boolean,
-    removed boolean,
-    poll jsonb
-); 
+    score jsonb
+);
 
 -- Enable row-level security on test_submission
 ALTER TABLE test_submission ENABLE ROW LEVEL SECURITY;
 
 -- Create table test_comment
-CREATE TABLE test_comment(
+CREATE TABLE test_comment (
     comment_id varchar primary key,
     link_id varchar,
-    subreddit varchar, 
     parent_id varchar,
     redditor_id varchar,
     created_at timestamptz,
-    body text,
-    score jsonb,
-    edited boolean,
-    removed varchar
-); 
+    body text
+);
 
 -- Enable row-level security on test_comment
 ALTER TABLE test_comment ENABLE ROW LEVEL SECURITY;
 ```
 
-This will create the three tables with the required columns and data types. Once created, you will see the new tables now available in the Supabase interface. In the future, you can duplicate these tables and modify the table names for your own production.
+Once created, you will see the new tables in the Supabase interface. In the future, you can duplicate these tables and modify the table names for your own production.
 
-> **<picture><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.gif" alt="🚧" width="20" height="20"></picture>** *RedditHarbor pacakge is dependent on the predefined column names for all users, submissions and comments tables. To ensure proper functionality, it is crucial to create tables with all the specified columns mentioned in the documentation. Failure to do so may lead to errors or incomplete data retrieval.*
+> **<picture><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.gif" alt="🚧" width="20" height="20"></picture>** *RedditHarbor inserts exactly the columns listed in `COLUMNS`, using the predefined column names and types. Each table must therefore contain every column you configured for it. A missing column will cause an error when inserting; a column in the table that is not in `COLUMNS` is simply never filled in.*
 
 ### Running the Code: 
 
@@ -188,20 +203,26 @@ To use the package, first create an empty Python file in your IDE of choice, suc
 
 ```python
 SUPABASE_URL = "<your-supabase-url>" 
-SUPABASE_KEY = "<your-supabase-api-key>" #Remember to use "service_role/secret" key, not "anon/public" key 
+SUPABASE_KEY = "<your-supabase-secret-key>" # The secret key (sb_secret_...), not the publishable key 
 
 REDDIT_PUBLIC = "<your-reddit-public-key>"
 REDDIT_SECRET = "<your-reddit-secret-key>"
 REDDIT_USER_AGENT = "<your-reddit-user-agent>" #format - <institution:project-name (u/reddit-username)>
 ```
 
-Then define the database table names to store the data:
+Then define the database table names and the columns to collect (the same `DB_CONFIG` and `COLUMNS` you used to create the tables):
 
 ```python
 DB_CONFIG = {
   "user": "test_redditor",
   "submission": "test_submission", 
   "comment": "test_comment"
+}
+
+COLUMNS = {
+    "user": ["redditor_id", "created_at", "karma"],
+    "submission": ["submission_id", "redditor_id", "created_at", "title", "text", "subreddit", "score"],
+    "comment": ["comment_id", "link_id", "parent_id", "redditor_id", "created_at", "body"],
 }
 ```
 
@@ -221,7 +242,7 @@ After initialising an instance of the `collect` class, you can call its various 
 ```python 
 from redditharbor.dock.pipeline import collect
 
-collect = collect(reddit_client=reddit_client, supabase_client=supabase_client, db_config=DB_CONFIG)
+collect = collect(reddit_client=reddit_client, supabase_client=supabase_client, db_config=DB_CONFIG, columns=COLUMNS)
 ```
 
 For example, to collect submissions and associated user data from specified subreddits:
@@ -232,7 +253,7 @@ sort_types = ["hot", "top"]
 collect.subreddit_submission(subreddits, sort_types, limit=5)
 ```
 
-This will collect the 5 hottest and 5 top submissions from r/python and r/learnpython, along with the associated user data, and store them in the configured database tables. If you would like to anonymise any pii data, set `mask_pii` as True. 
+This will collect the 5 hottest and 5 top submissions from r/python and r/learnpython, storing only the configured submission columns. The authors' user data is stored as well, because `COLUMNS` includes a `"user"` entry; omit it and no user profiles are collected. If you would like to anonymise any pii data in the text, set `mask_pii` as True. 
 
 ```python
 collect.subreddit_submission(subreddits, sort_types, limit=5, mask_pii=True)

@@ -9,8 +9,10 @@ parts:
     - file: getting_started/prerequisites
     - file: getting_started/installation
     - file: getting_started/setting_up
-  - caption: Database Schema 
-    chapters: 
+    - file: getting_started/migration
+  - caption: Database Schema
+    chapters:
+    - file: data_schema/columns
     - file: data_schema/user
     - file: data_schema/submission
     - file: data_schema/comment

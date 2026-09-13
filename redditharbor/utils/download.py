@@ -10,7 +10,22 @@ import requests
 from io import BytesIO
 from PIL import Image
 
+from redditharbor import schema
+
 console = Console()
+
+
+def _header(columns, rows, known_columns):
+    """
+    Column names for an export: the requested columns or, for "all", the columns
+    actually present in the table (RedditHarbor tables only contain the columns you
+    chose to collect).
+    """
+    if columns != "*":
+        return list(columns)
+    if rows:
+        return list(rows[0].keys())
+    return list(known_columns)
 
 # While it might have been possible to design a unified class for submission, comment, and redditor,
 # we opted for three separate classes with near-identical structures to enhance user experience (UX).
@@ -52,25 +67,7 @@ class submission:
         self.submission_db = self.supabase.table(self.submission_db_config)
         self.paginate = paginate
 
-        self.columns = [
-            "submission_id",
-            "redditor_id",
-            "created_at",
-            "title",
-            "text",
-            "subreddit",
-            "permalink",
-            "attachment",
-            "flair",
-            "awards",
-            "score",
-            "upvote_ratio",
-            "num_comments",
-            "edited",
-            "archived",
-            "removed",
-            "poll",
-        ]
+        self.columns = list(schema.SUBMISSION_COLUMNS)
 
         if self.paginate is True:
             self.row_count = (
@@ -184,13 +181,13 @@ class submission:
         else:
             raise ValueError("Input is neither a string nor a list.")
 
-        start_row, end_row = 0, 1000
+        start_row, end_row = 0, self.page_size
 
         with open(
             save_file_name, "w", newline="", encoding="utf-8"
         ) as csvfile:
             writer = csv.writer(csvfile)
-            writer.writerow(columns if columns != "*" else self.columns)
+            header = None
 
             for page in track(
                 range(1, self.page_numbers + 1),
@@ -210,8 +207,11 @@ class submission:
                     .range(start_row, end_row)
                     .execute()
                 ).model_dump()["data"]
+                if header is None:
+                    header = _header(columns, paginated_submissions, self.columns)
+                    writer.writerow(header)
                 for row in paginated_submissions:
-                    writer.writerow(list(row.values()))
+                    writer.writerow([row.get(column) for column in header])
 
         return console.print(
             f"{self.row_count} rows downloaded and saved in {save_file_name}"
@@ -253,7 +253,7 @@ class submission:
         start_row, end_row = 0, self.page_size
 
         with open(save_file_name, "w", encoding="utf-8") as txtfile:
-            txtfile.write("\t".join(columns if columns != "*" else self.columns) + "\n")
+            header = None
 
             for page in track(
                 range(1, self.page_numbers + 1),
@@ -273,8 +273,11 @@ class submission:
                     .range(start_row, end_row)
                     .execute()
                 ).model_dump()["data"]
+                if header is None:
+                    header = _header(columns, paginated_submissions, self.columns)
+                    txtfile.write("\t".join(header) + "\n")
                 for row in paginated_submissions:
-                    txtfile.write("\t".join(map(str, row.values())) + "\n")
+                    txtfile.write("\t".join(str(row.get(column)) for column in header) + "\n")
 
         return console.print(
             f"{self.row_count} rows downloaded and saved in {save_file_name}"
@@ -373,7 +376,7 @@ class submission:
                 self.submission_db.select("submission_id", "attachment").range(start_row, end_row).execute()
             ).model_dump()["data"]
             
-            for data in track(paginated_submissions, description=f"Downloading bulk {page}\{self.page_numbers}"): 
+            for data in track(paginated_submissions, description=f"Downloading bulk {page}/{self.page_numbers}"): 
                 if (data['attachment'] is None): 
                     pass 
                 else:
@@ -444,18 +447,7 @@ class comment:
         self.comment_db = self.supabase.table(self.comment_db_config)
         self.paginate = paginate
 
-        self.columns = [
-            "comment_id",
-            "link_id",
-            "subreddit",
-            "parent_id",
-            "redditor_id",
-            "created_at",
-            "body",
-            "score",
-            "edited",
-            "removed",
-        ]
+        self.columns = list(schema.COMMENT_COLUMNS)
 
         if self.paginate is True:
             self.row_count = (
@@ -574,7 +566,7 @@ class comment:
             save_file_name, "w", newline="", encoding="utf-8"
         ) as csvfile:
             writer = csv.writer(csvfile)
-            writer.writerow(columns if columns != "*" else self.columns)
+            header = None
 
             for page in track(
                 range(1, self.page_numbers + 1),
@@ -594,8 +586,11 @@ class comment:
                     .range(start_row, end_row)
                     .execute()
                 ).model_dump()["data"]
+                if header is None:
+                    header = _header(columns, paginated_comments, self.columns)
+                    writer.writerow(header)
                 for row in paginated_comments:
-                    writer.writerow(list(row.values()))
+                    writer.writerow([row.get(column) for column in header])
 
         return console.print(
             f"{self.row_count} rows downloaded and saved in {save_file_name}"
@@ -637,7 +632,7 @@ class comment:
         start_row, end_row = 0, self.page_size
 
         with open(save_file_name, "w", encoding="utf-8") as txtfile:
-            txtfile.write("\t".join(columns if columns != "*" else self.columns) + "\n")
+            header = None
 
             for page in track(
                 range(1, self.page_numbers + 1),
@@ -657,8 +652,11 @@ class comment:
                     .range(start_row, end_row)
                     .execute()
                 ).model_dump()["data"]
+                if header is None:
+                    header = _header(columns, paginated_comments, self.columns)
+                    txtfile.write("\t".join(header) + "\n")
                 for row in paginated_comments:
-                    txtfile.write("\t".join(map(str, row.values())) + "\n")
+                    txtfile.write("\t".join(str(row.get(column)) for column in header) + "\n")
 
         return console.print(
             f"{self.row_count} rows downloaded and saved in {save_file_name}"
@@ -760,16 +758,7 @@ class user:
         self.redditor_db = self.supabase.table(self.redditor_db_config)
         self.paginate = paginate
 
-        self.columns = [
-            "redditor_id",
-            "name",
-            "created_at",
-            "karma",
-            "is_gold",
-            "is_mod",
-            "trophy",
-            "removed",
-        ]
+        self.columns = list(schema.USER_COLUMNS)
 
         if self.paginate is True:
             self.row_count = (
@@ -887,7 +876,7 @@ class user:
             save_file_name, "w", newline="", encoding="utf-8"
         ) as csvfile:
             writer = csv.writer(csvfile)
-            writer.writerow(columns if columns != "*" else self.columns)
+            header = None
 
             for page in track(
                 range(1, self.page_numbers + 1),
@@ -907,8 +896,11 @@ class user:
                     .range(start_row, end_row)
                     .execute()
                 ).model_dump()["data"]
+                if header is None:
+                    header = _header(columns, paginated_redditors, self.columns)
+                    writer.writerow(header)
                 for row in paginated_redditors:
-                    writer.writerow(list(row.values()))
+                    writer.writerow([row.get(column) for column in header])
 
         return console.print(
             f"{self.row_count} rows downloaded and saved in {save_file_name}"
@@ -950,7 +942,7 @@ class user:
         start_row, end_row = 0, self.page_size
 
         with open(save_file_name, "w", encoding="utf-8") as txtfile:
-            txtfile.write("\t".join(columns if columns != "*" else self.columns) + "\n")
+            header = None
 
             for page in track(
                 range(1, self.page_numbers + 1),
@@ -970,8 +962,11 @@ class user:
                     .range(start_row, end_row)
                     .execute()
                 ).model_dump()["data"]
+                if header is None:
+                    header = _header(columns, paginated_redditors, self.columns)
+                    txtfile.write("\t".join(header) + "\n")
                 for row in paginated_redditors:
-                    txtfile.write("\t".join(map(str, row.values())) + "\n")
+                    txtfile.write("\t".join(str(row.get(column)) for column in header) + "\n")
 
         return console.print(
             f"{self.row_count} rows downloaded and saved in {save_file_name}"
