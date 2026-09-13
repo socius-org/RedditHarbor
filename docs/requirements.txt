@@ -1,2 +1,3 @@
-jupyter-book
-redditharbor
+# Build dependencies for the documentation (see .github/workflows/docs.yml).
+# Jupyter Book 2 is a different tool with a different config format; stay on 1.x.
+jupyter-book>=1.0,<2
