@@ -1,6 +1,6 @@
 # Prerequisites
 
-## 👨‍💻 Reddit API
+## Reddit API
 
 1. **Create a Reddit Account**: You will need a Reddit account to access the Reddit API. If you don't have one already, head over to [reddit.com](https://www.reddit.com/) and sign up for a new account.
 
@@ -20,11 +20,11 @@
 ```
 <br>
 
-## 📦 Supabase API
+## Supabase API
 
 1. **Sign Up for Supabase**: Visit [supabase.com](https://supabase.com/) and sign up for a new account. This will allow you to create a project and obtain the necessary credentials for storing the Reddit data.
 
-2. **Create a New Project**: After signing up, create a new project in Supabase. This will generate a database `URL` and a `SECRET_KEY` (`service_role`) for your project.
+2. **Create a New Project**: After signing up, create a new project in Supabase. Give it a name, choose a strong database password and the region closest to you. Under "Security", keep **Enable Data API** ticked: RedditHarbor talks to your database through the Data API. Once the project is ready, it has a project `URL` of the form `https://<project-id>.supabase.co` (shown under "Settings > Data API", or by clicking "Connect" at the top of the dashboard).
 <br>
 ```{image} ../images/supabase_createnewproject.png
 :width: 400px
@@ -32,7 +32,7 @@
 ```
 <br>
 
-3. **Access Credentials**: Access database `URL` and `SECRET_KEY` provided in the "Project Settings > Configuration > API" section. You will need these credentials to connect and store the Reddit data during the tutorial.
+3. **Access Credentials**: Open "Settings > API Keys". On the *Publishable and secret API keys* tab, reveal and copy the **Secret key** (it starts with `sb_secret_`). This is the `SECRET_KEY` you will use as `SUPABASE_KEY`; it allows RedditHarbor to write to your tables. Do **not** use the *Publishable key* (`sb_publishable_`): it has no write access, and RedditHarbor will refuse it.
 <br>
 ```{image} ../images/supabase_apikey.png
 :width: 400px
@@ -40,7 +40,11 @@
 ```
 <br>
 
-## 🖥️ Environment Setup
+```{note}
+Supabase is retiring the legacy `anon` and `service_role` keys (shown on the *Legacy anon, service_role API keys* tab) by the end of 2026. They still work for now, and RedditHarbor prints a warning if you use one, but new projects should use the secret key described above. If you followed an older version of this guide, see [Upgrading from 0.3](migration.md).
+```
+
+## Environment Setup
 
 1. **Install Visual Studio Code (Recommended)**: We recommend [installing Visual Studio Code](https://code.visualstudio.com/download), a popular and user-friendly code editor. Once installed, make sure to get the Python extension for full support in running and editing Python apps.
 
@@ -52,7 +56,7 @@
 
 3. **Install Python Extension (for Visual Studio Code users)**: If you're using Visual Studio Code, open the editor and navigate to the sidebar (or press `Ctrl+Shift+X`). Search for "python" in the Extensions Marketplace and install the Python extension.
 
-## 🔣 Command Prompt (Windows Users)
+## Command Prompt (Windows Users)
 
 If you're a Windows user, we recommend using Git Bash, one of the best command prompts for a Linux-style command-line experience. Follow these steps:
 
@@ -61,4 +65,4 @@ If you're a Windows user, we recommend using Git Bash, one of the best command p
 3. At the "Adjusting your PATH environment" step, select the "Use Git from the Windows Command Prompt" option
 4. Once installed, you will have access to Git Bash, which provides Linux-style command-line utilities and Git functionality in Windows.
 
-If you have any questions or encounter any difficulties during the setup process, please don't hesitate to reach out to us. We're here to ensure a smooth and enjoyable tutorial experience for everyone.
+If you run into difficulties during setup, open an issue on [GitHub](https://github.com/socius-org/RedditHarbor/issues).

@@ -1,16 +1,17 @@
 'use client';
 
-import type { ReactNode } from 'react';
-import { use } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useSuspendingLiveQuery } from 'dexie-react-hooks';
 import { ArrowLeft, ArrowRightLeft, BarChart3, Database, Lock, Shield, Upload } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import type { ReactNode } from 'react';
+import { use } from 'react';
+
 import { Button } from '#app/components/ui/button.tsx';
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '#app/components/ui/empty.tsx';
 import { PageContainer } from '#app/components/ui/PageContainer.tsx';
-import { cn } from '#app/utils/cn.ts';
 import { db } from '#app/database.ts';
+import { cn } from '#app/utils/cn.ts';
 
 const PHASES = [
   { key: 'privacy', label: 'Privacy', icon: Shield, number: 1, enabled: true },

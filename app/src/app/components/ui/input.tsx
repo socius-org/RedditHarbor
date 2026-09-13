@@ -1,10 +1,10 @@
 'use client';
 
-import type { ComponentProps, Key } from 'react';
 import { Input as InputPrimitive } from '@base-ui/react/input';
+import type { ComponentProps, Key } from 'react';
 
-import { cn } from '#app/utils/cn.ts';
 import { useFieldContext } from '#app/components/ui/field.tsx';
+import { cn } from '#app/utils/cn.ts';
 
 function Input({ className, defaultValue, required, type, ...props }: ComponentProps<'input'>) {
   const fieldContext = useFieldContext();

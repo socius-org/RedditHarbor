@@ -9,10 +9,13 @@ try:
 except FileNotFoundError:
     long_description = 'Effortlessly collect and store Reddit data in your database.'
 
+# Keep in sync with redditharbor/__init__.py and CITATION.cff
+VERSION = '0.4.0'
+
 setup(
     name='redditharbor',
     packages=find_packages(),
-    version='0.3',
+    version=VERSION,
     license='MIT',
     description='Effortlessly collect and store Reddit data in your database.',
     long_description=long_description,
@@ -20,13 +23,14 @@ setup(
     author='Nick Oh',
     author_email='nick.sh.oh@socius.org',
     url='https://github.com/socius-org/RedditHarbor/',
-    download_url='https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.3.tar.gz',
-    keywords=['Reddit', 'Supabase', 'reddit-api', 'database', 'reddit-crawler', 'reddit-scraper'],
+    download_url=f'https://github.com/socius-org/RedditHarbor/archive/refs/tags/v{VERSION}.tar.gz',
+    keywords=['Reddit', 'Supabase', 'reddit-api', 'database', 'reddit-crawler', 'reddit-scraper', 'gdpr'],
     include_package_data=True,
-    python_requires='>=3.8',
+    # praw 8 and supabase 2.27+ dropped Python 3.9
+    python_requires='>=3.10',
     install_requires=[
-        'praw>=7.7.1',
-        'supabase>=1.0.3',
+        'praw>=8.0,<9.0',
+        'supabase>=2.0,<3.0',
         'rich>=13.4.2',
         'python-dotenv>=1.0.0',
         'pillow>=10.3.0,<12.0.0',
@@ -40,18 +44,17 @@ setup(
         ],
     },
     classifiers=[
-        'Development Status :: 3 - Alpha', 
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
         'Programming Language :: Python :: 3.13',
+        'Programming Language :: Python :: 3.14',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Database',
@@ -59,6 +62,7 @@ setup(
     project_urls={
         'Bug Reports': 'https://github.com/socius-org/RedditHarbor/issues',
         'Source': 'https://github.com/socius-org/RedditHarbor/',
-        'Documentation': 'https://github.com/socius-org/RedditHarbor/blob/main/README.md',
+        'Documentation': 'https://socius-org.github.io/RedditHarbor/',
+        'Changelog': 'https://github.com/socius-org/RedditHarbor/blob/main/CHANGELOG.md',
     },
 )

@@ -1,10 +1,10 @@
 # User 
 
-The `User` collection stores information about Reddit users. Each document in this collection has the following schema:
+The `User` table stores information about Reddit users. It is only populated if `COLUMNS` contains a `"user"` entry, and each row only contains the columns you listed there (see [Choosing Columns](columns.md)). The complete set of columns is:
 
 ```python
 {
-    "redditor_id": str,  # Unique identifier for the user
+    "redditor_id": str,  # Unique identifier for the user (always collected)
     "name": str,  # User's Reddit username
     "created_at": str,  # Datetime when the user account was created (ISO format)
     "karma": {
@@ -26,4 +26,8 @@ The `User` collection stores information about Reddit users. Each document in th
 }
 ```
 
-Note: For suspended users, the `redditor_id` is represented as `"suspended:{name}"`.
+Notes:
+
+- `name` is the only column that identifies a person directly. Only collect it if your research question requires usernames; `redditor_id` is sufficient to link submissions and comments by the same author.
+- Suspended accounts have no id on Reddit. If `name` is collected, they are stored with `redditor_id` set to `"suspended:{name}"` and only the karma fields populated. If `name` is not collected, no user row is stored for them and they appear as `"suspended"` in the `redditor_id` column of submissions and comments.
+- `is_mod` and `trophy` each require an additional API request per user. They are only requested when listed in `COLUMNS`.

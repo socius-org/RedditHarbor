@@ -1,6 +1,6 @@
 # Database-Driven Data Collection
 
-## Leverage your existing database 📂 to collect additional relevant data, such as comments from specific submissions or user activity. 
+Use what is already in your database to collect related data, such as the comments of stored submissions or the activity of stored users.
 
 ## Collect Submission Comments
 
@@ -19,7 +19,7 @@ This will collect comments from the specified 100 submissions up to level 2 (e.g
 
 ## Collect User Submissions
 
-To collect submissions made by specified users, you'll need to "fetch" user names from your existing database:
+To collect submissions made by specified users, you'll need to "fetch" user names from your existing database. This requires the `name` column in your user table (see [Choosing Columns](../data_schema/columns.md)), because Reddit's API looks up users by username, not by id:
 
 ```python
 from redditharbor.utils import fetch
@@ -27,7 +27,7 @@ from redditharbor.utils import fetch
 fetch_user = fetch.user(supabase_client=supabase_client, db_name=DB_CONFIG["user"])
 users = fetch_user.name(limit=100)  # This will fetch the first 100 user names from the user database. Set limit=None to fetch all user names.
 
-collect.submission_from_user(users=users, sort_types=["controversial"], limit=10)
+collect.submission_from_user(user_names=users, sort_types=["controversial"], limit=10)
 ```
 
 This will collect the 10 most controversial submissions from the specified users.
@@ -37,7 +37,7 @@ This will collect the 10 most controversial submissions from the specified users
 To collect comments made by specified users, use:
 
 ```python
-collect.comment_from_user(users=users, sort_types=["new"], limit=10)
+collect.comment_from_user(user_names=users, sort_types=["new"], limit=10)
 ```
 
 This will collect the 10 most recent comments from the specified users.

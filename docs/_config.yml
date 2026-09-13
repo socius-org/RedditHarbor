@@ -3,8 +3,8 @@
 
 title: RedditHarbor
 author: socius
-logo: images/socius_logo.png
-copyright: "2024"
+logo: images/RedditHarbor_docs_banner.png
+copyright: "2026"
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
@@ -32,4 +32,5 @@ html:
   favicon: images/socius_logo.png
   use_issues_button: true
   use_repository_button: true
-  google_analytics_id: "G-11M59X5QB1"
+  analytics:
+    google_analytics_id: "G-11M59X5QB1"

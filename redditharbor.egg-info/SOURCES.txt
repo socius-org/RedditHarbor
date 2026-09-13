@@ -5,6 +5,7 @@ setup.cfg
 setup.py
 redditharbor/__init__.py
 redditharbor/login.py
+redditharbor/schema.py
 redditharbor.egg-info/PKG-INFO
 redditharbor.egg-info/SOURCES.txt
 redditharbor.egg-info/dependency_links.txt
@@ -17,3 +18,4 @@ redditharbor/utils/download.py
 redditharbor/utils/fetch.py
 redditharbor/utils/metrics.py
 redditharbor/utils/subreddit_collections.py
+redditharbor/utils/updates.py

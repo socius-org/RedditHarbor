@@ -1,10 +1,10 @@
 # Collecting Subreddit-based Data 
 
-## Collect data from specific subreddits 📚, whether you're interested in submissions, comments, or user information. 
+Collect data from specific subreddits, whether you are interested in submissions, comments, or user information.
 
 ## Collect Submissions and Users
 
-To collect submissions and associated user data from specified subreddits, simply run:
+To collect submissions and associated user data from specified subreddits, run:
 
 ```python
 subreddits = ["python", "learnpython"]
@@ -12,7 +12,7 @@ sort_types = ["hot", "top"]
 collect.subreddit_submission(subreddits, sort_types, limit=5)
 ```
 
-This will fetch the 5 hottest and 5 top submissions from r/python and r/learnpython, along with the corresponding user data, and store them in your configured database tables.
+This will fetch the 5 hottest and 5 top submissions from r/python and r/learnpython and store them in your configured database tables. Only the columns listed in your `COLUMNS` configuration are collected (see [Choosing Columns](../data_schema/columns.md)), and the corresponding user data is stored only if `COLUMNS` includes a `"user"` entry.
 
 If you'd like to anonymise any personally identifiable information (PII), set `mask_pii` to `True`:
 
