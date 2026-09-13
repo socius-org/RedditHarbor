@@ -3,6 +3,8 @@ import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
 
+// @ts-expect-error Some issue with TypeScript 6:
+// https://github.com/microsoft/TypeScript/issues/62547#issuecomment-3369269448
 import './globals.css';
 import { ApiKeysButton } from './ApiKeysButton';
 import { ApiKeysDialogProvider } from './ApiKeysDialogContext';
