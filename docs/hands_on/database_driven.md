@@ -1,6 +1,6 @@
 # Database-Driven Data Collection
 
-## Leverage your existing database 📂 to collect additional relevant data, such as comments from specific submissions or user activity. 
+Use what is already in your database to collect related data, such as the comments of stored submissions or the activity of stored users.
 
 ## Collect Submission Comments
 

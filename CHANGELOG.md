@@ -6,7 +6,7 @@ All notable changes to RedditHarbor are documented here. The format follows
 
 ## [0.4.0] - 2026-09-13
 
-### ⚠️ Deprecation notice
+### Deprecation notice
 
 **RedditHarbor 0.3 and earlier are deprecated and no longer supported.** Please upgrade
 (`pip install --upgrade redditharbor`) and follow the

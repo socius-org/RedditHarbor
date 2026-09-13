@@ -1,6 +1,6 @@
 # Collecting Keyword-based Data 
 
-## Collect submissions based on specific keywords 🔍 from your desired subreddits.
+Collect submissions that match a keyword query from the subreddits of your choice.
 
 ## Collect Submissions
 
@@ -33,4 +33,4 @@ When using multiple boolean operators, you may sometimes get unexpected results.
 
 ## Collect Comments
 
-Unfortunately, Reddit's Data API does not currently support searching comments based on keywords. However, RedditHarbor provides other powerful features for collecting relevant comment data, which we'll explore in the next section.
+Reddit's Data API does not support searching comments by keyword. The usual workaround is to search submissions by keyword and then collect their comment threads, which the next section covers.

@@ -1,6 +1,6 @@
 # Choosing Columns
 
-## Collect only what your research needs 🧹
+## Collect only what your research needs
 
 RedditHarbor is built around the GDPR principle of **data minimisation** (Art. 5(1)(c)): personal data must be "adequate, relevant and limited to what is necessary" for the purpose it is collected for. Rather than collecting every field Reddit exposes, you tell RedditHarbor exactly which columns you need, and only those are requested from Reddit and stored in your database.
 

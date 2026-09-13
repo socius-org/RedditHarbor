@@ -1,10 +1,10 @@
 # Collecting Subreddit-based Data 
 
-## Collect data from specific subreddits 📚, whether you're interested in submissions, comments, or user information. 
+Collect data from specific subreddits, whether you are interested in submissions, comments, or user information.
 
 ## Collect Submissions and Users
 
-To collect submissions and associated user data from specified subreddits, simply run:
+To collect submissions and associated user data from specified subreddits, run:
 
 ```python
 subreddits = ["python", "learnpython"]

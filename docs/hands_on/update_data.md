@@ -1,8 +1,8 @@
 # Updating Data
 
-## Unlock temporal insights 📈 with intelligent updates 🔄
+Track how submission metrics change over time.
 
-The `update()` module streamlines and automates the process of updating crucial metrics for existing submissions (comment and user is currently working-in-progress!). It provides flexibility and configurability to adjust update intervals and data sources. A key advantage of this update module is the ability to track how various metrics, such as the upvote ratio or score, change over time for specific posts. This capability sets RedditHarbor apart from many other Reddit database resources, such as PushShift or Academic Torrents, which typically provide a static "snapshot" of submissions and comments at a random point in time.
+The `update` module refreshes the metrics of submissions that are already stored in your database, on a schedule. Each refresh appends a new timestamped value to `score`, `upvote_ratio` and `num_comments`, so you can see how these metrics change over time rather than only their value at the moment of collection. Updating comments and users is not yet implemented.
 
 ## Updating Submissions
 To update submission data, follow these steps:

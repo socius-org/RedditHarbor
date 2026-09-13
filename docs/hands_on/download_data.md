@@ -1,10 +1,10 @@
 # Downloading Data 
 
-## Seamlessly download 💾 the data you need, in CSV, JSON, text, or even image formats. 
+Download the data you need in CSV, JSON, text, pickle or image formats.
 
 ## Downloading Submissions
 
-To download submission data, simply follow these steps:
+To download submission data, run:
 
 ```python
 from redditharbor.utils import download
@@ -35,7 +35,7 @@ This will save all `.jpg` and `.png` files associated with the submissions table
 
 ## Downloading Comments
 
-Extracting comment data is just as straightforward:
+Extracting comment data works the same way:
 
 ```python
 download = download.comment(supabase_client, DB_CONFIG["comment"])
@@ -44,7 +44,7 @@ download.to_csv(columns="all", file_name="comment", file_path="<your-folder-name
 
 ## Downloading User Data
 
-And for user data:
+User data:
 
 ```python
 download = download.user(supabase_client, DB_CONFIG["user"])

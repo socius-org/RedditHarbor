@@ -131,4 +131,4 @@ supabase_client = login.supabase(url=SUPABASE_URL, private_key=SUPABASE_KEY)
 collect = collect(reddit_client=reddit_client, supabase_client=supabase_client, db_config=DB_CONFIG, columns=COLUMNS)
 ```
 
-Now you're ready to start collecting Reddit data!
+You are ready to collect data.
