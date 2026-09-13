@@ -3,7 +3,7 @@ Name: redditharbor
 Version: 0.4.0
 Summary: Effortlessly collect and store Reddit data in your database.
 Home-page: https://github.com/socius-org/RedditHarbor/
-Download-URL: https://github.com/socius-org/RedditHarbor/archive/refs/tags/0.4.0.tar.gz
+Download-URL: https://github.com/socius-org/RedditHarbor/archive/refs/tags/v0.4.0.tar.gz
 Author: Nick Oh
 Author-email: nick.sh.oh@socius.org
 License: MIT

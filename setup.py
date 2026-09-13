@@ -23,7 +23,7 @@ setup(
     author='Nick Oh',
     author_email='nick.sh.oh@socius.org',
     url='https://github.com/socius-org/RedditHarbor/',
-    download_url=f'https://github.com/socius-org/RedditHarbor/archive/refs/tags/{VERSION}.tar.gz',
+    download_url=f'https://github.com/socius-org/RedditHarbor/archive/refs/tags/v{VERSION}.tar.gz',
     keywords=['Reddit', 'Supabase', 'reddit-api', 'database', 'reddit-crawler', 'reddit-scraper', 'gdpr'],
     include_package_data=True,
     # praw 8 and supabase 2.27+ dropped Python 3.9
