@@ -45,8 +45,8 @@ importers:
         specifier: ^4.3.0
         version: 4.3.0
       dexie-react-hooks:
-        specifier: ^4.2.1-beta.1
-        version: 4.2.1-beta.1(dexie@4.3.0)(react@19.2.4)
+        specifier: ^4.4.0
+        version: 4.4.0(dexie@4.3.0)(react@19.2.4)
       lucide-react:
         specifier: ^0.577.0
         version: 0.577.0(react@19.2.4)
@@ -1238,8 +1238,8 @@ packages:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
 
-  dexie-react-hooks@4.2.1-beta.1:
-    resolution: {integrity: sha512-JiZVp62kr/ML42TD1PB4OHTobRABhYeJqrmTdUs27/zcDm3cWS+5fAwx2DkdBHYwbi4vCBTEcahNg9riG7wUag==}
+  dexie-react-hooks@4.4.0:
+    resolution: {integrity: sha512-ObLXBS5+4BJU8vtSvBx6b9fY6zZYgniAtwxzjCHsUQadgbqYN6935X2/1TWw4Rf2N1aZV1io5/ziox4vKuxABA==}
     peerDependencies:
       dexie: '>=4.2.0-alpha.1 <5.0.0'
       react: '>=16'
@@ -3365,7 +3365,7 @@ snapshots:
 
   detect-libc@2.1.2: {}
 
-  dexie-react-hooks@4.2.1-beta.1(dexie@4.3.0)(react@19.2.4):
+  dexie-react-hooks@4.4.0(dexie@4.3.0)(react@19.2.4):
     dependencies:
       dexie: 4.3.0
       react: 19.2.4
