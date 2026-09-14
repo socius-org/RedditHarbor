@@ -27,7 +27,7 @@ importers:
         specifier: ^0.2.5
         version: 0.2.5(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@clerk/clerk-react':
-        specifier: ^5.61.6
+        specifier: ^5.61.9
         version: 5.61.9(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tanstack/react-query':
         specifier: ^5.90.21
